@@ -5,8 +5,9 @@ import type { TileId } from "./types";
 export type Block = readonly (readonly TileId[])[];
 
 /**
- * Behaviour lives in per-tileset lists of tile ids, not in per-cell flags.
- * Every cell that uses a listed tile inherits the behaviour.
+ * Terrain behaviour lives in per-tileset lists of tile ids, not in per-cell
+ * flags: every cell that uses a listed tile inherits the behaviour. Objects
+ * (trees, doors, furniture) carry their own behaviour, see `objectInfo`.
  */
 export interface TileSetDefinition {
     id: string;
@@ -20,10 +21,6 @@ export interface TileSetDefinition {
     water?: readonly TileId[];
     /** Tiles that can trigger encounters. */
     grass?: readonly TileId[];
-    /** Tiles you can interact across, such as a shop counter. */
-    counter?: readonly TileId[];
-    /** Tiles that act as a warp, such as a door. */
-    door?: readonly TileId[];
 }
 
 export interface TileSet {
@@ -33,8 +30,6 @@ export interface TileSet {
     readonly solid: ReadonlySet<TileId>;
     readonly water: ReadonlySet<TileId>;
     readonly grass: ReadonlySet<TileId>;
-    readonly counter: ReadonlySet<TileId>;
-    readonly door: ReadonlySet<TileId>;
 }
 
 function checkTiles(setId: string, list: string, ids: readonly TileId[]): ReadonlySet<TileId> {
@@ -63,8 +58,6 @@ export function defineTileSet(def: TileSetDefinition): TileSet {
         blocks: def.blocks,
         solid: checkTiles(def.id, "solid", def.solid ?? []),
         water: checkTiles(def.id, "water", def.water ?? []),
-        grass: checkTiles(def.id, "grass", def.grass ?? []),
-        counter: checkTiles(def.id, "counter", def.counter ?? []),
-        door: checkTiles(def.id, "door", def.door ?? [])
+        grass: checkTiles(def.id, "grass", def.grass ?? [])
     });
 }

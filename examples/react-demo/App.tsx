@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildTile, createCache, defineMap, houseTileset, tileIds, toSvgDataUrl, townTileset, type Raster, type AvatarConfig, type TileId } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, buildTile, createCache, defineMap, houseTileset, objectIds, tileIds, toSvgDataUrl, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -141,16 +141,8 @@ const TILE_LABELS: Record<TileId, string> = {
   path:           "Path",
   water:          "Water",
   shore:          "Shore",
-  tree:           "Tree",
-  fence:          "Fence",
-  flower:         "Flowers",
   wall:           "Wall",
   floor:          "Floor",
-  door:           "Door",
-  window:         "Window",
-  counter:        "Counter",
-  rug:            "Rug",
-  bookshelf:      "Bookshelf",
 }
 const TILE_DESC: Record<TileId, string> = {
   road:           "Asphalt with white lane markings",
@@ -161,37 +153,47 @@ const TILE_DESC: Record<TileId, string> = {
   path:           "Dirt path (draft)",
   water:          "Open water, not walkable (draft)",
   shore:          "Grass, sand and water edge (draft)",
-  tree:           "Solid tree (draft)",
-  fence:          "Solid fence run (draft)",
-  flower:         "Grass with flowers (draft)",
   wall:           "Stone wall, solid (draft)",
   floor:          "Wood plank floor (draft)",
-  door:           "Door, acts as a warp (draft)",
-  window:         "Wall with a window (draft)",
-  counter:        "Shop counter, interact across it (draft)",
-  rug:            "Patterned rug (draft)",
-  bookshelf:      "Solid bookshelf (draft)",
+}
+const OBJECT_LABELS: Record<ObjectId, string> = {
+  tree: "Tree", fence: "Fence", door: "Door", window: "Window",
+  counter: "Counter", bookshelf: "Bookshelf", rug: "Rug", flower: "Flowers",
 }
 
 // ─── Demo worlds ─────────────────────────────────────────────────────────────
-// One character per block. Each block is 2×2 tiles, so these maps are tiny.
+// Terrain is one character per 2×2-tile block. Objects are placed in tile
+// coordinates on top and shaded automatically.
+const at = (id: ObjectId, ...spots: [number, number][]): PlacedObject[] => spots.map(([x, y]) => ({ id, x, y }))
 const TOWN_MAP = defineMap(townTileset, [
-  "TTTTTTTTTT",
-  "TggFggGGgT",
-  "ThhhWhggfT",
-  "ThhhdhggfT",
-  "TgpppppgGT",
-  "TFgpggggGT",
-  "TggpgwwwwT",
-  "TggpgssssT",
+  "gggggggggg",
+  "gghhhhgggg",
+  "gghhhhgggg",
+  "ggpppppggg",
+  "gggpggggGG",
+  "gggpgggGGG",
+  "gggpgsssss",
+  "gggpgwwwww",
+], [
+  ...at("tree", [0, 0], [2, 0], [17, 0], [19, 0], [1, 9], [18, 8]),
+  ...at("window", [5, 3], [9, 3]),
+  ...at("door", [7, 5]),
+  ...at("fence", [8, 8], [9, 8], [10, 8], [11, 8]),
+  ...at("flower", [2, 7], [3, 9], [12, 6], [14, 5]),
 ])
 const HOUSE_MAP = defineMap(houseTileset, [
-  "hhWhhWhh",
-  "bbffffbb",
-  "ffrrrrff",
-  "ccccffff",
+  "hhhhhhhh",
   "ffffffff",
-  "hhhdhhhh",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "hhhhhhhh",
+], [
+  ...at("window", [3, 1], [11, 1]),
+  ...at("bookshelf", [1, 2], [2, 2], [13, 2], [14, 2]),
+  ...at("counter", [5, 4], [7, 4], [9, 4]),
+  ...at("rug", [7, 7]),
+  ...at("door", [7, 11]),
 ])
 const TOWN_RASTER = buildMap(TOWN_MAP)
 const HOUSE_RASTER = buildMap(HOUSE_MAP)
@@ -455,6 +457,19 @@ export default function App() {
 
             <PreviewWindow label="TILE" name={TILE_LABELS[tile].toUpperCase()} size="16×16 PX">
               <TileBackground tileId={tile} />
+            </PreviewWindow>
+
+            <PreviewWindow label="OBJECTS" name="SHADED SPRITES" size="AUTO OUTLINE + LIGHT">
+              <div style={{ display: "flex", gap: 16, alignItems: "flex-end", flexWrap: "wrap", padding: 12 }}>
+                {objectIds.map(id => (
+                  <div key={id} style={{ textAlign: "center", fontSize: 10, color: C.muted, letterSpacing: "0.1em" }}>
+                    <div style={{ background: C.section, padding: 4, marginBottom: 4 }}>
+                      <PixelImage raster={buildObject(id)} pixelSize={3} title={OBJECT_LABELS[id]} />
+                    </div>
+                    {OBJECT_LABELS[id].toUpperCase()}
+                  </div>
+                ))}
+              </div>
             </PreviewWindow>
 
             <PreviewWindow label="WORLD" name="TOWN + HOUSE" size="BLOCKS 2×2">

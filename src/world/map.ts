@@ -1,13 +1,22 @@
 import { composeSprites, type Layer, type Raster } from "../core/compose";
+import { objectIds, objectInfo, objectLayers } from "./objects/objects";
 import { TILE_SIZE } from "./tiles/parseRows";
 import { tilePalette, tileSprite } from "./tiles";
 import type { TileSet } from "./tileset";
-import type { TileId } from "./types";
+import type { ObjectId, TileId } from "./types";
 
-/** A map is a grid of block characters. One character per block keeps maps tiny. */
+/** An object placed on a map. `x` and `y` are the tile coordinates of its top-left footprint tile. */
+export interface PlacedObject {
+    readonly id: ObjectId;
+    readonly x: number;
+    readonly y: number;
+}
+
+/** A map is a grid of block characters plus placed objects. One character per block keeps maps tiny. */
 export interface TileMap {
     readonly tileset: TileSet;
     readonly rows: readonly string[];
+    readonly objects: readonly PlacedObject[];
     /** Width in blocks. */
     readonly width: number;
     /** Height in blocks. */
@@ -16,6 +25,9 @@ export interface TileMap {
 
 export interface CellInfo {
     readonly tile: TileId;
+    /** The object covering this cell. A standing object wins over a ground one. */
+    readonly object?: ObjectId;
+    /** True for solid terrain and for solid footprint cells of standing objects. */
     readonly solid: boolean;
     readonly water: boolean;
     readonly grass: boolean;
@@ -23,8 +35,20 @@ export interface CellInfo {
     readonly door: boolean;
 }
 
-/** Validates a map against its tileset. Throws on ragged rows or unknown block characters. */
-export function defineMap(tileset: TileSet, rows: readonly string[]): TileMap {
+interface Occupant {
+    readonly object: PlacedObject;
+    /** Footprint character at this cell: `#` solid, `.` open. */
+    readonly mark: string;
+}
+
+const occupancy = new WeakMap<TileMap, { standing: Map<number, Occupant>; ground: Map<number, Occupant> }>();
+
+/**
+ * Validates a map against its tileset. Throws on ragged rows, unknown block
+ * characters or objects, objects outside the map, and objects of the same
+ * layer that overlap.
+ */
+export function defineMap(tileset: TileSet, rows: readonly string[], objects: readonly PlacedObject[] = []): TileMap {
     if (rows.length === 0) throw new Error("A map needs at least one row");
     const width = rows[0].length;
     rows.forEach((row, y) => {
@@ -33,7 +57,40 @@ export function defineMap(tileset: TileSet, rows: readonly string[]): TileMap {
             if (!tileset.blocks[ch]) throw new Error(`Map row ${y}: no block "${ch}" in tileset "${tileset.id}"`);
         }
     });
-    return Object.freeze({ tileset, rows: Object.freeze([...rows]), width, height: rows.length });
+
+    const tilesWide = width * tileset.blockSize;
+    const tilesHigh = rows.length * tileset.blockSize;
+    const index = { standing: new Map<number, Occupant>(), ground: new Map<number, Occupant>() };
+    for (const placed of objects) {
+        if (!objectIds.includes(placed.id)) throw new Error(`Unknown object "${String(placed.id)}"`);
+        const info = objectInfo[placed.id];
+        if (
+            !Number.isInteger(placed.x) || !Number.isInteger(placed.y) ||
+            placed.x < 0 || placed.y < 0 || placed.x + info.width > tilesWide || placed.y + info.height > tilesHigh
+        ) {
+            throw new Error(`Object "${placed.id}" at (${placed.x}, ${placed.y}) does not fit in the map`);
+        }
+        const cells = index[info.layer];
+        for (let dy = 0; dy < info.height; dy += 1) {
+            for (let dx = 0; dx < info.width; dx += 1) {
+                const key = (placed.y + dy) * tilesWide + placed.x + dx;
+                if (cells.has(key)) {
+                    throw new Error(`Object "${placed.id}" at (${placed.x}, ${placed.y}) overlaps another ${info.layer} object`);
+                }
+                cells.set(key, { object: placed, mark: info.footprint[dy][dx] });
+            }
+        }
+    }
+
+    const map: TileMap = Object.freeze({
+        tileset,
+        rows: Object.freeze([...rows]),
+        objects: Object.freeze([...objects]),
+        width,
+        height: rows.length
+    });
+    occupancy.set(map, index);
+    return map;
 }
 
 /** Size of the map in tiles. */
@@ -41,7 +98,7 @@ export function mapTileSize(map: TileMap): { width: number; height: number } {
     return { width: map.width * map.tileset.blockSize, height: map.height * map.tileset.blockSize };
 }
 
-/** The tile at tile coordinates (tx, ty), or undefined outside the map. */
+/** The terrain tile at tile coordinates (tx, ty), or undefined outside the map. */
 export function tileAt(map: TileMap, tx: number, ty: number): TileId | undefined {
     const size = map.tileset.blockSize;
     if (!Number.isInteger(tx) || !Number.isInteger(ty) || tx < 0 || ty < 0) return undefined;
@@ -52,18 +109,24 @@ export function tileAt(map: TileMap, tx: number, ty: number): TileId | undefined
     return map.tileset.blocks[ch][ty % size][tx % size];
 }
 
-/** Behaviour of the cell at tile coordinates (tx, ty), or undefined outside the map. */
+/** Terrain and object behaviour of the cell at tile coordinates (tx, ty), or undefined outside the map. */
 export function queryCell(map: TileMap, tx: number, ty: number): CellInfo | undefined {
     const tile = tileAt(map, tx, ty);
     if (tile === undefined) return undefined;
-    const { solid, water, grass, counter, door } = map.tileset;
+    const { solid, water, grass } = map.tileset;
+    const index = occupancy.get(map);
+    const key = ty * mapTileSize(map).width + tx;
+    const standing = index?.standing.get(key);
+    const ground = index?.ground.get(key);
+    const info = standing && objectInfo[standing.object.id];
     return {
         tile,
-        solid: solid.has(tile),
+        object: (standing ?? ground)?.object.id,
+        solid: solid.has(tile) || standing?.mark === "#",
         water: water.has(tile),
         grass: grass.has(tile),
-        counter: counter.has(tile),
-        door: door.has(tile)
+        counter: info?.counter === true,
+        door: info?.door === true
     };
 }
 
@@ -89,6 +152,15 @@ export function buildMap(map: TileMap): Raster {
                     }
                 }
             }
+        }
+        // Ground objects first, then standing ones from back to front so that a
+        // tall object (a tree) covers whatever stands behind it.
+        const order = (a: PlacedObject, b: PlacedObject) => {
+            const layer = Number(objectInfo[a.id].layer === "standing") - Number(objectInfo[b.id].layer === "standing");
+            return layer || a.y + objectInfo[a.id].height - (b.y + objectInfo[b.id].height) || a.x - b.x;
+        };
+        for (const placed of [...map.objects].sort(order)) {
+            layers.push(...objectLayers(placed.id, placed.x * TILE_SIZE, placed.y * TILE_SIZE));
         }
         const { width, height } = mapTileSize(map);
         raster = composeSprites(layers, { x: 0, y: 0, width: width * TILE_SIZE, height: height * TILE_SIZE });

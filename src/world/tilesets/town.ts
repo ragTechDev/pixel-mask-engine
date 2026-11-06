@@ -1,9 +1,9 @@
 import { defineTileSet } from "../tileset";
 
 /**
- * Outdoor tileset: grass, paths, water, trees, fences and a building front.
- * Block keys: g grass, G tall grass, p path, w water, s shore, T tree,
- * f fence, F flowers, h wall, W window wall, d door wall.
+ * Outdoor tileset: grass, paths, water and building walls.
+ * Block keys: g grass, G tall grass, p path, w water, s shore, h wall.
+ * Trees, fences, flowers, doors and windows are objects placed on top.
  */
 export const townTileset = defineTileSet({
     id: "town",
@@ -13,15 +13,9 @@ export const townTileset = defineTileSet({
         p: [["path", "path"], ["path", "path"]],
         w: [["water", "water"], ["water", "water"]],
         s: [["shore", "shore"], ["water", "water"]],
-        T: [["tree", "tree"], ["tree", "tree"]],
-        f: [["fence", "fence"], ["grass", "grass"]],
-        F: [["flower", "grass"], ["grass", "flower"]],
-        h: [["wall", "wall"], ["wall", "wall"]],
-        W: [["wall", "window"], ["wall", "wall"]],
-        d: [["wall", "wall"], ["wall", "door"]]
+        h: [["wall", "wall"], ["wall", "wall"]]
     },
-    solid: ["tree", "fence", "wall", "window", "water"],
+    solid: ["water", "wall"],
     water: ["water"],
-    grass: ["tall_grass"],
-    door: ["door"]
+    grass: ["tall_grass"]
 });

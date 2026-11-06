@@ -23,23 +23,13 @@ export const tilePalette = [
     "#6FA3C7", // 14 (e): water
     "#A9D0E6", // 15 (f): water light
     "#4F7FA6", // 16 (g): water shade
-    "#A8794E", // 17 (h): wood
-    "#7A5434", // 18 (i): wood shade
-    "#C79A6B", // 19 (j): wood light
-    "#4F7A3E", // 20 (k): leaf shade
-    "#D9645B", // 21 (l): flower red
-    "#E8C557", // 22 (m): flower yellow
-    "#C9BFB0", // 23 (n): wall
-    "#A09585", // 24 (o): wall shade
-    "#D8C8A8", // 25 (p): floor
-    "#BFAE8C", // 26 (q): floor line
-    "#A8474D", // 27 (r): rug
-    "#7F3238", // 28 (s): rug shade
-    "#D1B48A", // 29 (t): path
-    "#B8996D", // 30 (u): path shade
-    "#E3CBA5", // 31 (v): path light
-    "#4A6FA5", // 32 (w): book blue
-    "#9CC7DB" // 33 (x): window glass
+    "#C9BFB0", // 17 (h): wall
+    "#A09585", // 18 (i): wall shade
+    "#D8C8A8", // 19 (j): floor
+    "#BFAE8C", // 20 (k): floor line
+    "#D1B48A", // 21 (l): path
+    "#B8996D", // 22 (m): path shade
+    "#E3CBA5" // 23 (n): path light
 ] as const;
 
 const allMasks: Record<TileId, number[][]> = { ...tileMasks, ...townMasks };

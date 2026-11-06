@@ -18,7 +18,7 @@ npm install @ragtechdev/pixel-mask-engine
 
 | Import | What it contains |
 | --- | --- |
-| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `queryCell`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
+| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
 | `@ragtechdev/pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
 | `@ragtechdev/pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
 
@@ -61,30 +61,33 @@ import { Avatar, Tile } from "@ragtechdev/pixel-mask-engine/react";
 
 ### Worlds
 
-Worlds use the layered design of classic tile-based games: small tiles, blocks of tiles, and maps that store one character per block.
+Worlds use the layered design of classic tile-based games, plus shaded objects on top.
 
-1. **Tile:** a 16×16 mask from the fixed tile palette (`tileIds`).
+1. **Tile:** a 16×16 terrain mask from the fixed tile palette (`tileIds`).
 2. **Block:** a square group of tiles (2×2 by default), keyed by a single character.
-3. **Tileset:** the blocks plus behaviour lists of tile ids (`solid`, `water`, `grass`, `counter`, `door`). Every cell that uses a listed tile inherits the behaviour, so there are no per-cell flags to maintain.
-4. **Map:** rows of block characters.
+3. **Tileset:** the blocks plus lists of terrain tile ids (`solid`, `water`, `grass`). Every cell that uses a listed tile inherits the behaviour, so there are no per-cell flags to maintain.
+4. **Map:** rows of block characters, plus placed objects.
+5. **Object:** a shaded sprite that stands on or sits over the terrain: `tree`, `fence`, `door`, `window`, `counter`, `bookshelf`, `rug`, `flower` (`objectIds`). Objects are drawn as `"0"/"1"` silhouettes and shaded automatically, like avatar parts, using fixed ramps (`objectRamps`). Each has a tile footprint, and `objectInfo` says which cells are solid and whether it is a door or a counter.
 
 ```ts
 import { buildMap, defineMap, queryCell, townTileset } from "@ragtechdev/pixel-mask-engine";
 import { drawRaster } from "@ragtechdev/pixel-mask-engine/canvas";
 
-const map = defineMap(townTileset, [
-  "TTTTTT",
-  "TggggT",
-  "ThWhgT", // h wall, W window wall
-  "ThhdgT", // d door
-  "TgppgT", // p path
-]);
+const map = defineMap(
+  townTileset,
+  ["gggggg", "gghhgg", "gghhgg", "ggpppp"], // g grass, h wall, p path
+  [
+    { id: "window", x: 4, y: 3 }, // tile coordinates of the footprint's top-left tile
+    { id: "door", x: 5, y: 3 },
+    { id: "tree", x: 0, y: 0 },
+  ],
+);
 
 drawRaster(ctx, buildMap(map), 0, 0, 2); // memoised per map object
-queryCell(map, 7, 7); // { tile: "door", solid: false, door: true, ... } in tile coordinates
+queryCell(map, 5, 3); // { tile: "wall", object: "door", solid: true, door: true, ... }
 ```
 
-`townTileset` (outdoor) and `houseTileset` (interior) are built in. `defineTileSet` and `defineMap` validate their input and throw on unknown tiles or block characters. Block art only references built-in tiles. The tile art for towns and interiors is in draft form and will change.
+`townTileset` (outdoor) and `houseTileset` (interior) are built in. `defineTileSet` and `defineMap` validate their input and throw on unknown tiles, block characters or objects, on objects outside the map, and on two objects of the same layer overlapping. `buildObject(id)` renders one object by itself. The art for towns, interiors and objects is in draft form and will change.
 
 ## Options
 
@@ -104,4 +107,4 @@ pnpm size       # gzipped size per entry
 ## Licence
 
 - **Code:** MIT, see [LICENSE](LICENSE).
-- **Pixel-art masks** (`src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`, `src/world/tiles/townMasks.ts`, `src/world/tilesets/**`): CC BY 4.0, see [LICENSE-ART.md](LICENSE-ART.md). Credit "pixel-mask-engine by Natasha Ann" when you redistribute the art or images rendered from it.
+- **Pixel-art masks** (`src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`, `src/world/tiles/townMasks.ts`, `src/world/objects/objectMasks.ts`, `src/world/tilesets/**`): CC BY 4.0, see [LICENSE-ART.md](LICENSE-ART.md). Credit "pixel-mask-engine by Natasha Ann" when you redistribute the art or images rendered from it.

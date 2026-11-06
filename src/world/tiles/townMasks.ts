@@ -1,21 +1,19 @@
 import type { TownTileId } from "../types";
 import { parseRows } from "./parseRows";
 
-// DRAFT tile masks for building towns and interiors. They are first drafts,
-// meant to be redrawn by hand before release.
+// DRAFT terrain tiles for building towns and interiors. They are first drafts,
+// meant to be redrawn by hand before release. Things that stand on terrain
+// (trees, fences, doors, windows, furniture) are objects, not tiles: see
+// `../objects/objectMasks.ts`.
 //
 // 16×16 pixels, drawn as text. `.` is transparent. Characters `1-9` then `a-z`
 // are slots 1 to 35 of `tilePalette` (in `../tiles.ts`):
-//   b grass       c grass shade   d grass light
-//   e water       f water light   g water shade
-//   h wood        i wood shade    j wood light     k leaf shade
-//   l flower red  m flower yellow
-//   n wall        o wall shade
-//   p floor       q floor line
-//   r rug         s rug shade
-//   t path        u path shade    v path light
-//   w book blue   x window glass
-// Tiles are fully opaque so a block never shows through to what is behind it.
+//   b grass   c grass shade   d grass light
+//   e water   f water light   g water shade
+//   h wall    i wall shade
+//   j floor   k floor line
+//   l path    m path shade    n path light
+// Tiles are fully opaque so they tile without gaps.
 
 export const townMasks: Record<TownTileId, number[][]> = {
     // ─── Outdoor ────────────────────────────────────────────────────────────
@@ -56,22 +54,22 @@ export const townMasks: Record<TownTileId, number[][]> = {
         "bbbcbdbcbbbcbdbc"
     ]),
     path: parseRows([
-        "tttttttttttttttt",
-        "ttvttttttttutttt",
-        "tttttttttttttttt",
-        "ttttuttttvtttttt",
-        "tttttttttttttttt",
-        "tvtttttttttttutt",
-        "tttttttvtttttttt",
-        "ttttttttttttvttt",
-        "tttutttttttttttt",
-        "ttttttttttvttttt",
-        "tttttttttttttutt",
-        "tvtttttttttttttt",
-        "ttttttuttttttttt",
-        "tttttttttttvtttt",
-        "ttutttttttttttvt",
-        "tttttttttttttttt"
+        "llllllllllllllll",
+        "llnllllllllmllll",
+        "llllllllllllllll",
+        "llllmllllnllllll",
+        "llllllllllllllll",
+        "lnlllllllllllmll",
+        "lllllllnllllllll",
+        "llllllllllllnlll",
+        "lllmllllllllllll",
+        "llllllllllnlllll",
+        "lllllllllllllmll",
+        "lnllllllllllllll",
+        "llllllmlllllllll",
+        "lllllllllllnllll",
+        "llmlllllllllllnl",
+        "llllllllllllllll"
     ]),
     water: parseRows([
         "eeeeeeeeeeeeeeee",
@@ -99,8 +97,8 @@ export const townMasks: Record<TownTileId, number[][]> = {
         "bbbbcbbbbbdbbbbb",
         "bbbbbbbbbbbbbbbb",
         "bcbbcbbbcbbcbbcb",
-        "uuuuuuuuuuuuuuuu",
-        "tttttttttttttttt",
+        "mmmmmmmmmmmmmmmm",
+        "llllllllllllllll",
         "fefffefffeffefff",
         "eeeeeeeeeeeeeeee",
         "eeeggeeeeeeggeee",
@@ -110,187 +108,41 @@ export const townMasks: Record<TownTileId, number[][]> = {
         "eeeeeeeeggeeeeee",
         "eeeeeeeeeeeeeeee"
     ]),
-    tree: parseRows([
-        "bbbbkkkkkkkkbbbb",
-        "bbkkccccddcckkbb",
-        "bkccccddddcccckb",
-        "bkcccdddccccccck",
-        "kccccccccccccckb",
-        "kcccccccccccccck",
-        "kccdcccccccdcckk",
-        "bkcccccccccccckb",
-        "bkkcccccccccckkb",
-        "bbbkkkcccckkkbbb",
-        "bbbbbbkhhkbbbbbb",
-        "bbbbbbihhibbbbbb",
-        "bbbbbbihjibbbbbb",
-        "bbbbbbihhibbbbbb",
-        "bbbbbiihhiibbbbb",
-        "bbcbbbbbbbbbbcbb"
-    ]),
-    // A horizontal fence run that joins the tile on either side.
-    fence: parseRows([
-        "bbbbbbbbbbbbbbbb",
-        "bbbbbbbbbbbbbbbb",
-        "bijjbbbbbbbbijjb",
-        "bihhbbbbbbbbihhb",
-        "jjjjjjjjjjjjjjjj",
-        "hhhhhhhhhhhhhhhh",
-        "iiiiiiiiiiiiiiii",
-        "bihhbbbbbbbbihhb",
-        "bihhbbbbbbbbihhb",
-        "jjjjjjjjjjjjjjjj",
-        "hhhhhhhhhhhhhhhh",
-        "iiiiiiiiiiiiiiii",
-        "bihhbbbbbbbbihhb",
-        "bihhbbbbbbbbihhb",
-        "bcccbbbbbbbbcccb",
-        "bbbbbbbbbbbbbbbb"
-    ]),
-    flower: parseRows([
-        "bbbbbbbbbbbbbbbb",
-        "bbbblbbbbbbbbbbb",
-        "bbblmlbbbbbbmbbb",
-        "bbbblbbbbbbmlmbb",
-        "bbbbcbbbbbbbmbbb",
-        "bbbbcbbbbbbbcbbb",
-        "bbbbbbbbbbbbcbbb",
-        "bbmbbbbbbbbbbbbb",
-        "bmlmbbbbblbbbbbb",
-        "bbmbbbbblmlbbbbb",
-        "bbcbbbbbbmbbbbbb",
-        "bbcbbbbbbcbbbbbb",
-        "bbbbbbbbbcbbbbbb",
-        "bbbbbbbbbbbbbbbb",
-        "bdbbbbbbbbbbbdbb",
-        "bbbbbbbbbbbbbbbb"
-    ]),
-
     // ─── Buildings and interiors ────────────────────────────────────────────
     wall: parseRows([
-        "oooooooooooooooo",
-        "nnnnnnnonnnnnnno",
-        "nnnnnnnonnnnnnno",
-        "nnnnnnnonnnnnnno",
-        "oooooooooooooooo",
-        "nnnonnnnnnnonnnn",
-        "nnnonnnnnnnonnnn",
-        "nnnonnnnnnnonnnn",
-        "oooooooooooooooo",
-        "nnnnnnnonnnnnnno",
-        "nnnnnnnonnnnnnno",
-        "nnnnnnnonnnnnnno",
-        "oooooooooooooooo",
-        "nnnonnnnnnnonnnn",
-        "nnnonnnnnnnonnnn",
-        "nnnonnnnnnnonnnn"
+        "iiiiiiiiiiiiiiii",
+        "hhhhhhhihhhhhhhi",
+        "hhhhhhhihhhhhhhi",
+        "hhhhhhhihhhhhhhi",
+        "iiiiiiiiiiiiiiii",
+        "hhhihhhhhhhihhhh",
+        "hhhihhhhhhhihhhh",
+        "hhhihhhhhhhihhhh",
+        "iiiiiiiiiiiiiiii",
+        "hhhhhhhihhhhhhhi",
+        "hhhhhhhihhhhhhhi",
+        "hhhhhhhihhhhhhhi",
+        "iiiiiiiiiiiiiiii",
+        "hhhihhhhhhhihhhh",
+        "hhhihhhhhhhihhhh",
+        "hhhihhhhhhhihhhh"
     ]),
     floor: parseRows([
-        "qqqqqqqqqqqqqqqq",
-        "ppppppppqppppppp",
-        "ppppppppqppppppp",
-        "ppppppppqppppppp",
-        "qqqqqqqqqqqqqqqq",
-        "pppqpppppppppppp",
-        "pppqpppppppppppp",
-        "pppqpppppppppppp",
-        "qqqqqqqqqqqqqqqq",
-        "ppppppppqppppppp",
-        "ppppppppqppppppp",
-        "ppppppppqppppppp",
-        "qqqqqqqqqqqqqqqq",
-        "pppqpppppppppppp",
-        "pppqpppppppppppp",
-        "pppqpppppppppppp"
-    ]),
-    door: parseRows([
-        "iiiiiiiiiiiiiiii",
-        "ijjjjjjjjjjjjjji",
-        "ihhhhhhiihhhhhhi",
-        "ihhhhhhiihhhhhhi",
-        "ihhhhhhiihhhhhhi",
-        "ihjjjjhiihjjjjhi",
-        "ihjhhjhiihjhhjhi",
-        "ihjhhjhiihjhhjhi",
-        "ihjhhjhiihjhmjhi",
-        "ihjhhjhiihjhhjhi",
-        "ihjhhjhiihjhhjhi",
-        "ihjjjjhiihjjjjhi",
-        "ihhhhhhiihhhhhhi",
-        "ihhhhhhiihhhhhhi",
-        "ihhhhhhiihhhhhhi",
-        "iiiiiiiiiiiiiiii"
-    ]),
-    window: parseRows([
-        "oooooooooooooooo",
-        "nnnnnnnnnnnnnnnn",
-        "nnnnnnnnnnnnnnnn",
-        "nniiiiiiiiiiiinn",
-        "nnixxxxiixxxxinn",
-        "nnixffxiixffxinn",
-        "nnixfxxiixfxxinn",
-        "nnixxxxiixxxxinn",
-        "nniiiiiiiiiiiinn",
-        "nnoooooooooooonn",
-        "nnnnnnnnnnnnnnnn",
-        "nnnnnnnnnnnnnnnn",
-        "nnnnnnnnnnnnnnnn",
-        "nnnnnnnnnnnnnnnn",
-        "nnnnnnnnnnnnnnnn",
-        "oooooooooooooooo"
-    ]),
-    counter: parseRows([
-        "jjjjjjjjjjjjjjjj",
-        "jjjjjjjjjjjjjjjj",
-        "hhhhhhhhhhhhhhhh",
-        "iiiiiiiiiiiiiiii",
-        "hhhhhhhhhhhhhhhh",
-        "hijjjjjjjjjjjjih",
-        "hihhhhhhhhhhhhih",
-        "hihhhhhhhhhhhhih",
-        "hihhhhhhhhhhhhih",
-        "hihhhhhhhhhhhhih",
-        "hihhhhhhhhhhhhih",
-        "hihhhhhhhhhhhhih",
-        "hiiiiiiiiiiiiiih",
-        "hhhhhhhhhhhhhhhh",
-        "iiiiiiiiiiiiiiii",
-        "qqqqqqqqqqqqqqqq"
-    ]),
-    rug: parseRows([
-        "ssssssssssssssss",
-        "smmmmmmmmmmmmmms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrmmrrrrrms",
-        "smrrrrmssmrrrrms",
-        "smrrrrmssmrrrrms",
-        "smrrrrrmmrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smrrrrrrrrrrrrms",
-        "smmmmmmmmmmmmmms",
-        "ssssssssssssssss"
-    ]),
-    bookshelf: parseRows([
-        "iiiiiiiiiiiiiiii",
-        "iwwlmwwllmwwlmwi",
-        "iwwlmwwllmwwlmwi",
-        "iwwlmwwllmwwlmwi",
-        "ihhhhhhhhhhhhhhi",
-        "ilmwwlmwwllmwwli",
-        "ilmwwlmwwllmwwli",
-        "ilmwwlmwwllmwwli",
-        "ihhhhhhhhhhhhhhi",
-        "iwwlmwwllmwwlmwi",
-        "iwwlmwwllmwwlmwi",
-        "iwwlmwwllmwwlmwi",
-        "ihhhhhhhhhhhhhhi",
-        "ilmwwlmwwllmwwli",
-        "ilmwwlmwwllmwwli",
-        "iiiiiiiiiiiiiiii"
+        "kkkkkkkkkkkkkkkk",
+        "jjjjjjjjkjjjjjjj",
+        "jjjjjjjjkjjjjjjj",
+        "jjjjjjjjkjjjjjjj",
+        "kkkkkkkkkkkkkkkk",
+        "jjjkjjjjjjjjjjjj",
+        "jjjkjjjjjjjjjjjj",
+        "jjjkjjjjjjjjjjjj",
+        "kkkkkkkkkkkkkkkk",
+        "jjjjjjjjkjjjjjjj",
+        "jjjjjjjjkjjjjjjj",
+        "jjjjjjjjkjjjjjjj",
+        "kkkkkkkkkkkkkkkk",
+        "jjjkjjjjjjjjjjjj",
+        "jjjkjjjjjjjjjjjj",
+        "jjjkjjjjjjjjjjjj"
     ])
 };

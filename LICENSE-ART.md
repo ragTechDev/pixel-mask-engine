@@ -8,6 +8,7 @@ Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 - Avatar masks: `src/avatar/masks/**`
 - Tile masks: `src/world/tiles/tileMasks.ts` and `src/world/tiles/townMasks.ts`
+- Object masks: `src/world/objects/objectMasks.ts`
 - Block layouts: `src/world/tilesets/**`
 
 Everything else, including the palette tables, style tables, rendering code, build scripts and tests, is source code under the MIT licence in [LICENSE](LICENSE).
