@@ -1,4 +1,4 @@
-import type { AutoShadePalette } from "./pixelRendererConstants";
+import type { Ramp as AutoShadePalette } from "./sprite";
 
 export const skinPalettes = {
     light: {
