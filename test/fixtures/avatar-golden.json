@@ -1,0 +1,1155 @@
+{
+ "source": "db0a2c2 src/avatar/Avatar.tsx",
+ "avatars": [
+  {
+   "config": {},
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "headOrientation": "front"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "headOrientation": "left"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "ebc5e353a2eb9742e631be2ffb9cb15c52ab5ce1d80aeb7203c5e5b4ab3210fc"
+  },
+  {
+   "config": {
+    "headOrientation": "right"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "661ebc924820962df307d792b7b5cee8308a30cd5ea44ad63ad1dfb0d9ab18e0"
+  },
+  {
+   "config": {
+    "headOrientation": "back"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "661ebc924820962df307d792b7b5cee8308a30cd5ea44ad63ad1dfb0d9ab18e0"
+  },
+  {
+   "config": {
+    "skinTone": "light"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "skinTone": "medium"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "ced5655ae950dbcc7af46b0e9ede853eb07ac91c19a6158a4388fb4749cfcd86"
+  },
+  {
+   "config": {
+    "skinTone": "brown"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "4cd4d0fce8cf970c958abe5aa2a75dbc5a2b920a27c500721b003f682389372e"
+  },
+  {
+   "config": {
+    "frontHairStyle": "centerPart"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "frontHairStyle": "bangs"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1c8e92724ca362d3858d2f2c9630196ee4d993931ff9349efdcb8b70d1607ab5"
+  },
+  {
+   "config": {
+    "frontHairStyle": "sideSwept"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "512a8d4b550d260d05d213135925be2e2d2e1e46e7f96c55f293ad80343553e3"
+  },
+  {
+   "config": {
+    "backHairStyle": "lowPonytail"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "backHairStyle": "highPonytail"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "6d4b4caa8f5ab376219de794696162ab5179c8368cffae68b647e0a7f1fdd65d"
+  },
+  {
+   "config": {
+    "backHairStyle": "doubleLowPonytail"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "0ab1c4233f1787153a98fbf27b70c9d321dc527bf1fabf42c4d5c6c27cf99e03"
+  },
+  {
+   "config": {
+    "backHairStyle": "doubleHighPonytail"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "b0d66f07ab0dfc5170e73a2e3bf69fe56022b6b0fd00265d587fdfa11b019df2"
+  },
+  {
+   "config": {
+    "backHairStyle": "shortCropped"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "e9fe6d5d9b596cb46e7db71c0fa94646a3d08c0a65cab3fa1e74c2e3f7f422a6"
+  },
+  {
+   "config": {
+    "hairColor": "brown"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "hairColor": "black"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "f9a010f7a37bea7b7933cc6431c701938591ca2435033ffa51164bbc1c7babc7"
+  },
+  {
+   "config": {
+    "hairColor": "blonde"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "285226b6cb0e2a25cbcd26fc2f983810e6dd94d8ea85ef05bde3bf37bf2cc612"
+  },
+  {
+   "config": {
+    "eyeColor": "dark"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "eyeColor": "green"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "dbe9ca12d2b5e2161dd923bc5621b62a8e59461f0fd9b76740de581916a82314"
+  },
+  {
+   "config": {
+    "eyeColor": "blue"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "764569051acaa498746b4300a1ccba1006213bbc9ae4d66f12e1cf922b5d5df4"
+  },
+  {
+   "config": {
+    "clothesColor": "blue"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "clothesColor": "red"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "14e9147793c577cb1f16a683e1f2bd548e0e03825d8b347159ca0edc195357f5"
+  },
+  {
+   "config": {
+    "clothesColor": "green"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "c8e7942c37661e9f8f201fb0e49bafa0d0d7d2ea9869c0f1b817f72615cf2110"
+  },
+  {
+   "config": {
+    "topStyle": "none"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "2586d61a65f2dae016411fa52ade39fd7f569aac5463ea1e7cadaff4b083fa2a"
+  },
+  {
+   "config": {
+    "topStyle": "spaghetti"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "cc94915c2ae8f4164b26e03ef0a162313b6a7caddc3cbe810b427fd978e81354"
+  },
+  {
+   "config": {
+    "topStyle": "shirt"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "topStyle": "longSleeve"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1e029e5a55c8149bafa90bfad64cdd8d5121fcb4c4400e739206e09b934a5865"
+  },
+  {
+   "config": {
+    "bottomStyle": "none"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "721edb51b4d9174f31547f2d5d59193cc32039fbeb0a650c328a3e1f4c6566c6"
+  },
+  {
+   "config": {
+    "bottomStyle": "shorts"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "bottomStyle": "skirt"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "48b4ac5dc528b236ba8b330968d2d258e6c273a4d57292aa5d34da5132257fc9"
+  },
+  {
+   "config": {
+    "fullOutfitStyle": "none"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "fullOutfitStyle": "overalls"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1a3f1522b6f95057e00bcc831d27010809859f16ceb248c14758bf7ca67ed8a5"
+  },
+  {
+   "config": {
+    "fullOutfitStyle": "dress"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "d83270a84c194b497fb7f14f23c26593d508b3cbe322c846595e9e816cb2763f"
+  },
+  {
+   "config": {
+    "shoeStyle": "none"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "8835acc3faacf02d74186228a7dd2a2953d231cdf792a8e04b8ac454b7d5c78e"
+  },
+  {
+   "config": {
+    "shoeStyle": "boots"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "shoeStyle": "sandals"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b2bab2087dd4e068c755f1d4fad521cc83ced26c7017713fbc2eb6e1f01aad8c"
+  },
+  {
+   "config": {
+    "shoeStyle": "shoes"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "6c13ef29bcfa10cef77b424ad25dca0bf3f1eed653037f8d59a4ab06a30f463e"
+  },
+  {
+   "config": {
+    "armPose": "down"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "armPose": "forward"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1a67b23b21223beb2351a79fe4db586dfb96e4d9a7c1fda43f4150426ea2c508"
+  },
+  {
+   "config": {
+    "armPose": "back"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1a67b23b21223beb2351a79fe4db586dfb96e4d9a7c1fda43f4150426ea2c508"
+  },
+  {
+   "config": {
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "legPose": "step"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+  },
+  {
+   "config": {
+    "headOrientation": "back",
+    "skinTone": "medium",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "highPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "blue",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 15,
+   "height": 27,
+   "sha256": "2ead598defcfd4d8d6c20a4ced9c68938ec45b9521d11e6b9273e8efb2e25f2e"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "shortCropped",
+    "hairColor": "brown",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "7538a8637ac8345e24598d77edfd2884e6e4bb08f7ce6e40792013d81e068e79"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "blue",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "89fa0407acf8a2506501367da3aa0664b55e155f56a91ad2d5754a872e157344"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "black",
+    "eyeColor": "green",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "494d0fb9a650553afb49bcdac5617c7e57161ed2e8a788c69185cf0b49642312"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "blue",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "9289dd20d8c8507a599ac24d1352fc8020fe76c71d720546b20b0401822f0bb1"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "green",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "1ce18853df4ea590a258f3d2da1363081ad5e21ebc38899bffc2262e5d0128a5"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "blue",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "aef7f4be85432402766d05c1507b566c73ad7805593cd1c0bb0ef2e35943fba2"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "89a6cfa15c75f8c8e3feb9b256414b8217ef4f8307e00f039c503d9ec3b325ac"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "0f350ab6b0c2a04831827ba3e3e8a34272bf54bdd3d18546c6cad2bee31b4399"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "e488595a0f7c33028208bb2833253da627056e549cc0e2eb8483586e8c7b9929"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "highPonytail",
+    "hairColor": "brown",
+    "eyeColor": "green",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "29eef99c4a2525f3ed0245ff9214739fd01c55ebeb3a1f73160ba129e193863d"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "blue",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "725b14347066b100744f29d5d1e3af29aa3ddf68b384294e19ebec1ae6352780"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "black",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "c3a75527ceec9e36fec66a40f390d8186a3cb3f743bc187e0b1ea94d27450168"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "blue",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "9e21341d3405606149a982542f4bf79dadcb39d64b9d5602dadc6a0569e45665"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "shortCropped",
+    "hairColor": "black",
+    "eyeColor": "dark",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "815ff3751903af89e84bc74d712aede394a51c931ffb9ceed40d4099a63b69f9"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "shortCropped",
+    "hairColor": "black",
+    "eyeColor": "dark",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "3b4943c1d9bd405ca580e117d85637812d3d589412742fae463ad3e721eba83c"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "black",
+    "eyeColor": "dark",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "step"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "237ce8e4355a7932d9829cde5d75e5d77fadaec983ff28e79621f8aec1e93e56"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "highPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "48844bdbecd48776ccfaef0b6de6f559ab75a4e0d176110d4ee1fa4d1b33c0fe"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "blue",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "b6abce79fdea78d8ebfa6bb5087645e53768ec9aeeabf3a4b3147e44f7f9b521"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "ada60920ebce37d13be786677dd74b8f19eb259db5d45cd0d25227b014b6bd4d"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "green",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "4d67e4420804ceac7615f403756390979cfe8476a4a21dbe66b1016b582114f7"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "f2e5927451f646c1949c4b8f41d37b56cd737e1a654f59107ac719b4162503e9"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "black",
+    "eyeColor": "dark",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "67bd051549a1757b568e0549255f495d5645fd69765bee7fe04fd80b87ee419f"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "red",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1651dc842df77f80b3accbfd5cf543e4f3645659c9be6424a47e5d2b7279c628"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "7d678381b46bc3f23caeab2e94b7a7cb78fd9cf9a3eb154d14cb7405075bacf8"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "highPonytail",
+    "hairColor": "black",
+    "eyeColor": "green",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "bf0f072a6f58ecdb9776f21e422c65345291e66b84890191b5a9f0e0935da914"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "73b952ca1752801ac0deeda33b6beb6ef6fb5a46ae79e59c778a0f4328d7e7a4"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "blue",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "1da6307f4bb4f781d9f3e387a95c2197bbb67e3a84be01673875cd630243bd81"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "7bb99567a00728dbd882e53be2916022dc3a74f4d2281363b62f6f986de53b1b"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "highPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "afbfabd16ba17fd08d369df18bf34fc5d6214eb8e14208364ef9265b445c5019"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "highPonytail",
+    "hairColor": "brown",
+    "eyeColor": "blue",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "c0f4f4cc61e03ccedb5986eb40e6d463357e9db97a7ff3e038c48895ef915a14"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "ff131618e4de96e66961b1dfc927de2bd728f48e54e28e974f8418a6b4c6854e"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "bc7e55f73d3137bd7ee58e0e0c958e1e70f46f0240cf1c36969607bdc47f2fda"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "dress",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "a20fd3af7b36bb6ae9f4cf85df5bd6a8800a997bc4db8481a0aba1c8081d2dda"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "black",
+    "eyeColor": "blue",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "178fc322c579791b145e753a9628a9df5b3ae859060d1209b3cf1d22ca3742f4"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleHighPonytail",
+    "hairColor": "black",
+    "eyeColor": "dark",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "4f6ca746487a9c9b5b59479a1fa7584e5b6267054d2f236bb865e4f60cfa6dc2"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "medium",
+    "frontHairStyle": "bangs",
+    "backHairStyle": "lowPonytail",
+    "hairColor": "black",
+    "eyeColor": "blue",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "back",
+    "legPose": "neutral"
+   },
+   "width": 16,
+   "height": 24,
+   "sha256": "104a5bd55ccdbbacd551e5d9770b553b3e86dfbcc58e27055973419274968a17"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "highPonytail",
+    "hairColor": "blonde",
+    "eyeColor": "green",
+    "clothesColor": "blue",
+    "topStyle": "none",
+    "bottomStyle": "none",
+    "fullOutfitStyle": "none",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 17,
+   "height": 24,
+   "sha256": "1c1ada0d1f12db92afadedfb709e6ec1c0452d3fe9088f73cbb780b1935e1b1f"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "light",
+    "frontHairStyle": "centerPart",
+    "backHairStyle": "shortCropped",
+    "hairColor": "blonde",
+    "eyeColor": "dark",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "skirt",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "down",
+    "legPose": "neutral"
+   },
+   "width": 15,
+   "height": 24,
+   "sha256": "7e0e82ae7ddb7db2e28480edabfcc0904a1234a6f3ac444ccacca047fed26efb"
+  },
+  {
+   "config": {
+    "headOrientation": "front",
+    "skinTone": "brown",
+    "frontHairStyle": "sideSwept",
+    "backHairStyle": "doubleLowPonytail",
+    "hairColor": "brown",
+    "eyeColor": "dark",
+    "clothesColor": "green",
+    "topStyle": "none",
+    "bottomStyle": "shorts",
+    "fullOutfitStyle": "overalls",
+    "shoeStyle": "none",
+    "armPose": "forward",
+    "legPose": "neutral"
+   },
+   "width": 19,
+   "height": 24,
+   "sha256": "04be7f0a6b0faa4a3ed7e4bdc10bf51affb3954bfb1dfcc21b55b89e6407c089"
+  }
+ ]
+}
