@@ -3,7 +3,7 @@ name: Release
 # Publishes to npm when a version tag is pushed. Uses npm trusted publishing
 # (short-lived OIDC credentials), so no npm token is stored in this repo.
 # One-time setup on npmjs.com: package settings -> Trusted Publisher -> GitHub
-# Actions -> repository ragtechdev/pixel-mask-engine, workflow release.yml,
+# Actions -> repository ragTechDev/pixel-mask-engine, workflow release.yml,
 # environment npm-publish. The GitHub environment of the same name must exist
 # (Settings -> Environments) with required reviewers, so every release needs
 # a manual approval.

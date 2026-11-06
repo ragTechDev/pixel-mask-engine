@@ -1,17 +1,17 @@
 {
   "name": "@ragtechdev/pixel-mask-engine",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Compose and render pixel-art avatars and tiles from fixed masks and palettes.",
   "author": "Natasha Ann",
   "license": "(MIT AND CC-BY-4.0)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ragtechdev/pixel-mask-engine.git"
+    "url": "git+https://github.com/ragTechDev/pixel-mask-engine.git"
   },
   "bugs": {
-    "url": "https://github.com/ragtechdev/pixel-mask-engine/issues"
+    "url": "https://github.com/ragTechDev/pixel-mask-engine/issues"
   },
-  "homepage": "https://github.com/ragtechdev/pixel-mask-engine#readme",
+  "homepage": "https://github.com/ragTechDev/pixel-mask-engine#readme",
   "keywords": [
     "pixel-art",
     "avatar",
