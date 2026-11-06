@@ -1,6 +1,6 @@
 {
   "name": "@ragtechdev/pixel-mask-engine",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Compose and render pixel-art avatars and tiles from fixed masks and palettes.",
   "author": "Natasha Ann",
   "license": "(MIT AND CC-BY-4.0)",
