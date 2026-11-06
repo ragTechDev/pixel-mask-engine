@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildObject, buildTile, createCache, defineMap, houseTileset, objectIds, objectInfo, tileIds, toSvgDataUrl, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, objectIds, tileIds, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -144,18 +144,6 @@ const TILE_LABELS: Record<TileId, string> = {
   wall:           "Wall",
   floor:          "Floor",
 }
-const TILE_DESC: Record<TileId, string> = {
-  road:           "Asphalt with white lane markings",
-  beige_pavement: "Flagstone running-bond + grout",
-  brick_pavement: "Brick running-bond + mortar",
-  grass:          "Plain grass (draft)",
-  tall_grass:     "Tall grass, can trigger encounters (draft)",
-  path:           "Dirt path (draft)",
-  water:          "Open water, not walkable (draft)",
-  shore:          "Grass, sand and water edge (draft)",
-  wall:           "Stone wall, solid (draft)",
-  floor:          "Wood plank floor (draft)",
-}
 const OBJECT_LABELS: Record<ObjectId, string> = {
   tree: "Tree", fence: "Fence", door: "Door", window: "Window",
   counter: "Counter", bookshelf: "Bookshelf", rug: "Rug", flower: "Flowers",
@@ -198,30 +186,9 @@ const HOUSE_MAP = defineMap(houseTileset, [
 const TOWN_RASTER = buildMap(TOWN_MAP)
 const HOUSE_RASTER = buildMap(HOUSE_MAP)
 
-// ─── Tiled background ────────────────────────────────────────────────────────
-// Uses a CSS background-image data-URL so the repeat covers any container
-// size with perfect seams and zero extra React nodes.
-// One scale for every preview window: SCALE CSS px per art pixel, so the
-// avatar and the tiles stay proportional to each other.
+// Screen pixels per art pixel in the avatar preview window.
 const SCALE = 8
-// Both preview windows show the same 32×32 art-pixel area (2×2 tiles).
 const VIEW_PX = 32 * SCALE
-
-function TileBackground({ tileId }: { tileId: TileId }) {
-  const tile     = buildTile(tileId)
-  const tileSize = tile.width * SCALE
-  const dataUrl  = toSvgDataUrl(tile, SCALE)
-  return (
-    <div style={{
-      position:          "absolute",
-      inset:             0,
-      backgroundImage:   `url("${dataUrl}")`,
-      backgroundRepeat:  "repeat",
-      backgroundSize:    `${tileSize}px ${tileSize}px`,
-      imageRendering:    "pixelated",
-    }} />
-  )
-}
 
 // ─── Preview window ──────────────────────────────────────────────────────────
 function PreviewWindow({ label, name, size, children }: {
@@ -266,7 +233,6 @@ const DEFAULT: AvatarProps = {
 }
 
 // ─── World view ──────────────────────────────────────────────────────────────
-type Picked = { kind: "tile"; id: TileId } | { kind: "object"; id: ObjectId }
 const MAPS = { Town: TOWN_RASTER, House: HOUSE_RASTER } as const
 type MapName = keyof typeof MAPS
 // Screen pixels per art pixel: tiles are 64 px, objects up to 128 px in the picker; maps use 3.
@@ -277,52 +243,33 @@ const sectionTitle: React.CSSProperties = {
   fontSize: 13, color: C.accent, letterSpacing: "0.25em", textTransform: "uppercase", fontWeight: 700,
 }
 
-function ChoiceButton({ selected, label, onClick, children }: {
-  selected: boolean; label: string; onClick: () => void; children: React.ReactNode
-}) {
+function PickerCell({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <button
-      onClick={onClick}
-      aria-pressed={selected}
+    <div
       title={label}
       style={{
-        background:    selected ? C.active : C.btn,
-        border:        `2px solid ${selected ? C.activeBorder : C.border}`,
-        boxShadow:     selected ? pixelBorderActive() : `2px 2px 0 ${INK}`,
-        padding:       8,
-        cursor:        "pointer",
-        display:       "flex",
-        flexDirection: "column",
-        alignItems:    "center",
+        background:     C.btn,
+        border:         `2px solid ${C.border}`,
+        boxShadow:      `2px 2px 0 ${INK}`,
+        padding:        8,
+        display:        "flex",
+        flexDirection:  "column",
+        alignItems:     "center",
         justifyContent: "flex-end",
-        gap:           6,
-        fontFamily:    FONT,
+        gap:            6,
       }}
     >
       {children}
-      <span style={{ color: selected ? C.white : C.muted, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+      <span style={{ color: C.muted, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" }}>
         {label}
       </span>
-    </button>
+    </div>
   )
-}
-
-function objectDescription(id: ObjectId): string {
-  const info = objectInfo[id]
-  const solid = info.footprint.join("").split("#").length - 1
-  const notes = [`${info.width}×${info.height} tiles`, `${info.layer} layer`]
-  notes.push(solid > 0 ? `${solid} solid cell${solid > 1 ? "s" : ""}` : "walkable")
-  if (info.door) notes.push("warp")
-  if (info.counter) notes.push("counter")
-  return notes.join(", ") + " (draft)"
 }
 
 function WorldView() {
   const [mapName, setMapName] = useState<MapName>("Town")
-  const [picked, setPicked]   = useState<Picked>({ kind: "tile", id: "grass" })
   const raster = MAPS[mapName]
-  const pickedName = picked.kind === "tile" ? TILE_LABELS[picked.id] : OBJECT_LABELS[picked.id]
-  const pickedDesc = picked.kind === "tile" ? TILE_DESC[picked.id] : objectDescription(picked.id)
 
   return (
     <>
@@ -331,20 +278,18 @@ function WorldView() {
         <div style={{ ...sectionTitle, marginBottom: 12 }}>Terrain</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
           {TILE_IDS.map(id => (
-            <ChoiceButton key={id} label={TILE_LABELS[id]} selected={picked.kind === "tile" && picked.id === id}
-              onClick={() => setPicked({ kind: "tile", id })}>
+            <PickerCell key={id} label={TILE_LABELS[id]}>
               <Tile id={id} pixelSize={PICK_SCALE} />
-            </ChoiceButton>
+            </PickerCell>
           ))}
         </div>
 
         <div style={{ ...sectionTitle, margin: "20px 0 12px" }}>Objects</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
           {objectIds.map(id => (
-            <ChoiceButton key={id} label={OBJECT_LABELS[id]} selected={picked.kind === "object" && picked.id === id}
-              onClick={() => setPicked({ kind: "object", id })}>
+            <PickerCell key={id} label={OBJECT_LABELS[id]}>
               <PixelImage raster={buildObject(id)} pixelSize={PICK_SCALE} title={OBJECT_LABELS[id]} />
-            </ChoiceButton>
+            </PickerCell>
           ))}
         </div>
       </Panel>
@@ -368,23 +313,6 @@ function WorldView() {
           </div>
         </Panel>
 
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "flex-start" }}>
-          <PreviewWindow label={picked.kind === "tile" ? "TILE" : "OBJECT"} name={pickedName.toUpperCase()}
-            size={picked.kind === "tile" ? "16×16 PX" : `${buildObject(picked.id).width}×${buildObject(picked.id).height} PX`}>
-            {picked.kind === "tile" ? (
-              <TileBackground tileId={picked.id} />
-            ) : (
-              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: C.section }}>
-                <PixelImage raster={buildObject(picked.id)} pixelSize={SCALE} title={pickedName} />
-              </div>
-            )}
-          </PreviewWindow>
-          <Panel style={{ width: 280 }}>
-            <div style={{ color: C.muted, fontSize: 10, letterSpacing: "0.15em", marginBottom: 6 }}>SELECTED</div>
-            <div style={{ color: C.text, fontSize: 13, letterSpacing: "0.08em", marginBottom: 4 }}>{pickedName.toUpperCase()}</div>
-            <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>{pickedDesc}</div>
-          </Panel>
-        </div>
       </div>
     </>
   )
