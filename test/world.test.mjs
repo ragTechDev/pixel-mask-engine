@@ -13,9 +13,41 @@ test("every tile is 16×16, opaque terrain, and only uses palette colours", () =
         assert.equal(tile.height, 16, id);
         for (const color of tile.colors.slice(1)) assert.ok(tilePalette.includes(color), `${id}: ${color}`);
     }
-    for (const id of ["grass", "tall_grass", "path", "water", "shore", "wall", "floor"]) {
-        assert.ok(buildTile(id).px.every((p) => p !== 0), id);
+    for (const id of tileIds) assert.ok(buildTile(id).px.every((p) => p !== 0), `${id} is not opaque`);
+});
+
+const colorAt = (tile, x, y) => tile.colors[tile.px[y * tile.width + x]];
+const sameIn = (a, b, xs, ys) => ys.every((y) => xs.every((x) => colorAt(a, x, y) === colorAt(b, x, y)));
+const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+test("edge tiles match their base pattern away from the edge", () => {
+    const pavement = buildTile("beige_pavement");
+    const inner = range(5, 10);
+    for (const id of tileIds.filter((t) => t.startsWith("beige_pavement_"))) {
+        const edge = buildTile(id);
+        assert.ok(sameIn(edge, pavement, inner, inner), `${id} interior`);
+        assert.ok(!sameIn(edge, pavement, range(0, 15), range(0, 15)), `${id} differs at its edge`);
     }
+    // Only the open sides turn to grass: the top edge keeps its left, right and bottom rows.
+    const top = buildTile("beige_pavement_top");
+    assert.ok(sameIn(top, pavement, range(0, 15), range(5, 15)), "top edge keeps rows 5-15");
+    assert.equal(colorAt(top, 8, 0), colorAt(buildTile("grass"), 8, 0), "top rows are grass");
+
+    const wall = buildTile("wall");
+    for (const id of ["wall_left", "wall_right", "wall_base", "wall_base_left", "wall_base_right"]) {
+        assert.ok(sameIn(buildTile(id), wall, range(4, 11), range(4, 10)), `${id} interior`);
+    }
+});
+
+test("roof pieces share the shingle pattern and differ at ridge, eave and edges", () => {
+    const roof = buildTile("roof");
+    const inner = range(3, 12);
+    for (const id of tileIds.filter((t) => t.startsWith("roof_"))) {
+        assert.ok(sameIn(buildTile(id), roof, inner, range(5, 11)), `${id} interior`);
+    }
+    assert.notDeepEqual(buildTile("roof_top").px, roof.px);
+    assert.notDeepEqual(buildTile("roof_bottom").px, roof.px);
+    assert.notDeepEqual(buildTile("roof_left").px, roof.px);
 });
 
 test("objects render at their footprint size using only fixed ramps", () => {
@@ -34,7 +66,7 @@ test("objects render at their footprint size using only fixed ramps", () => {
     assert.equal(buildObject("tree"), buildObject("tree"), "memoised");
 });
 
-const rows = ["gggg", "gGpw", "hhhh"];
+const rows = ["gggg", "gtpw", "hhhh"];
 const objects = [
     { id: "tree", x: 0, y: 0 },
     { id: "door", x: 5, y: 5 },
@@ -76,6 +108,27 @@ test("queryCell combines terrain and object behaviour", () => {
     assert.equal(queryCell(map, 8, 0), undefined);
     assert.equal(queryCell(map, 0, 6), undefined);
     assert.equal(queryCell(map, 0.5, 0), undefined);
+});
+
+test("the keypad blocks assemble a roof, a wall and a pavement patch", () => {
+    const map = defineMap(townTileset, ["1223", "7889", "lhhr", "[__]", "ABBC", "DEEF", "GHHI"]);
+    assert.equal(tileAt(map, 0, 0), "roof_top_left");
+    assert.equal(tileAt(map, 7, 0), "roof_top_right");
+    assert.equal(tileAt(map, 1, 1), "roof");
+    assert.equal(tileAt(map, 0, 3), "roof_bottom_left");
+    assert.equal(tileAt(map, 3, 3), "roof_bottom");
+    assert.equal(tileAt(map, 0, 4), "wall_left");
+    assert.equal(tileAt(map, 7, 5), "wall_right");
+    assert.equal(tileAt(map, 2, 7), "wall_base");
+    assert.equal(tileAt(map, 0, 7), "wall_base_left");
+    assert.equal(tileAt(map, 7, 7), "wall_base_right");
+    assert.equal(tileAt(map, 0, 8), "beige_pavement_top_left");
+    assert.equal(tileAt(map, 3, 11), "beige_pavement");
+    assert.equal(tileAt(map, 7, 13), "beige_pavement_bottom_right");
+    assert.equal(queryCell(map, 2, 1).solid, true, "roofs are solid");
+    assert.equal(queryCell(map, 2, 5).solid, true, "walls are solid");
+    assert.equal(queryCell(map, 3, 11).solid, false, "pavement is walkable");
+    assert.equal(queryCell(map, 0, 8).solid, false, "pavement corner is walkable");
 });
 
 test("interior objects: counters, furniture and open rugs", () => {

@@ -133,16 +133,38 @@ function Panel({ children, style }: { children: React.ReactNode; style?: React.C
 // ─── Tile data ───────────────────────────────────────────────────────────────
 const TILE_IDS: TileId[] = tileIds
 const TILE_LABELS: Record<TileId, string> = {
-  road:           "Road",
-  beige_pavement: "Pavement",
-  brick_pavement: "Brick",
-  grass:          "Grass",
-  tall_grass:     "Tall grass",
-  path:           "Path",
-  water:          "Water",
-  shore:          "Shore",
-  wall:           "Wall",
-  floor:          "Floor",
+  road:                       "Road",
+  beige_pavement:             "Pavement",
+  brick_pavement:             "Brick",
+  grass:                      "Grass",
+  tall_grass:                 "Tall grass",
+  path:                       "Path",
+  water:                      "Water",
+  shore:                      "Shore",
+  wall:                       "Wall",
+  floor:                      "Floor",
+  roof_top_left:              "Roof ridge L",
+  roof_top:                   "Roof ridge",
+  roof_top_right:             "Roof ridge R",
+  roof_left:                  "Roof left",
+  roof:                       "Roof",
+  roof_right:                 "Roof right",
+  roof_bottom_left:           "Roof eave L",
+  roof_bottom:                "Roof eave",
+  roof_bottom_right:          "Roof eave R",
+  beige_pavement_top_left:    "Pave top L",
+  beige_pavement_top:         "Pave top",
+  beige_pavement_top_right:   "Pave top R",
+  beige_pavement_left:        "Pave left",
+  beige_pavement_right:       "Pave right",
+  beige_pavement_bottom_left: "Pave bottom L",
+  beige_pavement_bottom:      "Pave bottom",
+  beige_pavement_bottom_right:"Pave bottom R",
+  wall_left:                  "Wall left",
+  wall_right:                 "Wall right",
+  wall_base:                  "Wall base",
+  wall_base_left:             "Wall base L",
+  wall_base_right:            "Wall base R",
 }
 const OBJECT_LABELS: Record<ObjectId, string> = {
   tree: "Tree", fence: "Fence", door: "Door", window: "Window",
@@ -155,19 +177,22 @@ const OBJECT_LABELS: Record<ObjectId, string> = {
 const at = (id: ObjectId, ...spots: [number, number][]): PlacedObject[] => spots.map(([x, y]) => ({ id, x, y }))
 const TOWN_MAP = defineMap(townTileset, [
   "gggggggggg",
-  "gghhhhgggg",
-  "gghhhhgggg",
-  "ggpppppggg",
-  "gggpggggGG",
-  "gggpgggGGG",
-  "gggpgsssss",
-  "gggpgwwwww",
+  "gg1223gggg",   // roof ridge
+  "gg7889gggg",   // roof eave
+  "gglhhrgggg",   // wall
+  "gg[__]gggg",   // wall base
+  "gggpggggtt",
+  "gggpgABCgt",   // pavement patch: edges and corners around a centre
+  "gggpgDEFgt",
+  "gggpgGHIgt",
+  "gggpsssssg",
+  "gggpwwwwwg",
 ], [
-  ...at("tree", [0, 0], [2, 0], [17, 0], [19, 0], [1, 9], [18, 8]),
-  ...at("window", [5, 3], [9, 3]),
-  ...at("door", [7, 5]),
-  ...at("fence", [8, 8], [9, 8], [10, 8], [11, 8]),
-  ...at("flower", [2, 7], [3, 9], [12, 6], [14, 5]),
+  ...at("tree", [0, 0], [2, 0], [17, 0], [19, 0], [1, 12], [16, 14]),
+  ...at("window", [5, 7], [9, 7]),
+  ...at("door", [7, 9]),
+  ...at("fence", [10, 10], [11, 10], [12, 10], [13, 10]),
+  ...at("flower", [2, 11], [3, 14], [4, 17], [18, 6]),
 ])
 const HOUSE_MAP = defineMap(houseTileset, [
   "hhhhhhhh",

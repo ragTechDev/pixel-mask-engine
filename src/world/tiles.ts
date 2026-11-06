@@ -1,14 +1,36 @@
 import { composeSprites, type Raster } from "../core/compose";
 import { spriteFromGrid, type Sprite } from "../core/sprite";
 import { beigePavementMask } from "./masks/tiles/beigePavement.mask";
+import { beigePavementBottomMask } from "./masks/tiles/beigePavementBottom.mask";
+import { beigePavementBottomLeftMask } from "./masks/tiles/beigePavementBottomLeft.mask";
+import { beigePavementBottomRightMask } from "./masks/tiles/beigePavementBottomRight.mask";
+import { beigePavementLeftMask } from "./masks/tiles/beigePavementLeft.mask";
+import { beigePavementRightMask } from "./masks/tiles/beigePavementRight.mask";
+import { beigePavementTopMask } from "./masks/tiles/beigePavementTop.mask";
+import { beigePavementTopLeftMask } from "./masks/tiles/beigePavementTopLeft.mask";
+import { beigePavementTopRightMask } from "./masks/tiles/beigePavementTopRight.mask";
 import { brickPavementMask } from "./masks/tiles/brickPavement.mask";
 import { floorMask } from "./masks/tiles/floor.mask";
 import { grassMask } from "./masks/tiles/grass.mask";
 import { pathMask } from "./masks/tiles/path.mask";
 import { roadMask } from "./masks/tiles/road.mask";
+import { roofMask } from "./masks/tiles/roof.mask";
+import { roofBottomMask } from "./masks/tiles/roofBottom.mask";
+import { roofBottomLeftMask } from "./masks/tiles/roofBottomLeft.mask";
+import { roofBottomRightMask } from "./masks/tiles/roofBottomRight.mask";
+import { roofLeftMask } from "./masks/tiles/roofLeft.mask";
+import { roofRightMask } from "./masks/tiles/roofRight.mask";
+import { roofTopMask } from "./masks/tiles/roofTop.mask";
+import { roofTopLeftMask } from "./masks/tiles/roofTopLeft.mask";
+import { roofTopRightMask } from "./masks/tiles/roofTopRight.mask";
 import { shoreMask } from "./masks/tiles/shore.mask";
 import { tallGrassMask } from "./masks/tiles/tallGrass.mask";
 import { wallMask } from "./masks/tiles/wall.mask";
+import { wallBaseMask } from "./masks/tiles/wallBase.mask";
+import { wallBaseLeftMask } from "./masks/tiles/wallBaseLeft.mask";
+import { wallBaseRightMask } from "./masks/tiles/wallBaseRight.mask";
+import { wallLeftMask } from "./masks/tiles/wallLeft.mask";
+import { wallRightMask } from "./masks/tiles/wallRight.mask";
 import { waterMask } from "./masks/tiles/water.mask";
 import { parseRows } from "./parseRows";
 import type { TileId } from "./types";
@@ -38,7 +60,12 @@ export const tilePalette = [
     "#BFAE8C", // 20 (k): floor line
     "#D1B48A", // 21 (l): path
     "#B8996D", // 22 (m): path shade
-    "#E3CBA5" // 23 (n): path light
+    "#E3CBA5", // 23 (n): path light
+    "#B0604A", // 24 (o): roof
+    "#864637", // 25 (p): roof shade
+    "#CC7E64", // 26 (q): roof light
+    "#5E2F28", // 27 (r): roof edge
+    "#7C7364" // 28 (s): wall foundation
 ] as const;
 
 const allMasks: Record<TileId, number[][]> = {
@@ -51,7 +78,29 @@ const allMasks: Record<TileId, number[][]> = {
     water: parseRows(waterMask),
     shore: parseRows(shoreMask),
     wall: parseRows(wallMask),
-    floor: parseRows(floorMask)
+    floor: parseRows(floorMask),
+    roof_top_left: parseRows(roofTopLeftMask),
+    roof_top: parseRows(roofTopMask),
+    roof_top_right: parseRows(roofTopRightMask),
+    roof_left: parseRows(roofLeftMask),
+    roof: parseRows(roofMask),
+    roof_right: parseRows(roofRightMask),
+    roof_bottom_left: parseRows(roofBottomLeftMask),
+    roof_bottom: parseRows(roofBottomMask),
+    roof_bottom_right: parseRows(roofBottomRightMask),
+    beige_pavement_top: parseRows(beigePavementTopMask),
+    beige_pavement_bottom: parseRows(beigePavementBottomMask),
+    beige_pavement_left: parseRows(beigePavementLeftMask),
+    beige_pavement_right: parseRows(beigePavementRightMask),
+    beige_pavement_top_left: parseRows(beigePavementTopLeftMask),
+    beige_pavement_top_right: parseRows(beigePavementTopRightMask),
+    beige_pavement_bottom_left: parseRows(beigePavementBottomLeftMask),
+    beige_pavement_bottom_right: parseRows(beigePavementBottomRightMask),
+    wall_left: parseRows(wallLeftMask),
+    wall_right: parseRows(wallRightMask),
+    wall_base: parseRows(wallBaseMask),
+    wall_base_left: parseRows(wallBaseLeftMask),
+    wall_base_right: parseRows(wallBaseRightMask)
 };
 
 export const tileIds = Object.keys(allMasks) as TileId[];
