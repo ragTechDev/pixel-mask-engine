@@ -1,6 +1,6 @@
 # Pixel Mask Engine
 
-A small TypeScript library that composes pixel-art avatars and tiles from fixed, hand-authored masks and fixed palettes.
+A small TypeScript library that composes pixel-art avatars, tiles and tile-based worlds from fixed, hand-authored masks and fixed palettes.
 
 - **Zero-dependency, tree-shakeable core.** Pure TypeScript with no React and no DOM.
 - **One `Sprite` primitive** shared by avatars and tiles, with furniture, decor and pets to come.
@@ -18,7 +18,7 @@ npm install @ragtechdev/pixel-mask-engine
 
 | Import | What it contains |
 | --- | --- |
-| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
+| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `queryCell`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
 | `@ragtechdev/pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
 | `@ragtechdev/pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
 
@@ -59,6 +59,33 @@ import { Avatar, Tile } from "@ragtechdev/pixel-mask-engine/react";
 
 `<Avatar>` caches each unique config internally.
 
+### Worlds
+
+Worlds use the layered design of classic tile-based games: small tiles, blocks of tiles, and maps that store one character per block.
+
+1. **Tile:** a 16×16 mask from the fixed tile palette (`tileIds`).
+2. **Block:** a square group of tiles (2×2 by default), keyed by a single character.
+3. **Tileset:** the blocks plus behaviour lists of tile ids (`solid`, `water`, `grass`, `counter`, `door`). Every cell that uses a listed tile inherits the behaviour, so there are no per-cell flags to maintain.
+4. **Map:** rows of block characters.
+
+```ts
+import { buildMap, defineMap, queryCell, townTileset } from "@ragtechdev/pixel-mask-engine";
+import { drawRaster } from "@ragtechdev/pixel-mask-engine/canvas";
+
+const map = defineMap(townTileset, [
+  "TTTTTT",
+  "TggggT",
+  "ThWhgT", // h wall, W window wall
+  "ThhdgT", // d door
+  "TgppgT", // p path
+]);
+
+drawRaster(ctx, buildMap(map), 0, 0, 2); // memoised per map object
+queryCell(map, 7, 7); // { tile: "door", solid: false, door: true, ... } in tile coordinates
+```
+
+`townTileset` (outdoor) and `houseTileset` (interior) are built in. `defineTileSet` and `defineMap` validate their input and throw on unknown tiles or block characters. Block art only references built-in tiles. The tile art for towns and interiors is in draft form and will change.
+
 ## Options
 
 `AvatarConfig` fields (all optional): `headOrientation`, `skinTone`, `frontHairStyle`, `backHairStyle`, `hairColor`, `eyeColor`, `clothesColor`, `topStyle`, `bottomStyle`, `fullOutfitStyle`, `shoeStyle`, `armPose`, `legPose`. Valid values are the keys of the exported tables, for example `skinPalettes`, `topStyles` and `frontHairStyles`. Tile ids are listed in `tileIds`.
@@ -77,4 +104,4 @@ pnpm size       # gzipped size per entry
 ## Licence
 
 - **Code:** MIT, see [LICENSE](LICENSE).
-- **Pixel-art masks** (`src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`): CC BY 4.0, see [LICENSE-ART.md](LICENSE-ART.md). Credit "pixel-mask-engine by Natasha Ann" when you redistribute the art or images rendered from it.
+- **Pixel-art masks** (`src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`, `src/world/tiles/townMasks.ts`, `src/world/tilesets/**`): CC BY 4.0, see [LICENSE-ART.md](LICENSE-ART.md). Credit "pixel-mask-engine by Natasha Ann" when you redistribute the art or images rendered from it.

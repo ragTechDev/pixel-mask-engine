@@ -13,7 +13,9 @@ A TypeScript library that composes and renders pixel-art avatars (and, next, til
 - `resolveAvatarConfig` replaces any value that isn't in the fixed tables with its default.
 - Size baseline before the refactor: the whole bundle was about 3.3 KB gzipped. After it, an avatar-only import is about 3.28 KB, the full core entry is about 4.25 KB (it now includes tiles), and the react and canvas entries add about 0.46 KB and 0.45 KB.
 
-Next: furniture, decor and a pet on `Sprite`; more tile types; a Web Worker only if measurements show it's needed.
+- Worlds (`src/world/`): `defineTileSet` (blocks plus `solid`/`water`/`grass`/`counter`/`door` tile-id lists), `defineMap` (one character per block), `buildMap` (memoised raster), `queryCell` and `tileAt`. Built-in tilesets are `townTileset` and `houseTileset`. Tile art is 16×16 text-drawn masks (`parseRows`, palette characters `1-9a-z`). `townMasks.ts` holds **draft** masks that the maintainer will redraw. The layering (tile, block, tileset behaviour lists, map) follows pret/pokered, with none of its art or data.
+
+Next: furniture, decor and a pet on `Sprite`; final art for the draft tiles; more tile types; a Web Worker only if measurements show it's needed.
 
 ## Target design
 
@@ -31,7 +33,7 @@ Next: furniture, decor and a pet on `Sprite`; more tile types; a Web Worker only
 - **No new dependency without checking its size and licence first.** Report the gzipped size delta. The core target is zero runtime dependencies.
 - **No secrets**, API keys, `.env` files or personal data anywhere in the repo or its history.
 - **Do not break the published API silently.** If an export changes, say so and update the README.
-- **Licences:** code is MIT (`LICENSE`). Art is CC BY 4.0 (`LICENSE-ART.md`), which covers `src/avatar/masks/**` and `src/world/tiles/tileMasks.ts`. When you add new art files (furniture, decor, pet masks), add their paths to `LICENSE-ART.md`. Do not change either licence without asking.
+- **Licences:** code is MIT (`LICENSE`). Art is CC BY 4.0 (`LICENSE-ART.md`), which covers `src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`, `src/world/tiles/townMasks.ts` and `src/world/tilesets/**`. When you add new art files (furniture, decor, pet masks), add their paths to `LICENSE-ART.md`. Do not change either licence without asking.
 
 ## Commands
 

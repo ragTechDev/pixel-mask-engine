@@ -1,11 +1,11 @@
-import { TileId } from "../types";
+import type { RoadTileId } from "../types";
 
 // 16×16 pixel tile masks. Cell values map to TileRenderer's palette:
 //   0 = transparent   1 = road dark gray   2 = road light gray   3 = white
 //   4 = beige base    5 = beige shadow     6 = beige highlight   7 = stone grout
 //   8 = brick main    9 = brick mortar    10 = brick highlight
 
-export const tileMasks: Record<TileId, number[][]> = {
+export const tileMasks: Record<RoadTileId, number[][]> = {
 
   // ─── Road ──────────────────────────────────────────────────────────────────
   // Top-down asphalt road. Light curb strips along top & bottom edges,
