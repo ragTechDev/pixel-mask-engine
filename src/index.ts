@@ -9,7 +9,8 @@ export {
     type AvatarConfig,
     type HeadOrientation
 } from "./avatar/buildAvatar";
-export { buildTile, tileIds, tilePalette } from "./world/tiles";
+export { buildTile, tileIds } from "./world/tiles";
+export { tilePalettes, tileThemes, type TileColor, type TileTheme } from "./world/tiles/palettes";
 export type { TileId, RoadTileId, TownTileId, ObjectId } from "./world/types";
 export { defineTileSet, type Block, type TileSet, type TileSetDefinition } from "./world/tileset";
 export { defineMap, buildMap, tileAt, queryCell, mapTileSize, type TileMap, type CellInfo, type PlacedObject } from "./world/map";

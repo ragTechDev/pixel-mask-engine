@@ -1,7 +1,8 @@
 import { composeSprites, type Layer, type Raster } from "../core/compose";
 import { objectIds, objectInfo, objectLayers } from "./objects/objects";
-import { TILE_SIZE } from "./parseRows";
-import { tilePalette, tileSprite } from "./tiles";
+import { TILE_SIZE } from "./size";
+import { themeSlots, tileSprite } from "./tiles";
+import { resolveTheme, type TileTheme } from "./tiles/palettes";
 import type { TileSet } from "./tileset";
 import type { ObjectId, TileId } from "./types";
 
@@ -130,12 +131,23 @@ export function queryCell(map: TileMap, tx: number, ty: number): CellInfo | unde
     };
 }
 
-const rendered = new WeakMap<TileMap, Raster>();
+const rendered = new WeakMap<TileMap, Map<TileTheme, Raster>>();
 
-/** Renders the whole map to one raster (16 px per tile). Memoised per map object. */
-export function buildMap(map: TileMap): Raster {
-    let raster = rendered.get(map);
+/**
+ * Renders the whole map to one raster (16 px per tile) in a fixed tile palette
+ * (`tileThemes`). Memoised per map object and palette. Unknown palettes fall
+ * back to the default. Objects keep their own colours.
+ */
+export function buildMap(map: TileMap, theme?: string): Raster {
+    const resolved = resolveTheme(theme);
+    let byTheme = rendered.get(map);
+    if (!byTheme) {
+        byTheme = new Map();
+        rendered.set(map, byTheme);
+    }
+    let raster = byTheme.get(resolved);
     if (!raster) {
+        const slots = themeSlots(resolved);
         const size = map.tileset.blockSize;
         const layers: Layer[] = [];
         for (let by = 0; by < map.height; by += 1) {
@@ -145,7 +157,7 @@ export function buildMap(map: TileMap): Raster {
                     for (let tx = 0; tx < size; tx += 1) {
                         layers.push({
                             sprite: tileSprite(block[ty][tx]),
-                            slots: tilePalette,
+                            slots,
                             x: (bx * size + tx) * TILE_SIZE,
                             y: (by * size + ty) * TILE_SIZE
                         });
@@ -164,7 +176,7 @@ export function buildMap(map: TileMap): Raster {
         }
         const { width, height } = mapTileSize(map);
         raster = composeSprites(layers, { x: 0, y: 0, width: width * TILE_SIZE, height: height * TILE_SIZE });
-        rendered.set(map, raster);
+        byTheme.set(resolved, raster);
     }
     return raster;
 }

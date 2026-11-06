@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { avatarKey, buildAvatar, buildTile, createCache, toSvgPaths } from "../index";
-import type { AvatarConfig, Raster, TileId } from "../index";
+import type { AvatarConfig, Raster, TileId, TileTheme } from "../index";
 
 const avatarCache = createCache<Raster>(512);
 
@@ -35,6 +35,6 @@ export function Avatar({ pixelSize, className, title, ...config }: AvatarProps) 
     return <PixelImage raster={raster} pixelSize={pixelSize} className={className} title={title} />;
 }
 
-export function Tile({ id, ...rest }: ImageProps & { id: TileId }) {
-    return <PixelImage raster={buildTile(id)} {...rest} />;
+export function Tile({ id, theme, ...rest }: ImageProps & { id: TileId; theme?: TileTheme }) {
+    return <PixelImage raster={buildTile(id, theme)} {...rest} />;
 }

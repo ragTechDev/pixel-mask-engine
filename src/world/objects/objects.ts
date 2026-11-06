@@ -1,6 +1,6 @@
 import { composeSprites, type Layer, type Raster } from "../../core/compose";
 import { rampSlots, shadeMask, type Sprite } from "../../core/sprite";
-import { TILE_SIZE } from "../parseRows";
+import { TILE_SIZE } from "../size";
 import type { ObjectId } from "../types";
 import { objectParts, type ObjectPart } from "./objectParts";
 import { objectRamps } from "./ramps";

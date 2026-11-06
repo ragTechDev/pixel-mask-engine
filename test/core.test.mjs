@@ -14,7 +14,7 @@ import {
     resolveAvatarConfig,
     skinPalettes,
     tileIds,
-    tilePalette,
+    tilePalettes,
     toSvgPaths
 } from "../dist/index.js";
 
@@ -78,7 +78,7 @@ test("buildTile resolves the fixed tile palette", () => {
     for (const id of tileIds) {
         const raster = buildTile(id);
         assert.deepEqual([raster.width, raster.height], [16, 16]);
-        assert.ok(raster.colors.slice(1).every((c) => tilePalette.includes(c)));
+        assert.ok(raster.colors.slice(1).every((c) => Object.values(tilePalettes.default).includes(c)));
         assert.equal(buildTile(id), raster, "memoised");
     }
 });

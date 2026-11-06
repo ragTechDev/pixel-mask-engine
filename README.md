@@ -18,7 +18,7 @@ npm install @ragtechdev/pixel-mask-engine
 
 | Import | What it contains |
 | --- | --- |
-| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
+| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `tilePalettes`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
 | `@ragtechdev/pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
 | `@ragtechdev/pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
 
@@ -63,7 +63,7 @@ import { Avatar, Tile } from "@ragtechdev/pixel-mask-engine/react";
 
 Worlds use the layered design of classic tile-based games, plus shaded objects on top.
 
-1. **Tile:** a 16×16 terrain mask from the fixed tile palette (`tileIds`).
+1. **Tile:** a 16×16 terrain tile (`tileIds`). Tiles are drawn as `"0"/"1"` layers painted in named colours, like avatar parts, and edge and corner tiles are composed from shared edge strips.
 2. **Block:** a square group of tiles (2×2 by default), keyed by a single character.
 3. **Tileset:** the blocks plus lists of terrain tile ids (`solid`, `water`, `grass`). Every cell that uses a listed tile inherits the behaviour, so there are no per-cell flags to maintain.
 4. **Map:** rows of block characters, plus placed objects.
@@ -86,6 +86,15 @@ const map = defineMap(
 drawRaster(ctx, buildMap(map), 0, 0, 2); // memoised per map object
 queryCell(map, 5, 3); // { tile: "wall", object: "door", solid: true, door: true, ... }
 ```
+
+Tile colours come from fixed palettes (`tilePalettes`, listed in `tileThemes`: `default`, `autumn`, `winter`), so one choice recolours the whole terrain and the art never changes:
+
+```ts
+buildTile("grass", "winter");
+buildMap(map, "autumn"); // objects keep their own colours
+```
+
+Unknown palette names fall back to `default`. Palettes are fixed tables, and the API does not accept arbitrary colours. (This replaces the old `tilePalette` colour array export, whose indices no longer exist.)
 
 Edges and roofs use nine-patch sets: a centre tile plus edge and corner tiles for where it meets its neighbour. `townTileset` has blocks for them, keyed by a phone-keypad layout (`1`-`9` for a roof, `A`-`I` for a beige pavement patch, `l` `h` `r` and `[` `_` `]` for house walls). The key layout is documented on `townTileset`.
 

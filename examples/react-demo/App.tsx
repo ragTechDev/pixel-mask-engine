@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, objectIds, tileIds, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -208,8 +208,6 @@ const HOUSE_MAP = defineMap(houseTileset, [
   ...at("rug", [7, 7]),
   ...at("door", [7, 11]),
 ])
-const TOWN_RASTER = buildMap(TOWN_MAP)
-const HOUSE_RASTER = buildMap(HOUSE_MAP)
 
 // Screen pixels per art pixel in the avatar preview window.
 const SCALE = 8
@@ -258,7 +256,7 @@ const DEFAULT: AvatarProps = {
 }
 
 // ─── World view ──────────────────────────────────────────────────────────────
-const MAPS = { Town: TOWN_RASTER, House: HOUSE_RASTER } as const
+const MAPS = { Town: TOWN_MAP, House: HOUSE_MAP } as const
 type MapName = keyof typeof MAPS
 // Screen pixels per art pixel: tiles are 64 px, objects up to 128 px in the picker; maps use 3.
 const PICK_SCALE  = 4
@@ -294,17 +292,25 @@ function PickerCell({ label, children }: { label: string; children: React.ReactN
 
 function WorldView() {
   const [mapName, setMapName] = useState<MapName>("Town")
-  const raster = MAPS[mapName]
+  const [theme, setTheme]     = useState<TileTheme>("default")
+  const raster = buildMap(MAPS[mapName], theme)
 
   return (
     <>
       {/* ── Left: terrain and object picker ───────────────────────────── */}
       <Panel style={{ width: 380, flexShrink: 0, overflowY: "auto", maxHeight: "calc(100vh - 76px)" }}>
+        <div style={{ ...sectionTitle, marginBottom: 12 }}>Palette</div>
+        <div role="tablist" style={{ display: "flex", gap: 4, marginBottom: 20 }}>
+          {tileThemes.map(name => (
+            <TabButton key={name} active={name === theme} onClick={() => setTheme(name)}>{name}</TabButton>
+          ))}
+        </div>
+
         <div style={{ ...sectionTitle, marginBottom: 12 }}>Terrain</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
           {TILE_IDS.map(id => (
             <PickerCell key={id} label={TILE_LABELS[id]}>
-              <Tile id={id} pixelSize={PICK_SCALE} />
+              <Tile id={id} theme={theme} pixelSize={PICK_SCALE} />
             </PickerCell>
           ))}
         </div>

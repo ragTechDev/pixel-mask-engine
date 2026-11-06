@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
     buildMap, buildObject, buildTile, defineMap, defineTileSet, houseTileset, mapTileSize,
-    objectIds, objectInfo, objectRamps, queryCell, tileAt, tileIds, tilePalette, townTileset
+    objectIds, objectInfo, objectRamps, queryCell, tileAt, tileIds, tilePalettes, tileThemes, townTileset
 } from "../dist/index.js";
 
 test("every tile is 16×16, opaque terrain, and only uses palette colours", () => {
@@ -11,7 +13,7 @@ test("every tile is 16×16, opaque terrain, and only uses palette colours", () =
         const tile = buildTile(id);
         assert.equal(tile.width, 16, id);
         assert.equal(tile.height, 16, id);
-        for (const color of tile.colors.slice(1)) assert.ok(tilePalette.includes(color), `${id}: ${color}`);
+        for (const color of tile.colors.slice(1)) assert.ok(Object.values(tilePalettes.default).includes(color), `${id}: ${color}`);
     }
     for (const id of tileIds) assert.ok(buildTile(id).px.every((p) => p !== 0), `${id} is not opaque`);
 });
@@ -160,4 +162,64 @@ test("validation rejects bad input", () => {
     assert.throws(() => defineTileSet({ id: "x", blocks: { a: [["nope", "grass"], ["grass", "grass"]] } }), /unknown tile/);
     assert.throws(() => defineTileSet({ id: "x", blocks: {}, solid: ["nope"] }), /unknown tile/);
     assert.throws(() => defineTileSet({ id: "x", blocks: {}, blockSize: 0 }), /blockSize/);
+});
+
+// ─── Palettes and golden pixels ──────────────────────────────────────────────
+const fingerprint = (r) => createHash("sha256").update(JSON.stringify([r.width, r.height, r.colors, [...r.px]])).digest("hex").slice(0, 16);
+
+test("tiles match the recorded pixels in the default palette", () => {
+    const golden = JSON.parse(readFileSync(new URL("./fixtures/tile-golden.json", import.meta.url), "utf8"));
+    assert.deepEqual(Object.keys(golden).sort(), [...tileIds].sort());
+    for (const id of tileIds) assert.equal(fingerprint(buildTile(id)), golden[id], id);
+});
+
+test("every palette names the same colours", () => {
+    assert.deepEqual(tileThemes, ["default", "autumn", "winter"]);
+    const names = Object.keys(tilePalettes.default).sort();
+    for (const theme of tileThemes) {
+        assert.deepEqual(Object.keys(tilePalettes[theme]).sort(), names, theme);
+        for (const color of Object.values(tilePalettes[theme])) assert.match(color, /^#[0-9A-F]{6}$/i, theme);
+    }
+});
+
+test("a palette recolours tiles without changing their shape", () => {
+    for (const theme of ["autumn", "winter"]) {
+        let changed = 0;
+        for (const id of tileIds) {
+            const base = buildTile(id);
+            const recoloured = buildTile(id, theme);
+            assert.equal(recoloured.width, base.width, id);
+            assert.equal(recoloured.height, base.height, id);
+            // Each default colour maps to exactly one colour in the new palette.
+            const seen = new Map();
+            for (let i = 0; i < base.px.length; i += 1) {
+                const from = base.colors[base.px[i]];
+                const to = recoloured.colors[recoloured.px[i]];
+                assert.equal(seen.get(from) ?? to, to, `${id}: ${from} maps to two colours in ${theme}`);
+                seen.set(from, to);
+            }
+            if ([...seen].some(([from, to]) => from !== to)) changed += 1;
+        }
+        assert.ok(changed > 0, `${theme} changes some tiles`);
+    }
+    assert.notDeepEqual(buildTile("grass", "winter").colors, buildTile("grass").colors);
+    assert.deepEqual(buildTile("road", "winter").colors, buildTile("road").colors, "road is not recoloured");
+});
+
+test("unknown palettes fall back to the default", () => {
+    assert.equal(buildTile("grass", "nope"), buildTile("grass"));
+    assert.equal(buildTile("grass", "toString"), buildTile("grass"), "inherited keys are not palettes");
+});
+
+test("buildMap takes a palette, keeps objects' colours, and memoises per palette", () => {
+    const map = defineMap(townTileset, ["ggg", "g1g"], [{ id: "tree", x: 0, y: 0 }]);
+    const plain = buildMap(map);
+    const winter = buildMap(map, "winter");
+    assert.notEqual(winter, plain);
+    assert.equal(buildMap(map, "winter"), winter);
+    assert.equal(buildMap(map, "nope"), plain);
+    assert.equal(winter.width, plain.width);
+    assert.ok(winter.colors.includes(objectRamps.leaf.base), "tree keeps its colours");
+    assert.ok(winter.colors.includes(tilePalettes.winter.grass));
+    assert.ok(!winter.colors.includes(tilePalettes.default.grass));
 });
