@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: 24 # ships npm >= 11.5, needed for trusted publishing
           registry-url: https://registry.npmjs.org
+          # Never restore a dependency cache in the job that holds OIDC publish
+          # rights: a poisoned cache could reach the credentials.
+          package-manager-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm run typecheck
       - run: pnpm test
