@@ -1,7 +1,7 @@
-/** Tiles in `src/world/tiles/tileMasks.ts` (road and pavement). */
+/** Road and pavement tiles (`src/world/masks/tiles`). */
 export type RoadTileId = "road" | "beige_pavement" | "brick_pavement";
 
-/** Terrain tiles in `src/world/tiles/townMasks.ts`. */
+/** Terrain tiles for towns and interiors (`src/world/masks/tiles`). */
 export type TownTileId = "grass" | "tall_grass" | "path" | "water" | "shore" | "wall" | "floor";
 
 export type TileId = RoadTileId | TownTileId;

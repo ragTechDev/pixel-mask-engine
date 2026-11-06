@@ -1,8 +1,8 @@
 import { composeSprites, type Layer, type Raster } from "../../core/compose";
 import { rampSlots, shadeMask, type Sprite } from "../../core/sprite";
-import { TILE_SIZE } from "../tiles/parseRows";
+import { TILE_SIZE } from "../parseRows";
 import type { ObjectId } from "../types";
-import { objectArt, type ObjectPart } from "./objectMasks";
+import { objectParts, type ObjectPart } from "./objectParts";
 import { objectRamps } from "./ramps";
 
 export interface ObjectInfo {
@@ -46,7 +46,7 @@ function partSprite(part: ObjectPart): Sprite {
 
 /** Internal: the layers of an object placed with its top-left corner at pixel (px, py). */
 export function objectLayers(id: ObjectId, px: number, py: number): Layer[] {
-    const parts = objectArt[id];
+    const parts = objectParts[id];
     if (!parts) throw new Error(`Unknown object: ${String(id)}`);
     return parts.map((part) => ({
         sprite: partSprite(part),

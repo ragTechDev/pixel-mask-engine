@@ -107,4 +107,4 @@ pnpm size       # gzipped size per entry
 ## Licence
 
 - **Code:** MIT, see [LICENSE](LICENSE).
-- **Pixel-art masks** (`src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`, `src/world/tiles/townMasks.ts`, `src/world/objects/objectMasks.ts`, `src/world/tilesets/**`): CC BY 4.0, see [LICENSE-ART.md](LICENSE-ART.md). Credit "pixel-mask-engine by Natasha Ann" when you redistribute the art or images rendered from it.
+- **Pixel-art masks** (`src/avatar/masks/**`, `src/world/masks/**`, `src/world/tilesets/**`): CC BY 4.0, see [LICENSE-ART.md](LICENSE-ART.md). Credit "pixel-mask-engine by Natasha Ann" when you redistribute the art or images rendered from it.

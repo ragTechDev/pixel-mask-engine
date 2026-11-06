@@ -1,6 +1,6 @@
 import { composeSprites, type Layer, type Raster } from "../core/compose";
 import { objectIds, objectInfo, objectLayers } from "./objects/objects";
-import { TILE_SIZE } from "./tiles/parseRows";
+import { TILE_SIZE } from "./parseRows";
 import { tilePalette, tileSprite } from "./tiles";
 import type { TileSet } from "./tileset";
 import type { ObjectId, TileId } from "./types";

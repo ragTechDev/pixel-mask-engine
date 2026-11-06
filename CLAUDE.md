@@ -9,14 +9,14 @@ A TypeScript library that composes and renders pixel-art avatars (and, next, til
 ## Current state (core and Sprite refactor done)
 
 - Entries: `@ragtechdev/pixel-mask-engine` (pure core: `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg*`, style and palette tables), `@ragtechdev/pixel-mask-engine/canvas` (`paintRaster`, `drawRaster`) and `@ragtechdev/pixel-mask-engine/react` (`Avatar`, `Tile`, `PixelImage`). React is an optional peer.
-- `Sprite` (`src/core/sprite.ts`) is the single image primitive: palette-slot indices plus an origin. Avatar shape masks are still `"0"`/`"1"` strings, auto-shaded by `shadeMask` using `src/core/lighting.ts`. Tile masks are numeric grids with the fixed `tilePalette`. `composeSprites` (internal) produces a colour-resolved `Raster`.
+- `Sprite` (`src/core/sprite.ts`) is the single image primitive: palette-slot indices plus an origin. Avatar shape masks are still `"0"`/`"1"` strings, auto-shaded by `shadeMask` using `src/core/lighting.ts`. Tile masks are 16×16 text rows resolved through the fixed `tilePalette`. `composeSprites` (internal) produces a colour-resolved `Raster`.
 - `resolveAvatarConfig` replaces any value that isn't in the fixed tables with its default.
 - Size baseline before the refactor: the whole bundle was about 3.3 KB gzipped. After it, an avatar-only import is about 3.28 KB, the full core entry is about 4.25 KB (it now includes tiles), and the react and canvas entries add about 0.46 KB and 0.45 KB.
 
 - Worlds (`src/world/`): terrain tiles, tilesets, maps and objects.
   - `defineTileSet` (2×2-tile blocks plus `solid`/`water`/`grass` tile-id lists), `defineMap` (one character per block, plus placed objects), `buildMap` (memoised raster), `queryCell` and `tileAt`. Built-in tilesets are `townTileset` and `houseTileset`.
-  - Terrain tiles are 16×16 text-drawn masks (`parseRows`, palette characters `1-9a-z`) in `townMasks.ts`.
-  - Things that stand on terrain (tree, fence, door, window, counter, bookshelf, rug, flower) are **objects**, not tiles: `"0"/"1"` shape masks in `src/world/objects/objectMasks.ts`, auto-shaded by `shadeMask` with the fixed `objectRamps`, with footprint and behaviour in `objectInfo`. This is the base for furniture, decor and a pet.
+  - Art is one `*.mask.ts` file per mask under `src/world/masks/`, like the avatar masks: `masks/tiles/<tile>.mask.ts` for terrain, and `masks/objects/<object>/<part>.mask.ts` for objects (a directory when an object has several masks, a single file otherwise). Terrain masks are 16×16 text rows (`parseRows`, palette characters `1-9a-z`). Assembly lives in `src/world/tiles.ts` (tiles) and `src/world/objects/objectParts.ts` (which mask, ramp and offset each object part uses).
+  - Things that stand on terrain (tree, fence, door, window, counter, bookshelf, rug, flower) are **objects**, not tiles: `"0"/"1"` shape masks, auto-shaded by `shadeMask` with the fixed `objectRamps`, with footprint and behaviour in `objectInfo`. This is the base for furniture, decor and a pet.
   - All town and object masks are **drafts** that the maintainer will redraw. The layering (tile, block, tileset behaviour lists, map) follows pret/pokered, with none of its art or data.
 
 Next: more objects and a pet on `Sprite`; final art for the draft tiles and objects; more tile types; a Web Worker only if measurements show it's needed.
@@ -37,7 +37,7 @@ Next: more objects and a pet on `Sprite`; final art for the draft tiles and obje
 - **No new dependency without checking its size and licence first.** Report the gzipped size delta. The core target is zero runtime dependencies.
 - **No secrets**, API keys, `.env` files or personal data anywhere in the repo or its history.
 - **Do not break the published API silently.** If an export changes, say so and update the README.
-- **Licences:** code is MIT (`LICENSE`). Art is CC BY 4.0 (`LICENSE-ART.md`), which covers `src/avatar/masks/**`, `src/world/tiles/tileMasks.ts`, `src/world/tiles/townMasks.ts`, `src/world/objects/objectMasks.ts` and `src/world/tilesets/**`. When you add new art files (furniture, decor, pet masks), add their paths to `LICENSE-ART.md`. Do not change either licence without asking.
+- **Licences:** code is MIT (`LICENSE`). Art is CC BY 4.0 (`LICENSE-ART.md`), which covers `src/avatar/masks/**`, `src/world/masks/**` and `src/world/tilesets/**`. When you add new art files (furniture, decor, pet masks), add their paths to `LICENSE-ART.md`. Do not change either licence without asking.
 
 ## Commands
 
