@@ -4,11 +4,11 @@ This repo will be **open source**. Write everything in it (code, comments, commi
 
 ## What this is
 
-A TypeScript library that composes and renders pixel-art avatars (and, next, tiles, furniture and small decor) from string-based masks and fixed palettes. It is the avatar/world engine for a separate, private, safety-first social app, but it must stand on its own and know nothing about that app.
+A TypeScript library that composes and renders pixel-art avatars (and, next, tiles, furniture and small decor) from string-based masks and fixed palettes.
 
 ## Current state (core and Sprite refactor done)
 
-- Entries: `pixel-mask-engine` (pure core: `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg*`, style and palette tables), `pixel-mask-engine/canvas` (`paintRaster`, `drawRaster`) and `pixel-mask-engine/react` (`Avatar`, `Tile`, `PixelImage`). React is an optional peer.
+- Entries: `@ragtechdev/pixel-mask-engine` (pure core: `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg*`, style and palette tables), `@ragtechdev/pixel-mask-engine/canvas` (`paintRaster`, `drawRaster`) and `@ragtechdev/pixel-mask-engine/react` (`Avatar`, `Tile`, `PixelImage`). React is an optional peer.
 - `Sprite` (`src/core/sprite.ts`) is the single image primitive: palette-slot indices plus an origin. Avatar shape masks are still `"0"`/`"1"` strings, auto-shaded by `shadeMask` using `src/core/lighting.ts`. Tile masks are numeric grids with the fixed `tilePalette`. `composeSprites` (internal) produces a colour-resolved `Raster`.
 - `resolveAvatarConfig` replaces any value that isn't in the fixed tables with its default.
 - Size baseline before the refactor: the whole bundle was about 3.3 KB gzipped. After it, an avatar-only import is about 3.28 KB, the full core entry is about 4.25 KB (it now includes tiles), and the react and canvas entries add about 0.46 KB and 0.45 KB.
@@ -17,7 +17,7 @@ Next: furniture, decor and a pet on `Sprite`; more tile types; a Web Worker only
 
 ## Target design
 
-1. **Zero-dependency, tree-shakeable ESM core** (pure TypeScript, no React, no DOM types in the core entry). The React/Preact component is a separate optional entry point (for example `pixel-mask-engine/react`), with React as an optional peer dependency.
+1. **Zero-dependency, tree-shakeable ESM core** (pure TypeScript, no React, no DOM types in the core entry). The React/Preact component is a separate optional entry point (for example `@ragtechdev/pixel-mask-engine/react`), with React as an optional peer dependency.
 2. **One `Sprite` abstraction** shared by avatars, tiles, furniture, decor and a pet: a palette-indexed mask plus size and anchor. Replace the three mask formats with this one.
 3. **Render once, reuse.** Paint each unique config to an offscreen canvas or sprite sheet, cache by a hash of the config, and draw with `image-rendering: pixelated`. Keep a plain SVG path for non-canvas use if it is cheap. Move batch generation into a Web Worker with `OffscreenCanvas` only if it measurably blocks the main thread.
 4. **Framework-agnostic API.** The consumer app mounts a canvas module outside its UI framework, so the core must be callable without any framework.
@@ -36,15 +36,24 @@ Next: furniture, decor and a pet on `Sprite`; more tile types; a Web Worker only
 ## Commands
 
 ```sh
-npm install
-npm run dev        # vite examples/react-demo
-npm run build      # tsup (tsup.config.ts): index, canvas, react entries
-npm run typecheck  # tsc on everything + no-DOM check of the core entry (tsconfig.core.json)
-npm test           # builds, then node:test against dist (test/*.test.mjs)
-npm run size       # gzipped size per entry (scripts/size.mjs)
+pnpm install --frozen-lockfile
+pnpm dev           # vite examples/react-demo
+pnpm build         # tsup (tsup.config.ts): index, canvas, react entries
+pnpm typecheck     # tsc on everything + no-DOM check of the core entry (tsconfig.core.json)
+pnpm test          # builds, then node:test against dist (test/*.test.mjs)
+pnpm size          # gzipped size per entry (scripts/size.mjs)
 ```
 
 Tests use the built-in `node:test` runner (no test dependency). `test/golden.test.mjs` checks `buildAvatar` pixel-for-pixel against fingerprints recorded from the original React renderer (commit db0a2c2). Add tests for each module you refactor.
+
+## Supply chain
+
+The package manager is pnpm (pinned in `packageManager`); do not use npm or commit `package-lock.json`. Hardening lives in `pnpm-workspace.yaml`:
+- Dependency install scripts never run (`onlyBuiltDependencies: []`). esbuild is explicitly ignored. If pnpm warns that a new dependency wants a build script, review it; do not allow it by reflex.
+- `minimumReleaseAge` delays brand-new versions by 3 days.
+- `trustPolicy: no-downgrade` rejects versions that lost provenance. Exceptions go in `trustPolicyExclude`, exact version only, with a comment saying why. Never add one without reviewing the package (maintainer, repo, publish history).
+- Always install with `--frozen-lockfile` in CI. Add a dependency only after checking its size and licence.
+- Publishing happens only from `.github/workflows/release.yml` via npm trusted publishing (OIDC, with provenance). No npm token is stored anywhere. GitHub Actions are pinned to commit SHAs.
 
 ## Measuring size
 

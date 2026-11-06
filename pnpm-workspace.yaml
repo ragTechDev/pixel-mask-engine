@@ -1,0 +1,21 @@
+# Supply-chain hardening (see CLAUDE.md "Supply chain").
+
+# Never run dependency install scripts unless a package is listed here.
+onlyBuiltDependencies: []
+# Reviewed and deliberately NOT allowed: esbuild's postinstall is an optional
+# speed-up; its native binary ships as a separate package and works without it.
+ignoredBuiltDependencies:
+  - esbuild
+# strictDepBuilds is left off: pnpm 10.22 exits non-zero even for packages listed
+# in ignoredBuiltDependencies. Scripts stay blocked either way; pnpm warns when a
+# new dependency wants one, so review that warning on every install.
+# Don't install versions published in the last 3 days (minutes).
+minimumReleaseAge: 4320
+# Refuse packages whose publish trust level dropped vs. earlier versions.
+trustPolicy: no-downgrade
+# Reviewed exceptions. Each is dev-only, exact-version, from a long-standing
+# maintainer, and is the final release of an older line published before the
+# maintainers began attaching provenance. Revisit when upgrading.
+trustPolicyExclude:
+  - chokidar@4.0.3   # via tsup (paulmillr); 4.0.1 had provenance, 4.0.3 does not
+  - semver@6.3.1     # via @babel/core (npm team); last 6.x, predates provenance

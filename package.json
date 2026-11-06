@@ -1,8 +1,29 @@
 {
-  "name": "pixel-mask-engine",
+  "name": "@ragtechdev/pixel-mask-engine",
   "version": "0.1.0",
   "description": "Compose and render pixel-art avatars and tiles from fixed masks and palettes.",
+  "author": "Natasha Ann",
   "license": "(MIT AND CC-BY-4.0)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ragtechdev/pixel-mask-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ragtechdev/pixel-mask-engine/issues"
+  },
+  "homepage": "https://github.com/ragtechdev/pixel-mask-engine#readme",
+  "keywords": [
+    "pixel-art",
+    "avatar",
+    "sprite",
+    "canvas",
+    "svg",
+    "tiles"
+  ],
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -32,7 +53,8 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.core.json",
     "test": "tsup && node --test test/*.test.mjs",
-    "size": "node scripts/size.mjs"
+    "size": "node scripts/size.mjs",
+    "prepublishOnly": "pnpm run typecheck && pnpm test"
   },
   "peerDependencies": {
     "react": ">=18"
@@ -52,5 +74,8 @@
     "vite": "^7.3.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

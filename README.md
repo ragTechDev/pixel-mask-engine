@@ -10,25 +10,25 @@ A small TypeScript library that composes pixel-art avatars and tiles from fixed,
 ## Install
 
 ```sh
-npm install pixel-mask-engine
-# React is an optional peer dependency, only needed for pixel-mask-engine/react
+npm install @ragtechdev/pixel-mask-engine
+# React is an optional peer dependency, only needed for @ragtechdev/pixel-mask-engine/react
 ```
 
 ## Entry points
 
 | Import | What it contains |
 | --- | --- |
-| `pixel-mask-engine` | `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
-| `pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
-| `pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
+| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
+| `@ragtechdev/pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
+| `@ragtechdev/pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
 
 ## Usage
 
 ### Framework-free (canvas)
 
 ```ts
-import { buildAvatar, avatarKey, createCache, type AvatarConfig, type Raster } from "pixel-mask-engine";
-import { drawRaster } from "pixel-mask-engine/canvas";
+import { buildAvatar, avatarKey, createCache, type AvatarConfig, type Raster } from "@ragtechdev/pixel-mask-engine";
+import { drawRaster } from "@ragtechdev/pixel-mask-engine/canvas";
 
 const cache = createCache<Raster>(512);
 const config: AvatarConfig = { skinTone: "medium", hairColor: "black", clothesColor: "green", topStyle: "shirt" };
@@ -42,7 +42,7 @@ drawRaster(ctx, avatar, x, y, 4); // 4 screen pixels per art pixel, nearest-neig
 ### SVG string
 
 ```ts
-import { buildTile, toSvg, toSvgDataUrl } from "pixel-mask-engine";
+import { buildTile, toSvg, toSvgDataUrl } from "@ragtechdev/pixel-mask-engine";
 
 const svg = toSvg(buildTile("brick_pavement"), 4); // one <path> per colour
 element.style.backgroundImage = `url("${toSvgDataUrl(buildTile("road"), 4)}")`;
@@ -51,7 +51,7 @@ element.style.backgroundImage = `url("${toSvgDataUrl(buildTile("road"), 4)}")`;
 ### React
 
 ```tsx
-import { Avatar, Tile } from "pixel-mask-engine/react";
+import { Avatar, Tile } from "@ragtechdev/pixel-mask-engine/react";
 
 <Avatar headOrientation="front" skinTone="medium" hairColor="black" topStyle="shirt" pixelSize={4} />
 <Tile id="road" pixelSize={4} />
@@ -66,12 +66,12 @@ import { Avatar, Tile } from "pixel-mask-engine/react";
 ## Development
 
 ```sh
-npm install
-npm run dev        # demo in examples/react-demo
-npm run typecheck  # whole project, plus a no-DOM check of the core entry
-npm test           # builds, then runs node:test against dist
-npm run build      # tsup: ESM + .d.ts for all entries
-npm run size       # gzipped size per entry
+pnpm install
+pnpm dev        # demo in examples/react-demo
+pnpm typecheck  # whole project, plus a no-DOM check of the core entry
+pnpm test       # builds, then runs node:test against dist
+pnpm build      # tsup: ESM + .d.ts for all entries
+pnpm size       # gzipped size per entry
 ```
 
 ## Licence
