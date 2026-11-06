@@ -19,3 +19,9 @@ trustPolicy: no-downgrade
 trustPolicyExclude:
   - chokidar@4.0.3   # via tsup (paulmillr); 4.0.1 had provenance, 4.0.3 does not
   - semver@6.3.1     # via @babel/core (npm team); last 6.x, predates provenance
+
+# GHSA-g7r4-m6w7-qqqr: esbuild < 0.28.1 (dev server file read on Windows).
+# tsup 8.5.1 pins esbuild ^0.27, so force the patched range. Remove this once
+# tsup (or its replacement, issue #6) depends on esbuild >= 0.28.1 itself.
+overrides:
+  esbuild: ^0.28.1
