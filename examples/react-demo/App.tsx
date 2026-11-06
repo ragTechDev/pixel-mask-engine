@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildTile, createCache, toSvgDataUrl, type Raster, type AvatarConfig, type TileId } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildTile, createCache, defineMap, houseTileset, tileIds, toSvgDataUrl, townTileset, type Raster, type AvatarConfig, type TileId } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -131,17 +131,70 @@ function Panel({ children, style }: { children: React.ReactNode; style?: React.C
 }
 
 // ─── Tile data ───────────────────────────────────────────────────────────────
-const TILE_IDS: TileId[] = ["road", "beige_pavement", "brick_pavement"]
+const TILE_IDS: TileId[] = tileIds
 const TILE_LABELS: Record<TileId, string> = {
   road:           "Road",
   beige_pavement: "Pavement",
   brick_pavement: "Brick",
+  grass:          "Grass",
+  tall_grass:     "Tall grass",
+  path:           "Path",
+  water:          "Water",
+  shore:          "Shore",
+  tree:           "Tree",
+  fence:          "Fence",
+  flower:         "Flowers",
+  wall:           "Wall",
+  floor:          "Floor",
+  door:           "Door",
+  window:         "Window",
+  counter:        "Counter",
+  rug:            "Rug",
+  bookshelf:      "Bookshelf",
 }
 const TILE_DESC: Record<TileId, string> = {
   road:           "Asphalt with white lane markings",
   beige_pavement: "Flagstone running-bond + grout",
   brick_pavement: "Brick running-bond + mortar",
+  grass:          "Plain grass (draft)",
+  tall_grass:     "Tall grass, can trigger encounters (draft)",
+  path:           "Dirt path (draft)",
+  water:          "Open water, not walkable (draft)",
+  shore:          "Grass, sand and water edge (draft)",
+  tree:           "Solid tree (draft)",
+  fence:          "Solid fence run (draft)",
+  flower:         "Grass with flowers (draft)",
+  wall:           "Stone wall, solid (draft)",
+  floor:          "Wood plank floor (draft)",
+  door:           "Door, acts as a warp (draft)",
+  window:         "Wall with a window (draft)",
+  counter:        "Shop counter, interact across it (draft)",
+  rug:            "Patterned rug (draft)",
+  bookshelf:      "Solid bookshelf (draft)",
 }
+
+// ─── Demo worlds ─────────────────────────────────────────────────────────────
+// One character per block. Each block is 2×2 tiles, so these maps are tiny.
+const TOWN_MAP = defineMap(townTileset, [
+  "TTTTTTTTTT",
+  "TggFggGGgT",
+  "ThhhWhggfT",
+  "ThhhdhggfT",
+  "TgpppppgGT",
+  "TFgpggggGT",
+  "TggpgwwwwT",
+  "TggpgssssT",
+])
+const HOUSE_MAP = defineMap(houseTileset, [
+  "hhWhhWhh",
+  "bbffffbb",
+  "ffrrrrff",
+  "ccccffff",
+  "ffffffff",
+  "hhhdhhhh",
+])
+const TOWN_RASTER = buildMap(TOWN_MAP)
+const HOUSE_RASTER = buildMap(HOUSE_MAP)
 
 // ─── Tiled background ────────────────────────────────────────────────────────
 // Uses a CSS background-image data-URL so the repeat covers any container
@@ -403,6 +456,13 @@ export default function App() {
             <PreviewWindow label="TILE" name={TILE_LABELS[tile].toUpperCase()} size="16×16 PX">
               <TileBackground tileId={tile} />
             </PreviewWindow>
+
+            <PreviewWindow label="WORLD" name="TOWN + HOUSE" size="BLOCKS 2×2">
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", flexWrap: "wrap", padding: 12 }}>
+                <PixelImage raster={TOWN_RASTER} pixelSize={2} title="Town demo map" />
+                <PixelImage raster={HOUSE_RASTER} pixelSize={2} title="House demo map" />
+              </div>
+            </PreviewWindow>
           </div>
         </div>
 
@@ -420,7 +480,7 @@ export default function App() {
           </div>
 
           {/* Compact tile grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
             {TILE_IDS.map(id => {
               const selected = tile === id
               return (
