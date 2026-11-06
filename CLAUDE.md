@@ -67,13 +67,21 @@ The package manager is pnpm (pinned in `packageManager`); do not use npm or comm
 - GitHub Actions are pinned to commit SHAs. Repo policy (Settings -> Actions) requires SHA pinning and allows only GitHub-owned actions plus `pnpm/action-setup`. To use a new action, review it first, then add it to that allow-list.
 - Dependabot (`.github/dependabot.yml`) proposes weekly updates for Actions and dev dependencies, skipping versions younger than 3 days. Review each PR: check the changelog, and treat any new install-script warning or trust-policy failure as a stop sign, not something to exclude by reflex.
 
+## Releases
+
+Versions follow semver (before 1.0, a breaking change bumps the minor). Release notes live in `CHANGELOG.md` (Keep a Changelog format) and are drafted from the commit history by `scripts/changelog.mjs`, which has no dependencies.
+
+- Commit messages use `type(scope): subject`. Mark a breaking change with `!` after the scope (`refactor(world)!: ...`) or a `BREAKING CHANGE:` footer, or the suggested bump will miss it. `feat`, `fix`, `perf`, `refactor` and `revert` reach the changelog; `chore`, `docs`, `test`, `ci` and `build` do not.
+- To release: run `pnpm changelog` for the suggested bump and a draft. Run `pnpm changelog:write` to insert the draft into `CHANGELOG.md`, then rewrite it for readers and add anything the script cannot see. Commit it, run `pnpm version <patch|minor|major>` (it bumps `package.json` and makes the commit and the `v*` tag), then push the commit and the tag.
+- The tag starts `.github/workflows/release.yml`. It refuses to publish when the version has no `CHANGELOG.md` section. After the approval-gated publish, a separate job creates the GitHub release from that section. Nothing automatic bumps versions or pushes tags, so no write token exists beyond that release job.
+
 ## Measuring size
 
 Build with tsup (ESM, minified, React external) and gzip the output. Report gzipped bytes for: the core entry alone, the React entry alone, and the whole thing. Compare to the 3.3 KB baseline above.
 
 ## Working agreement
 
-Start by proposing a short plan (steps, API sketch, what breaks) and wait for approval before refactoring. Keep one logical change per commit, with a message in the form `type(scope): subject`. Keep answers concise and ask at most one question at a time.
+Start by proposing a short plan (steps, API sketch, what breaks) and wait for approval before refactoring. Keep one logical change per commit, with a message in the form `type(scope): subject` (see Releases for breaking changes). Keep answers concise and ask at most one question at a time.
 
 ## Definition of done
 

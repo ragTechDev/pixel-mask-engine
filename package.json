@@ -54,6 +54,8 @@
     "typecheck": "tsc --noEmit && tsc -p tsconfig.core.json",
     "test": "tsup && node --test test/*.test.mjs",
     "size": "node scripts/size.mjs",
+    "changelog": "node scripts/changelog.mjs",
+    "changelog:write": "node scripts/changelog.mjs --write",
     "prepublishOnly": "pnpm run typecheck && pnpm test"
   },
   "peerDependencies": {

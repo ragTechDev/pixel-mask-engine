@@ -6,7 +6,8 @@ name: Release
 # Actions -> repository ragTechDev/pixel-mask-engine, workflow release.yml,
 # environment npm-publish. The GitHub environment of the same name must exist
 # (Settings -> Environments) with required reviewers, so every release needs
-# a manual approval.
+# a manual approval. Release notes come from CHANGELOG.md: publishing is refused
+# when the version has no notes, and a second job then creates the GitHub release.
 on:
   push:
     tags: ["v*"]
@@ -38,4 +39,28 @@ jobs:
       - run: pnpm test
       - name: Verify tag matches package version
         run: test "v$(node -p 'require("./package.json").version')" = "${GITHUB_REF_NAME}"
+      - name: Verify CHANGELOG.md has notes for this version
+        run: node scripts/changelog.mjs --notes "${GITHUB_REF_NAME}" > /dev/null
       - run: npm publish --provenance --access public
+
+  # Separate job so that only this one can write to the repository, and it holds
+  # no publish credentials. It runs only after the package is published.
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Create the GitHub release from CHANGELOG.md
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/changelog.mjs --notes "${GITHUB_REF_NAME}" > release-notes.md
+          gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --notes-file release-notes.md --verify-tag
