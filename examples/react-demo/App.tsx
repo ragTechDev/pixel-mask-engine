@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildObject, buildTile, createCache, defineMap, houseTileset, objectIds, tileIds, toSvgDataUrl, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, buildTile, createCache, defineMap, houseTileset, objectIds, objectInfo, tileIds, toSvgDataUrl, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -265,11 +265,160 @@ const DEFAULT: AvatarProps = {
   legPose:         "neutral",
 }
 
+// ─── World view ──────────────────────────────────────────────────────────────
+type Picked = { kind: "tile"; id: TileId } | { kind: "object"; id: ObjectId }
+const MAPS = { Town: TOWN_RASTER, House: HOUSE_RASTER } as const
+type MapName = keyof typeof MAPS
+// Screen pixels per art pixel: tiles are 64 px, objects up to 128 px in the picker; maps use 3.
+const PICK_SCALE  = 4
+const WORLD_SCALE = 3
+
+const sectionTitle: React.CSSProperties = {
+  fontSize: 13, color: C.accent, letterSpacing: "0.25em", textTransform: "uppercase", fontWeight: 700,
+}
+
+function ChoiceButton({ selected, label, onClick, children }: {
+  selected: boolean; label: string; onClick: () => void; children: React.ReactNode
+}) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={selected}
+      title={label}
+      style={{
+        background:    selected ? C.active : C.btn,
+        border:        `2px solid ${selected ? C.activeBorder : C.border}`,
+        boxShadow:     selected ? pixelBorderActive() : `2px 2px 0 ${INK}`,
+        padding:       8,
+        cursor:        "pointer",
+        display:       "flex",
+        flexDirection: "column",
+        alignItems:    "center",
+        justifyContent: "flex-end",
+        gap:           6,
+        fontFamily:    FONT,
+      }}
+    >
+      {children}
+      <span style={{ color: selected ? C.white : C.muted, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+        {label}
+      </span>
+    </button>
+  )
+}
+
+function objectDescription(id: ObjectId): string {
+  const info = objectInfo[id]
+  const solid = info.footprint.join("").split("#").length - 1
+  const notes = [`${info.width}×${info.height} tiles`, `${info.layer} layer`]
+  notes.push(solid > 0 ? `${solid} solid cell${solid > 1 ? "s" : ""}` : "walkable")
+  if (info.door) notes.push("warp")
+  if (info.counter) notes.push("counter")
+  return notes.join(", ") + " (draft)"
+}
+
+function WorldView() {
+  const [mapName, setMapName] = useState<MapName>("Town")
+  const [picked, setPicked]   = useState<Picked>({ kind: "tile", id: "grass" })
+  const raster = MAPS[mapName]
+  const pickedName = picked.kind === "tile" ? TILE_LABELS[picked.id] : OBJECT_LABELS[picked.id]
+  const pickedDesc = picked.kind === "tile" ? TILE_DESC[picked.id] : objectDescription(picked.id)
+
+  return (
+    <>
+      {/* ── Left: terrain and object picker ───────────────────────────── */}
+      <Panel style={{ width: 380, flexShrink: 0, overflowY: "auto", maxHeight: "calc(100vh - 76px)" }}>
+        <div style={{ ...sectionTitle, marginBottom: 12 }}>Terrain</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+          {TILE_IDS.map(id => (
+            <ChoiceButton key={id} label={TILE_LABELS[id]} selected={picked.kind === "tile" && picked.id === id}
+              onClick={() => setPicked({ kind: "tile", id })}>
+              <Tile id={id} pixelSize={PICK_SCALE} />
+            </ChoiceButton>
+          ))}
+        </div>
+
+        <div style={{ ...sectionTitle, margin: "20px 0 12px" }}>Objects</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+          {objectIds.map(id => (
+            <ChoiceButton key={id} label={OBJECT_LABELS[id]} selected={picked.kind === "object" && picked.id === id}
+              onClick={() => setPicked({ kind: "object", id })}>
+              <PixelImage raster={buildObject(id)} pixelSize={PICK_SCALE} title={OBJECT_LABELS[id]} />
+            </ChoiceButton>
+          ))}
+        </div>
+      </Panel>
+
+      {/* ── Right: map viewer and selection preview ──────────────────── */}
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 14 }}>
+        <Panel>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+            <div style={sectionTitle}>World</div>
+            <div role="tablist" style={{ display: "flex", gap: 4 }}>
+              {(Object.keys(MAPS) as MapName[]).map(name => (
+                <TabButton key={name} active={name === mapName} onClick={() => setMapName(name)}>{name}</TabButton>
+              ))}
+            </div>
+            <span style={{ marginLeft: "auto", color: C.muted, fontSize: 10, letterSpacing: "0.1em" }}>
+              {raster.width / 16}×{raster.height / 16} TILES
+            </span>
+          </div>
+          <div style={{ overflow: "auto", background: C.section, border: `2px solid ${C.border}`, padding: 12, lineHeight: 0 }}>
+            <PixelImage raster={raster} pixelSize={WORLD_SCALE} title={`${mapName} demo map`} />
+          </div>
+        </Panel>
+
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "flex-start" }}>
+          <PreviewWindow label={picked.kind === "tile" ? "TILE" : "OBJECT"} name={pickedName.toUpperCase()}
+            size={picked.kind === "tile" ? "16×16 PX" : `${buildObject(picked.id).width}×${buildObject(picked.id).height} PX`}>
+            {picked.kind === "tile" ? (
+              <TileBackground tileId={picked.id} />
+            ) : (
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: C.section }}>
+                <PixelImage raster={buildObject(picked.id)} pixelSize={SCALE} title={pickedName} />
+              </div>
+            )}
+          </PreviewWindow>
+          <Panel style={{ width: 280 }}>
+            <div style={{ color: C.muted, fontSize: 10, letterSpacing: "0.15em", marginBottom: 6 }}>SELECTED</div>
+            <div style={{ color: C.text, fontSize: 13, letterSpacing: "0.08em", marginBottom: 4 }}>{pickedName.toUpperCase()}</div>
+            <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>{pickedDesc}</div>
+          </Panel>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      style={{
+        background:    active ? C.active : C.btn,
+        color:         active ? C.white  : C.muted,
+        border:        `2px solid ${active ? C.activeBorder : C.border}`,
+        boxShadow:     active ? pixelBorderActive() : `2px 2px 0 ${INK}`,
+        fontFamily:    FONT,
+        fontSize:      11,
+        padding:       "5px 10px",
+        cursor:        "pointer",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+      }}
+    >
+      {children}
+    </button>
+  )
+}
+
 // ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [cfg, setCfg]   = useState<AvatarProps>(DEFAULT)
-  const [tile, setTile] = useState<TileId>("brick_pavement")
   const [tab, setTab]   = useState<Tab>("Skin")
+  const [view, setView] = useState<"avatar" | "world">("avatar")
 
   const set = <K extends keyof AvatarProps>(k: K) =>
     (v: AvatarProps[K]) => setCfg(prev => ({ ...prev, [k]: v }))
@@ -307,6 +456,10 @@ export default function App() {
         }}>
           Pixel Avatar Studio
         </h1>
+        <div role="tablist" style={{ display: "flex", gap: 6, marginLeft: 12 }}>
+          <TabButton active={view === "avatar"} onClick={() => setView("avatar")}>Avatar</TabButton>
+          <TabButton active={view === "world"} onClick={() => setView("world")}>World</TabButton>
+        </div>
         <span style={{ marginLeft: "auto", fontSize: 10, color: C.muted, letterSpacing: "0.15em" }}>
           PIXEL-MASK-ENGINE
         </span>
@@ -322,6 +475,7 @@ export default function App() {
         overflowX:  "auto",
       }}>
 
+        {view === "world" ? <WorldView /> : (<>
         {/* ── Left: Customizer ──────────────────────────────────────────── */}
         <Panel style={{
           width:     360,
@@ -435,10 +589,8 @@ export default function App() {
           </button>
         </Panel>
 
-        {/* ── Center: Preview ──────────────────────────────────────────── */}
+        {/* ── Center: Avatar preview ───────────────────────────────────── */}
         <div style={{ flex: 1, minWidth: 280, display: "flex", flexDirection: "column", gap: 10 }}>
-
-          {/* Avatar and tile windows: same frame size, same pixel scale */}
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <PreviewWindow label="AVATAR" name={cfg.headOrientation!.toUpperCase()} size={`${avatarRaster.width}×${avatarRaster.height} PX`}>
               <div style={{
@@ -454,99 +606,10 @@ export default function App() {
                 </div>
               </div>
             </PreviewWindow>
-
-            <PreviewWindow label="TILE" name={TILE_LABELS[tile].toUpperCase()} size="16×16 PX">
-              <TileBackground tileId={tile} />
-            </PreviewWindow>
-
-            <PreviewWindow label="OBJECTS" name="SHADED SPRITES" size="AUTO OUTLINE + LIGHT">
-              <div style={{ display: "flex", gap: 16, alignItems: "flex-end", flexWrap: "wrap", padding: 12 }}>
-                {objectIds.map(id => (
-                  <div key={id} style={{ textAlign: "center", fontSize: 10, color: C.muted, letterSpacing: "0.1em" }}>
-                    <div style={{ background: C.section, padding: 4, marginBottom: 4 }}>
-                      <PixelImage raster={buildObject(id)} pixelSize={3} title={OBJECT_LABELS[id]} />
-                    </div>
-                    {OBJECT_LABELS[id].toUpperCase()}
-                  </div>
-                ))}
-              </div>
-            </PreviewWindow>
-
-            <PreviewWindow label="WORLD" name="TOWN + HOUSE" size="BLOCKS 2×2">
-              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", flexWrap: "wrap", padding: 12 }}>
-                <PixelImage raster={TOWN_RASTER} pixelSize={2} title="Town demo map" />
-                <PixelImage raster={HOUSE_RASTER} pixelSize={2} title="House demo map" />
-              </div>
-            </PreviewWindow>
           </div>
         </div>
 
-        {/* ── Right: Tile Selector ──────────────────────────────────────── */}
-        <Panel style={{ width: 210, flexShrink: 0 }}>
-          <div style={{
-            fontSize:      13,
-            color:         C.accent,
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            fontWeight:    700,
-            marginBottom:  16,
-          }}>
-            Tile World
-          </div>
-
-          {/* Compact tile grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
-            {TILE_IDS.map(id => {
-              const selected = tile === id
-              return (
-                <button
-                  key={id}
-                  onClick={() => setTile(id)}
-                  aria-pressed={selected}
-                  title={TILE_LABELS[id]}
-                  style={{
-                    background:    selected ? C.active : C.btn,
-                    border:        `2px solid ${selected ? C.activeBorder : C.border}`,
-                    boxShadow:     selected ? pixelBorderActive() : `2px 2px 0 ${INK}`,
-                    padding:       4,
-                    cursor:        "pointer",
-                    display:       "flex",
-                    flexDirection: "column",
-                    alignItems:    "center",
-                    gap:           4,
-                    fontFamily:    FONT,
-                  }}
-                >
-                  <Tile id={id} pixelSize={3} />
-                  <span style={{
-                    color: selected ? C.white : C.muted, fontSize: 9,
-                    letterSpacing: "0.08em", textTransform: "uppercase",
-                  }}>
-                    {TILE_LABELS[id]}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Info box */}
-          <div style={{
-            marginTop:  16,
-            background: C.section,
-            border:     `2px solid ${C.border}`,
-            padding:    10,
-          }}>
-            <div style={{ color: C.muted, fontSize: 10, letterSpacing: "0.15em", marginBottom: 6 }}>
-              SELECTED
-            </div>
-            <div style={{ color: C.text, fontSize: 13, letterSpacing: "0.08em", marginBottom: 4 }}>
-              {TILE_LABELS[tile].toUpperCase()}
-            </div>
-            <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>
-              {TILE_DESC[tile]}
-            </div>
-          </div>
-        </Panel>
+        </>)}
 
       </main>
     </div>
