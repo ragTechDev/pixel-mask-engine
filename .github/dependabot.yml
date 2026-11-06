@@ -1,0 +1,28 @@
+version: 2
+
+updates:
+  # GitHub Actions: keeps the commit-SHA pins in .github/workflows current.
+  # Dependabot rewrites the SHA and the "# vN" comment together.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Matches minimumReleaseAge in pnpm-workspace.yaml: never propose a
+    # version younger than 3 days.
+    cooldown:
+      default-days: 3
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # Dev dependencies (the published package has no runtime dependencies).
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]

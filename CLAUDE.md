@@ -53,7 +53,10 @@ The package manager is pnpm (pinned in `packageManager`); do not use npm or comm
 - `minimumReleaseAge` delays brand-new versions by 3 days.
 - `trustPolicy: no-downgrade` rejects versions that lost provenance. Exceptions go in `trustPolicyExclude`, exact version only, with a comment saying why. Never add one without reviewing the package (maintainer, repo, publish history).
 - Always install with `--frozen-lockfile` in CI. Add a dependency only after checking its size and licence.
-- Publishing happens only from `.github/workflows/release.yml` via npm trusted publishing (OIDC, with provenance). No npm token is stored anywhere. GitHub Actions are pinned to commit SHAs.
+- Publishing happens only from `.github/workflows/release.yml` via npm trusted publishing (OIDC, with provenance). No npm token is stored anywhere. The npm trusted-publisher entry needs the **npm publish** permission (not "stage publish"), and its owner, repo, workflow and environment must match GitHub's spelling exactly (`ragTechDev`, `pixel-mask-engine`, `release.yml`, `npm-publish`).
+- A release needs a manual approval: the `npm-publish` GitHub environment has a required reviewer and only allows `v*` tags.
+- GitHub Actions are pinned to commit SHAs. Repo policy (Settings -> Actions) requires SHA pinning and allows only GitHub-owned actions plus `pnpm/action-setup`. To use a new action, review it first, then add it to that allow-list.
+- Dependabot (`.github/dependabot.yml`) proposes weekly updates for Actions and dev dependencies, skipping versions younger than 3 days. Review each PR: check the changelog, and treat any new install-script warning or trust-policy failure as a stop sign, not something to exclude by reflex.
 
 ## Measuring size
 
