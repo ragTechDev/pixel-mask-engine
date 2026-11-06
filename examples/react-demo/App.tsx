@@ -1,9 +1,8 @@
 import { useState } from "react"
-import { default as AvatarRenderer } from "../../src/avatar/Avatar"
-import { TileRenderer } from "../../src/world/TileRenderer"
-import { tileMasks } from "../../src/world/tiles/tileMasks"
-import type { TileId } from "../../src/world/types"
-import type { AvatarProps } from "../../src/avatar/Avatar"
+import { Avatar, Tile } from "../../src/react"
+import { buildTile, toSvgDataUrl, type AvatarConfig, type TileId } from "../../src"
+
+type AvatarProps = AvatarConfig
 
 // ─── Design tokens ──────────────────────────────────────────────────────────
 const C = {
@@ -158,7 +157,7 @@ function TileCard({ id, selected, onSelect }: { id: TileId; selected: boolean; o
         lineHeight:          0,
       }}>
         {[0, 1, 2, 3].map(i => (
-          <TileRenderer key={i} mask={tileMasks[id]} pixelSize={4} />
+          <Tile key={i} id={id} pixelSize={4} />
         ))}
       </div>
       <span style={{
@@ -174,31 +173,6 @@ function TileCard({ id, selected, onSelect }: { id: TileId; selected: boolean; o
   )
 }
 
-// ─── Tile palette (mirrors TileRenderer) ─────────────────────────────────────
-const TILE_PALETTE: string[] = [
-  "transparent", "#726962", "#8A7D78", "#FFFFFF",
-  "#E9BFA7",    "#C4A090",  "#F5D0BA", "#D4C4B4",
-  "#6B4548",    "#3E2830",  "#8C6870",
-]
-
-// Convert a tile mask to a repeatable SVG data-URL so CSS background-repeat
-// can tile it seamlessly at any container size without extra DOM nodes.
-function maskToDataUrl(mask: number[][], pixelSize: number): string {
-  const cols   = mask[0]?.length ?? 0
-  const rows   = mask.length
-  const w      = cols * pixelSize
-  const h      = rows * pixelSize
-  const rects  = mask.flatMap((row, y) =>
-    row.flatMap((cell, x) => {
-      if (cell === 0) return []
-      const fill = TILE_PALETTE[cell]
-      if (!fill || fill === "transparent") return []
-      return [`<rect x="${x * pixelSize}" y="${y * pixelSize}" width="${pixelSize}" height="${pixelSize}" fill="${fill}"/>`]
-    })
-  ).join("")
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">${rects}</svg>`
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`
-}
 
 // ─── Tiled background ────────────────────────────────────────────────────────
 // Uses a CSS background-image data-URL so the repeat covers any container
@@ -208,7 +182,7 @@ function TileBackground({ tileId }: { tileId: TileId }) {
   // is 16 CSS px. Tiles must use the same value to stay proportional.
   const pixelSize = 16
   const tileSize  = 16 * pixelSize  // 256 px per tile
-  const dataUrl   = maskToDataUrl(tileMasks[tileId], pixelSize)
+  const dataUrl   = toSvgDataUrl(buildTile(tileId), pixelSize)
   return (
     <div style={{
       position:          "absolute",
@@ -447,7 +421,7 @@ export default function App() {
                   imageRendering:  "pixelated",
                   filter:          "drop-shadow(0 2px 0 rgba(0,0,0,0.9))",
                 }}>
-                  <AvatarRenderer {...cfg} />
+                  <Avatar {...cfg} />
                 </div>
               </div>
             </div>
@@ -559,7 +533,7 @@ export default function App() {
                     lineHeight: 0,
                   }}
                 >
-                  <TileRenderer mask={tileMasks[id]} pixelSize={3} />
+                  <Tile id={id} pixelSize={3} />
                 </div>
               ))}
             </div>

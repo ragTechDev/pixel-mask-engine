@@ -1,12 +1,46 @@
 {
+  "name": "pixel-mask-engine",
+  "version": "0.1.0",
+  "description": "Compose and render pixel-art avatars and tiles from fixed masks and palettes.",
+  "license": "(MIT AND CC-BY-4.0)",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "LICENSE",
+    "LICENSE-ART.md"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./canvas": {
+      "types": "./dist/canvas.d.ts",
+      "import": "./dist/canvas.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    }
+  },
   "scripts": {
     "dev": "vite examples/react-demo",
-    "build": "tsup src/index.ts"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.core.json",
+    "test": "tsup && node --test test/*.test.mjs",
+    "size": "node scripts/size.mjs"
   },
-  "dependencies": {
-    "path": "^0.12.7",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^25.3.2",
@@ -15,6 +49,8 @@
     "@vitejs/plugin-react": "^5.1.4",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }

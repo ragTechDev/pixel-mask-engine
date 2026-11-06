@@ -1,8 +1,17 @@
+// Core entry: pure TypeScript, no React, no DOM.
 export * from "./avatar/styles";
-
-// convenience exports for consumers that want to render or compose
-// avatars without digging into the subdirectories.
-export { Avatar } from "./components/Avatar";
-export { composeAvatar } from "./avatar/composeAvatar";
-export { default as AvatarRenderer } from "./avatar/Avatar";
-export type { AvatarConfig, RenderedAvatar } from "./avatar/types";
+export * from "./core/palette";
+export {
+    buildAvatar,
+    avatarKey,
+    resolveAvatarConfig,
+    defaultAvatarConfig,
+    type AvatarConfig,
+    type HeadOrientation
+} from "./avatar/buildAvatar";
+export { buildTile, tileIds, tilePalette } from "./world/tiles";
+export type { TileId } from "./world/types";
+export type { Raster } from "./core/compose";
+export type { Ramp } from "./core/sprite";
+export { configKey, createCache, type Cache } from "./core/cache";
+export { toSvg, toSvgPaths, toSvgDataUrl } from "./core/svg";
