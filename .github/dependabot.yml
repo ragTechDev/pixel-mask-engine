@@ -23,6 +23,14 @@ updates:
     cooldown:
       default-days: 3
     open-pull-requests-limit: 5
+    ignore:
+      # tsup will not support TypeScript 7 (egoist/tsup#1405). Skip TS 7+ and
+      # new tsup majors until the move to tsdown. Tracked in issue #6, which
+      # also says when to remove these rules.
+      - dependency-name: typescript
+        versions: [">=7"]
+      - dependency-name: tsup
+        update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
         update-types: ["minor", "patch"]
