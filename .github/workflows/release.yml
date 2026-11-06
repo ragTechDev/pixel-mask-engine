@@ -1,0 +1,38 @@
+name: Release
+
+# Publishes to npm when a version tag is pushed. Uses npm trusted publishing
+# (short-lived OIDC credentials), so no npm token is stored in this repo.
+# One-time setup on npmjs.com: package settings -> Trusted Publisher -> GitHub
+# Actions -> repository ragtechdev/pixel-mask-engine, workflow release.yml,
+# environment npm-publish. The GitHub environment of the same name must exist
+# (Settings -> Environments) with required reviewers, so every release needs
+# a manual approval.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish # gated by required reviewers; must match the npm trusted-publisher setting
+    permissions:
+      contents: read
+      id-token: write # required for trusted publishing and provenance
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24 # ships npm >= 11.5, needed for trusted publishing
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+      - run: pnpm test
+      - name: Verify tag matches package version
+        run: test "v$(node -p 'require("./package.json").version')" = "${GITHUB_REF_NAME}"
+      - run: npm publish --provenance --access public
