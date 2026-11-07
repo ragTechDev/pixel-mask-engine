@@ -5,6 +5,8 @@ import {
     basketMask, basketWeave, bubbleDots, bubbleMask, doveBody, doveLegs, doveWing, heartMask,
     letterBig, letterFlapBig, letterFlapMid, letterFlapSmall, letterMid, letterSmall, loafMask,
     sealMask, wingLeft, wingRight,
+    cottageChimney, cottageRoof, cottageWalls, cottageDoor, cottageWindow, quillFeather, quillShaft, quillInkPot,
+    cogMask,
     envelopeMask, envelopeFlap, mailboxBody, mailboxPost, mailboxFlag, mailboxPole, mailboxSlot,
     noteMask, ribbonBand, ribbonKnot, bookmarkMask, pinnedNote, noteLines, pinMask, jarLid, jarBody, jarJam
 } from "./masks";
@@ -19,6 +21,7 @@ export type IconId =
     | "bird_letter_idle"
     | "bird_perch"
     | "winged_letter"
+    | "cottage" | "cottage_idle" | "quill" | "quill_idle" | "cog" | "cog_idle"
     | "envelope" | "envelope_idle" | "mailbox" | "note_ribbon" | "bookmark" | "bookmark_idle" | "pinned_note" | "jar";
 
 export const iconIds: IconId[] = [
@@ -30,12 +33,43 @@ export const iconIds: IconId[] = [
     "bird_letter_idle",
     "bird_perch",
     "winged_letter",
+    "cottage", "cottage_idle", "quill", "quill_idle", "cog", "cog_idle",
     "envelope", "envelope_idle", "mailbox", "note_ribbon", "bookmark", "bookmark_idle", "pinned_note", "jar"
 ];
 
 type Part =
     | { readonly shaded: PixelMask; readonly ramp: Ramp; readonly x: number; readonly y: number }
     | { readonly flat: PixelMask; readonly color: string; readonly x: number; readonly y: number };
+
+type Tone = "light" | "dark";
+type NavPart =
+    | { readonly mask: PixelMask; readonly ramp: Ramp; readonly tone: Tone; readonly x: number; readonly y: number }
+    | { readonly flat: PixelMask; readonly color: string; readonly x: number; readonly y: number };
+
+/** Turns drawn navigation parts into an active (coloured) or idle (faded, two-tone) icon. */
+function navIcon(parts: readonly NavPart[], active: boolean): readonly Part[] {
+    return parts.map((part): Part => {
+        if ("mask" in part) {
+            const ramp = active ? part.ramp : part.tone === "light" ? iconRamps.cream_idle : iconRamps.dove_wing_idle;
+            return { shaded: part.mask, ramp, x: part.x, y: part.y };
+        }
+        return { flat: part.flat, color: active ? part.color : iconInk.legs_idle, x: part.x, y: part.y };
+    });
+}
+
+const cottage: readonly NavPart[] = [
+    { mask: cottageChimney, ramp: iconRamps.brick, tone: "dark", x: 9, y: 0 },
+    { mask: cottageRoof, ramp: iconRamps.roof, tone: "dark", x: 0, y: 1 },
+    { mask: cottageWalls, ramp: iconRamps.cream, tone: "light", x: 1, y: 7 },
+    { mask: cottageDoor, ramp: iconRamps.wicker, tone: "dark", x: 3, y: 8 },
+    { mask: cottageWindow, ramp: iconRamps.glass, tone: "dark", x: 9, y: 8 }
+];
+const quill: readonly NavPart[] = [
+    { mask: quillFeather, ramp: iconRamps.dove, tone: "light", x: 0, y: 0 },
+    { flat: quillShaft, color: iconInk.legs, x: 0, y: 0 },
+    { mask: quillInkPot, ramp: iconRamps.ink_blue, tone: "dark", x: 8, y: 9 }
+];
+const cog: readonly NavPart[] = [{ mask: cogMask, ramp: iconRamps.wicker, tone: "dark", x: 0, y: 0 }];
 
 const dot: PixelMask = ["1"];
 const beak: PixelMask = ["11"];
@@ -68,6 +102,12 @@ const iconParts: Record<IconId, readonly Part[]> = {
         { shaded: bubbleMask, ramp: iconRamps.cream_soft, x: 0, y: 0 },
         { flat: bubbleDots, color: iconInk.dark, x: 4, y: 2 }
     ],
+    cottage: navIcon(cottage, true),
+    cottage_idle: navIcon(cottage, false),
+    quill: navIcon(quill, true),
+    quill_idle: navIcon(quill, false),
+    cog: navIcon(cog, true),
+    cog_idle: navIcon(cog, false),
     // A basket of bread, passed hand to hand.
     basket: [
         { shaded: loafMask, ramp: iconRamps.bread, x: 2, y: 0 },

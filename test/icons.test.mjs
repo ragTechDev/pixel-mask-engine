@@ -8,8 +8,8 @@ test("the icon set has the like, comment and message icons", () => {
     assert.deepEqual(
         [...iconIds].sort(),
         [
-            "basket", "bird_letter", "bird_letter_idle", "bird_perch", "bookmark", "bookmark_idle", "comment", "envelope", "envelope_idle",
-            "heart", "heart_empty", "jar", "mailbox", "note_ribbon", "pinned_note", "winged_letter"
+            "basket", "bird_letter", "bird_letter_idle", "bird_perch", "bookmark", "bookmark_idle", "cog", "cog_idle", "comment", "cottage", "cottage_idle", "envelope", "envelope_idle",
+            "heart", "heart_empty", "jar", "mailbox", "note_ribbon", "pinned_note", "quill", "quill_idle", "winged_letter"
         ]
     );
 });
@@ -87,3 +87,18 @@ test("the sent envelope is sealed and the idle one is a faded, unsealed copy of 
 test("the mailbox has a red flag", () => {
     assert.ok(buildIcon("mailbox").colors.some((c) => Object.values(iconRamps.heart).includes(c)), "mailbox has a red flag");
 });
+
+test("each navigation icon has a coloured version and a faded copy of the same shape", () => {
+    const faded = new Set([...Object.values(iconRamps.cream_idle), ...Object.values(iconRamps.dove_wing_idle), iconInk.legs_idle]);
+    for (const name of ["cottage", "quill", "cog"]) {
+        const active = buildIcon(name);
+        const idle = buildIcon(`${name}_idle`);
+        assert.equal(active.width, idle.width, name);
+        assert.equal(active.height, idle.height, name);
+        const shape = (r) => [...r.px].map((p) => (p === 0 ? 0 : 1)).join("");
+        assert.equal(shape(active), shape(idle), `${name} keeps its shape`);
+        for (const color of idle.colors.slice(1)) assert.ok(faded.has(color), `${name}_idle uses only faded colours: ${color}`);
+        assert.ok(active.colors.length > idle.colors.length - 1, `${name} has more colour than its faded copy`);
+    }
+});
+
