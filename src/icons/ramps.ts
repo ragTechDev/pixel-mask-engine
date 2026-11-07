@@ -11,6 +11,8 @@ export const iconRamps = {
     /** Faded versions for a state that is switched off. */
     dove_idle: { outline: "#8A8478", base: "#E6E2D6", shadow: "#D1CBBC", highlight: "#F4F1E8" },
     dove_wing_idle: { outline: "#8A8478", base: "#BDB7A8", shadow: "#A8A294", highlight: "#D0CBBE" },
+    /** Cream with the same soft outline as the idle bird, for icons that are off or outline-only. */
+    cream_soft: { outline: "#8A8478", base: "#F7F1E1", shadow: "#DDD2BC", highlight: "#FFFFFF" },
     cream_idle: { outline: "#8A8478", base: "#EFEBDD", shadow: "#DCD6C4", highlight: "#FAF8F1" }
 } as const satisfies Record<string, Ramp>;
 

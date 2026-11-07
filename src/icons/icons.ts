@@ -59,9 +59,9 @@ function birdWithLetter(active: boolean): readonly Part[] {
 /** Parts are drawn in order, later parts on top. Positions are in icon pixels. */
 const iconParts: Record<IconId, readonly Part[]> = {
     heart: [{ shaded: heartMask, ramp: iconRamps.heart, x: 0, y: 0 }],
-    heart_empty: [{ shaded: heartMask, ramp: iconRamps.cream, x: 0, y: 0 }],
+    heart_empty: [{ shaded: heartMask, ramp: iconRamps.cream_soft, x: 0, y: 0 }],
     comment: [
-        { shaded: bubbleMask, ramp: iconRamps.cream, x: 0, y: 0 },
+        { shaded: bubbleMask, ramp: iconRamps.cream_soft, x: 0, y: 0 },
         { flat: bubbleDots, color: iconInk.dark, x: 4, y: 2 }
     ],
     // A basket of bread, passed hand to hand.

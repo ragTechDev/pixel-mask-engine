@@ -51,3 +51,12 @@ test("icons are memoised and an unknown icon is rejected", () => {
     assert.equal(buildIcon("basket"), buildIcon("basket"));
     assert.throws(() => buildIcon("skull"), /Unknown icon/);
 });
+
+test("the empty heart, the comment bubble and the idle bird share one soft outline colour", () => {
+    const outline = iconRamps.cream_idle.outline;
+    assert.equal(iconRamps.cream_soft.outline, outline);
+    for (const id of ["heart_empty", "comment", "bird_letter_idle"]) {
+        assert.ok(buildIcon(id).colors.includes(outline), `${id} uses the soft outline`);
+    }
+    assert.ok(!buildIcon("heart_empty").colors.includes(iconRamps.cream.outline), "heart_empty no longer uses the dark outline");
+});
