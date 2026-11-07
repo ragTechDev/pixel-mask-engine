@@ -177,10 +177,8 @@ const OBJECT_LABELS: Record<ObjectId, string> = {
 const at = (id: ObjectId, ...spots: [number, number][]): PlacedObject[] => spots.map(([x, y]) => ({ id, x, y }))
 const TOWN_MAP = defineMap(townTileset, [
   "gggggggggg",
-  "gg1223gggg",   // roof ridge
-  "gg7889gggg",   // roof eave
-  "gglhhrgggg",   // wall
-  "gg[__]gggg",   // wall base
+  "gg<==>gggg",   // roof: ridge over eave
+  "gg[__]gggg",   // wall with its foundation row
   "gggpggggtt",
   "gggpgABCgt",   // pavement patch: edges and corners around a centre
   "gggpgDEFgt",
@@ -188,11 +186,11 @@ const TOWN_MAP = defineMap(townTileset, [
   "gggpsssssg",
   "gggpwwwwwg",
 ], [
-  ...at("tree", [0, 0], [2, 0], [17, 0], [19, 0], [1, 12], [16, 14]),
-  ...at("window", [5, 7], [9, 7]),
-  ...at("door", [7, 9]),
-  ...at("fence", [10, 10], [11, 10], [12, 10], [13, 10]),
-  ...at("flower", [2, 11], [3, 14], [4, 17], [18, 6]),
+  ...at("tree", [0, 0], [2, 0], [17, 0], [19, 0], [1, 8], [16, 10]),
+  ...at("window", [5, 4], [10, 4]),
+  ...at("door", [7, 5]),
+  ...at("fence", [10, 6], [11, 6], [12, 6], [13, 6]),
+  ...at("flower", [2, 7], [3, 10], [4, 13], [18, 2]),
 ])
 const HOUSE_MAP = defineMap(houseTileset, [
   "hhhhhhhh",
