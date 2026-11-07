@@ -18,7 +18,7 @@ npm install @ragtechdev/pixel-mask-engine
 
 | Import | What it contains |
 | --- | --- |
-| `@ragtechdev/pixel-mask-engine` | `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `tilePalettes`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
+| `@ragtechdev/pixel-mask-engine` | `iconIds`, `iconMask`, `iconSvg`, `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `tilePalettes`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
 | `@ragtechdev/pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
 | `@ragtechdev/pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
 
@@ -99,6 +99,17 @@ Unknown palette names fall back to `default`. Palettes are fixed tables, and the
 Edges and roofs use nine-patch sets: a centre tile plus edge and corner tiles for where it meets its neighbour. `townTileset` has blocks for them, keyed by a phone-keypad layout (`1`-`9` for a roof, `< = >` for a roof one block high, `A`-`I` for a beige pavement patch, `l` `h` `r` for house walls and `[` `_` `]` for a wall one block high with its foundation). The key layout is documented on `townTileset`.
 
 `townTileset` (outdoor) and `houseTileset` (interior) are built in. `defineTileSet` and `defineMap` validate their input and throw on unknown tiles, block characters or objects, on objects outside the map, and on two objects of the same layer overlapping. `buildObject(id)` renders one object by itself. The art for towns, interiors and objects is in draft form and will change.
+
+### Icons
+
+Small one-colour interface icons (`iconIds`: `heart`, `heart_outline`, `repost`, `comment`), each 9 by 8 pixels. They take their colour from the surrounding text, so there is no colour option.
+
+```ts
+import { iconMask, iconSvg } from "@ragtechdev/pixel-mask-engine";
+
+element.innerHTML = iconSvg("heart", 3); // <svg ... fill="currentColor">, 27 by 24 px
+iconMask("repost"); // ["000001000", "111111100", ...], paint the "1" cells yourself
+```
 
 ## Options
 

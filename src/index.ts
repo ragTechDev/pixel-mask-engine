@@ -22,3 +22,4 @@ export type { Raster } from "./core/compose";
 export type { Ramp } from "./core/sprite";
 export { configKey, createCache, type Cache } from "./core/cache";
 export { toSvg, toSvgPaths, toSvgDataUrl } from "./core/svg";
+export { iconIds, iconMask, iconSvg, type IconId } from "./icons/icons";
