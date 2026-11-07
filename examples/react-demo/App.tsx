@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, buildIcon, iconIds, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, buildIcon, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type IconId, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -350,22 +350,35 @@ function WorldView() {
 // ─── Icons view ──────────────────────────────────────────────────────────────
 const ICON_SCALES = [2, 4, 8] as const
 
+const ICON_GROUPS: ReadonlyArray<readonly [string, readonly IconId[]]> = [
+  ["Like", ["heart_empty", "heart"]],
+  ["Comment", ["comment"]],
+  ["Pass it on", ["bird_letter_idle", "bird_letter", "basket", "bird_perch", "winged_letter"]],
+  ["Send to one person", ["envelope", "mailbox", "note_ribbon"]],
+  ["Save", ["bookmark_idle", "bookmark", "pinned_note", "jar"]],
+]
+
 function IconsView() {
   return (
-    <Panel style={{ maxWidth: 760 }}>
+    <Panel style={{ maxWidth: 920 }}>
       <div style={{ ...sectionTitle, marginBottom: 6 }}>Icons</div>
       <p style={{ color: C.muted, fontSize: 12, margin: "0 0 16px", lineHeight: 1.6 }}>
-        Small coloured objects with an outline, shade and highlight, like the world objects. Shown at 2, 4 and 8 screen pixels per icon pixel.
+        Small coloured objects with an outline, shade and highlight, like the world objects. Where an action has an off and an on state, the off icon is faded. Shown at 2, 4 and 8 screen pixels per icon pixel.
       </p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
-        {iconIds.map((id) => (
-          <PickerCell key={id} label={id.replace("_", " ")}>
-            {ICON_SCALES.map((scale) => (
-              <PixelImage key={scale} raster={buildIcon(id)} pixelSize={scale} title={id} />
+      {ICON_GROUPS.map(([title, ids]) => (
+        <div key={title} style={{ marginBottom: 18 }}>
+          <div style={{ ...sectionTitle, fontSize: 11, marginBottom: 8 }}>{title}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 10 }}>
+            {ids.map((id) => (
+              <PickerCell key={id} label={id.replaceAll("_", " ")}>
+                {ICON_SCALES.map((scale) => (
+                  <PixelImage key={scale} raster={buildIcon(id)} pixelSize={scale} title={id} />
+                ))}
+              </PickerCell>
             ))}
-          </PickerCell>
-        ))}
-      </div>
+          </div>
+        </div>
+      ))}
     </Panel>
   )
 }

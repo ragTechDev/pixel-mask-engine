@@ -4,7 +4,9 @@ import { defineSprite, rampSlots, shadeMask, type Ramp, type Sprite } from "../c
 import {
     basketMask, basketWeave, bubbleDots, bubbleMask, doveBody, doveLegs, doveWing, heartMask,
     letterBig, letterFlapBig, letterFlapMid, letterFlapSmall, letterMid, letterSmall, loafMask,
-    sealMask, wingLeft, wingRight
+    sealMask, wingLeft, wingRight,
+    envelopeMask, envelopeFlap, mailboxBody, mailboxPost, mailboxFlag, mailboxPole, mailboxSlot,
+    noteMask, ribbonBand, ribbonKnot, bookmarkMask, pinnedNote, noteLines, pinMask, jarLid, jarBody, jarJam
 } from "./masks";
 import { iconInk, iconRamps } from "./ramps";
 
@@ -16,7 +18,8 @@ export type IconId =
     | "bird_letter"
     | "bird_letter_idle"
     | "bird_perch"
-    | "winged_letter";
+    | "winged_letter"
+    | "envelope" | "mailbox" | "note_ribbon" | "bookmark" | "bookmark_idle" | "pinned_note" | "jar";
 
 export const iconIds: IconId[] = [
     "heart",
@@ -26,7 +29,8 @@ export const iconIds: IconId[] = [
     "bird_letter",
     "bird_letter_idle",
     "bird_perch",
-    "winged_letter"
+    "winged_letter",
+    "envelope", "mailbox", "note_ribbon", "bookmark", "bookmark_idle", "pinned_note", "jar"
 ];
 
 type Part =
@@ -81,6 +85,35 @@ const iconParts: Record<IconId, readonly Part[]> = {
         { shaded: doveWing, ramp: iconRamps.dove_wing, x: 3, y: 3 },
         { flat: dot, color: iconInk.eye, x: 9, y: 1 },
         { flat: dot, color: iconInk.beak, x: 12, y: 2 }
+    ],
+    envelope: [
+        { shaded: envelopeMask, ramp: iconRamps.cream, x: 0, y: 0 },
+        { flat: envelopeFlap, color: iconInk.flap, x: 0, y: 0 },
+        { flat: sealMask, color: iconInk.seal, x: 6, y: 5 }
+    ],
+    mailbox: [
+        { shaded: mailboxPost, ramp: iconRamps.wicker, x: 6, y: 9 },
+        { shaded: mailboxBody, ramp: iconRamps.mailbox, x: 0, y: 3 },
+        { flat: mailboxSlot, color: iconInk.eye, x: 4, y: 6 },
+        { flat: mailboxPole, color: iconInk.dark, x: 14, y: 1 },
+        { shaded: mailboxFlag, ramp: iconRamps.heart, x: 14, y: 0 }
+    ],
+    note_ribbon: [
+        { shaded: noteMask, ramp: iconRamps.cream, x: 0, y: 0 },
+        { flat: ribbonBand, color: iconInk.seal, x: 0, y: 4 },
+        { shaded: ribbonKnot, ramp: iconRamps.heart, x: 4, y: 3 }
+    ],
+    bookmark: [{ shaded: bookmarkMask, ramp: iconRamps.coral, x: 0, y: 0 }],
+    bookmark_idle: [{ shaded: bookmarkMask, ramp: iconRamps.cream_soft, x: 0, y: 0 }],
+    pinned_note: [
+        { shaded: pinnedNote, ramp: iconRamps.cream, x: 0, y: 1 },
+        { flat: noteLines, color: iconInk.flap, x: 1, y: 4 },
+        { shaded: pinMask, ramp: iconRamps.heart, x: 4, y: 0 }
+    ],
+    jar: [
+        { shaded: jarBody, ramp: iconRamps.glass, x: 0, y: 2 },
+        { shaded: jarJam, ramp: iconRamps.heart, x: 2, y: 5 },
+        { shaded: jarLid, ramp: iconRamps.gold, x: 1, y: 0 }
     ],
     // A sealed letter with a wing on each side.
     winged_letter: [

@@ -13,6 +13,10 @@ export const iconRamps = {
     dove_wing_idle: { outline: "#8A8478", base: "#BDB7A8", shadow: "#A8A294", highlight: "#D0CBBE" },
     /** Cream with the same soft outline as the idle bird, for icons that are off or outline-only. */
     cream_soft: { outline: "#8A8478", base: "#F7F1E1", shadow: "#DDD2BC", highlight: "#FFFFFF" },
+    mailbox: { outline: "#243A5C", base: "#4A6FA5", shadow: "#375684", highlight: "#7596C8" },
+    coral: { outline: "#7A3E30", base: "#E59A82", shadow: "#C97C65", highlight: "#F2BBA8" },
+    glass: { outline: "#3F5F70", base: "#9CC7DB", shadow: "#7FAFC6", highlight: "#D6EBF5" },
+    gold: { outline: "#6E5420", base: "#E8C557", shadow: "#C4A23F", highlight: "#F6E39A" },
     cream_idle: { outline: "#8A8478", base: "#EFEBDD", shadow: "#DCD6C4", highlight: "#FAF8F1" }
 } as const satisfies Record<string, Ramp>;
 

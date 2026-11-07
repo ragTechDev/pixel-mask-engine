@@ -7,7 +7,10 @@ const allowed = new Set([...Object.values(iconRamps).flatMap((ramp) => Object.va
 test("the icon set has the like, comment and message icons", () => {
     assert.deepEqual(
         [...iconIds].sort(),
-        ["basket", "bird_letter", "bird_letter_idle", "bird_perch", "comment", "heart", "heart_empty", "winged_letter"]
+        [
+            "basket", "bird_letter", "bird_letter_idle", "bird_perch", "bookmark", "bookmark_idle", "comment", "envelope",
+            "heart", "heart_empty", "jar", "mailbox", "note_ribbon", "pinned_note", "winged_letter"
+        ]
     );
 });
 
@@ -52,11 +55,27 @@ test("icons are memoised and an unknown icon is rejected", () => {
     assert.throws(() => buildIcon("skull"), /Unknown icon/);
 });
 
-test("the empty heart, the comment bubble and the idle bird share one soft outline colour", () => {
+test("the empty heart, comment bubble, idle bird and unsaved bookmark share one soft outline colour", () => {
     const outline = iconRamps.cream_idle.outline;
     assert.equal(iconRamps.cream_soft.outline, outline);
-    for (const id of ["heart_empty", "comment", "bird_letter_idle"]) {
+    for (const id of ["heart_empty", "comment", "bird_letter_idle", "bookmark_idle"]) {
         assert.ok(buildIcon(id).colors.includes(outline), `${id} uses the soft outline`);
     }
     assert.ok(!buildIcon("heart_empty").colors.includes(iconRamps.cream.outline), "heart_empty no longer uses the dark outline");
+});
+
+test("the saved bookmark is coral and the unsaved one is a faded copy of the same shape", () => {
+    const saved = buildIcon("bookmark");
+    const unsaved = buildIcon("bookmark_idle");
+    assert.equal(saved.width, unsaved.width);
+    assert.equal(saved.height, unsaved.height);
+    const shape = (r) => [...r.px].map((p) => (p === 0 ? 0 : 1)).join("");
+    assert.equal(shape(saved), shape(unsaved));
+    assert.ok(saved.colors.includes(iconRamps.coral.base));
+    assert.ok(!unsaved.colors.includes(iconRamps.coral.base));
+});
+
+test("the send-to-one-person icons are sealed or flagged in red", () => {
+    assert.ok(buildIcon("envelope").colors.includes(iconInk.seal), "envelope has a seal");
+    assert.ok(buildIcon("mailbox").colors.some((c) => Object.values(iconRamps.heart).includes(c)), "mailbox has a red flag");
 });
