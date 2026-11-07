@@ -30,7 +30,9 @@ const defaultColors = {
     roofShade: "#864637",
     roofLight: "#CC7E64",
     roofEdge: "#5E2F28",
-    roofCast: "#A09585" // shadow an eave casts on the wall below it
+    roofCast: "#A09585", // shadow an eave casts on the wall below it
+    sky: "#BFDDEB",
+    skyLight: "#D3E9F3"
 } as const;
 
 export type TileColor = keyof typeof defaultColors;
@@ -59,7 +61,9 @@ export const tilePalettes = {
         pathLight: "#DDB98A",
         roof: "#8E4B3A",
         roofShade: "#6B372B",
-        roofLight: "#AD6650"
+        roofLight: "#AD6650",
+        sky: "#EAD7B9",
+        skyLight: "#F3E6CF"
     },
     winter: {
         ...defaultColors,
@@ -75,7 +79,9 @@ export const tilePalettes = {
         roof: "#D8DEE4",
         roofShade: "#AEB8C2",
         roofLight: "#FFFFFF",
-        roofEdge: "#5F6B77"
+        roofEdge: "#5F6B77",
+        sky: "#D5DFE8",
+        skyLight: "#E8EFF5"
     }
 } as const satisfies Record<string, Palette>;
 

@@ -143,6 +143,7 @@ const TILE_LABELS: Record<TileId, string> = {
   shore:                      "Shore",
   wall:                       "Wall",
   floor:                      "Floor",
+  sky:                        "Sky",
   roof_top_left:              "Roof ridge L",
   roof_top:                   "Roof ridge",
   roof_top_right:             "Roof ridge R",

@@ -4,7 +4,7 @@ import { defineTileSet } from "../tileset";
  * Outdoor tileset: grass, paths, water, pavement, building walls and roofs.
  *
  * Block keys:
- * - `g` grass, `t` tall grass, `p` path, `w` water, `s` shore (shore row over a water row)
+ * - `g` grass, `t` tall grass, `p` path, `w` water, `s` shore (shore row over a water row), `k` sky
  * - `1`-`9` roof, laid out like a phone keypad:
  *     1 2 3   ridge, with corners
  *     4 5 6   middle
@@ -25,6 +25,7 @@ export const townTileset = defineTileSet({
         p: [["path", "path"], ["path", "path"]],
         w: [["water", "water"], ["water", "water"]],
         s: [["shore", "shore"], ["water", "water"]],
+        k: [["sky", "sky"], ["sky", "sky"]],
 
         "1": [["roof_top_left", "roof_top"], ["roof_left", "roof"]],
         "2": [["roof_top", "roof_top"], ["roof", "roof"]],

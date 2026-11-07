@@ -239,3 +239,18 @@ test("buildMap takes a palette, keeps objects' colours, and memoises per palette
     assert.ok(winter.colors.includes(tilePalettes.winter.grass));
     assert.ok(!winter.colors.includes(tilePalettes.default.grass));
 });
+
+test("the sky tile is a pale opaque tile that changes colour with the palette", () => {
+    const sky = buildTile("sky");
+    assert.equal(sky.width, 16);
+    assert.equal(sky.height, 16);
+    assert.ok(sky.px.every((p) => p !== 0), "sky is opaque");
+    assert.equal(sky.colors.length, 3, "a base colour and a lighter speckle");
+    for (const theme of ["autumn", "winter"]) {
+        assert.notDeepEqual(buildTile("sky", theme).colors, sky.colors, `${theme} recolours the sky`);
+    }
+});
+
+test("the town tileset has a sky block", () => {
+    assert.deepEqual(townTileset.blocks.k, [["sky", "sky"], ["sky", "sky"]]);
+});

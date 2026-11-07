@@ -32,6 +32,7 @@ import { roadCurbMask } from "../masks/tiles/road/curb.mask";
 import { roadLineMask } from "../masks/tiles/road/line.mask";
 import { roofLightMask } from "../masks/tiles/roof/light.mask";
 import { roofShadeMask } from "../masks/tiles/roof/shade.mask";
+import { skyLightMask } from "../masks/tiles/sky/light.mask";
 import { tallGrassLightMask } from "../masks/tiles/tallGrass/light.mask";
 import { tallGrassShadeMask } from "../masks/tiles/tallGrass/shade.mask";
 import { wallMask } from "../masks/tiles/wall.mask";
@@ -152,6 +153,7 @@ export const tileDefs: Record<TileId, TileDef> = {
     water: material("water", [waterLightMask, "waterLight"], [waterShadeMask, "waterShade"]),
     wall: material("wall", [wallMask, "wallShade"]),
     floor: material("floor", [floorMask, "floorLine"]),
+    sky: material("sky", [skyLightMask, "skyLight"]),
     roof: material("roof", [roofShadeMask, "roofShade"], [roofLightMask, "roofLight"]),
 
     shore: edge("water", shoreEdges, "top"),

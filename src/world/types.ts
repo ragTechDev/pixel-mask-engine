@@ -3,7 +3,7 @@ export type RoadTileId = "road" | "beige_pavement" | "brick_pavement";
 
 /** Terrain tiles for towns and interiors (`src/world/masks/tiles`). */
 export type TownTileId =
-    | "grass" | "tall_grass" | "path" | "water" | "shore" | "wall" | "floor"
+    | "grass" | "tall_grass" | "path" | "water" | "shore" | "wall" | "floor" | "sky"
     // Roof nine-patch: ridge (top), eave (bottom), rake edges (left, right).
     | "roof_top_left" | "roof_top" | "roof_top_right"
     | "roof_left" | "roof" | "roof_right"
