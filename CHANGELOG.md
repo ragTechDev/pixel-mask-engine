@@ -10,6 +10,11 @@ To draft the next entry from the commit history, run `pnpm changelog`. See
 
 <!-- next-release -->
 
+## [0.6.0] - 2026-11-07
+
+### Added
+- **Navigation icons.** `cottage`, `quill` and `cog`, and three candidates for a feed icon: `cottage_row` (three small cottages with a little greenery, 16 pixels wide like the cottage), `willage_map` and `notice_board`. Each has a faded `_idle` copy for when it is not the current page, so `iconIds` lists both.
+
 ## [0.5.0] - 2026-11-07
 
 ### Added
