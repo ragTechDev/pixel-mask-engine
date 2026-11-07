@@ -354,7 +354,7 @@ const ICON_GROUPS: ReadonlyArray<readonly [string, readonly IconId[]]> = [
   ["Like", ["heart_empty", "heart"]],
   ["Comment", ["comment"]],
   ["Pass it on", ["bird_letter_idle", "bird_letter", "basket", "bird_perch", "winged_letter"]],
-  ["Send to one person", ["envelope", "mailbox", "note_ribbon"]],
+  ["Send to one person", ["envelope_idle", "envelope", "mailbox", "note_ribbon"]],
   ["Save", ["bookmark_idle", "bookmark", "pinned_note", "jar"]],
 ]
 

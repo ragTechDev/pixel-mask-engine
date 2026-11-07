@@ -109,7 +109,7 @@ Small coloured interface icons, drawn like world objects with an outline, shade 
 | Like | `heart_empty` (not liked), `heart` (liked) |
 | Comment | `comment` |
 | Pass it on | `bird_letter_idle` (not passed), `bird_letter` (passed, sealed); alternatives `basket`, `bird_perch`, `winged_letter` |
-| Send to one person | `envelope`; alternatives `mailbox`, `note_ribbon` |
+| Send to one person | `envelope_idle` (not sent), `envelope` (sent, sealed); alternatives `mailbox`, `note_ribbon` |
 | Save | `bookmark_idle` (not saved), `bookmark` (saved); alternatives `pinned_note`, `jar` |
 
 ```ts

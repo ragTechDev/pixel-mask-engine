@@ -19,7 +19,7 @@ export type IconId =
     | "bird_letter_idle"
     | "bird_perch"
     | "winged_letter"
-    | "envelope" | "mailbox" | "note_ribbon" | "bookmark" | "bookmark_idle" | "pinned_note" | "jar";
+    | "envelope" | "envelope_idle" | "mailbox" | "note_ribbon" | "bookmark" | "bookmark_idle" | "pinned_note" | "jar";
 
 export const iconIds: IconId[] = [
     "heart",
@@ -30,7 +30,7 @@ export const iconIds: IconId[] = [
     "bird_letter_idle",
     "bird_perch",
     "winged_letter",
-    "envelope", "mailbox", "note_ribbon", "bookmark", "bookmark_idle", "pinned_note", "jar"
+    "envelope", "envelope_idle", "mailbox", "note_ribbon", "bookmark", "bookmark_idle", "pinned_note", "jar"
 ];
 
 type Part =
@@ -90,6 +90,10 @@ const iconParts: Record<IconId, readonly Part[]> = {
         { shaded: envelopeMask, ramp: iconRamps.cream, x: 0, y: 0 },
         { flat: envelopeFlap, color: iconInk.flap, x: 0, y: 0 },
         { flat: sealMask, color: iconInk.seal, x: 6, y: 5 }
+    ],
+    envelope_idle: [
+        { shaded: envelopeMask, ramp: iconRamps.cream_idle, x: 0, y: 0 },
+        { flat: envelopeFlap, color: iconInk.flap_idle, x: 0, y: 0 }
     ],
     mailbox: [
         { shaded: mailboxPost, ramp: iconRamps.wicker, x: 6, y: 9 },
