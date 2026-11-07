@@ -133,6 +133,22 @@ test("the keypad blocks assemble a roof, a wall and a pavement patch", () => {
     assert.equal(queryCell(map, 0, 8).solid, false, "pavement corner is walkable");
 });
 
+test("a small house is one roof block over one wall block", () => {
+    const map = defineMap(townTileset, ["<==>", "[__]"]);
+    assert.deepEqual(mapTileSize(map), { width: 8, height: 4 });
+    assert.equal(tileAt(map, 0, 0), "roof_top_left");
+    assert.equal(tileAt(map, 1, 0), "roof_top");
+    assert.equal(tileAt(map, 0, 1), "roof_bottom_left");
+    assert.equal(tileAt(map, 3, 1), "roof_bottom");
+    assert.equal(tileAt(map, 7, 0), "roof_top_right");
+    assert.equal(tileAt(map, 7, 1), "roof_bottom_right");
+    assert.equal(tileAt(map, 0, 2), "wall_left");
+    assert.equal(tileAt(map, 0, 3), "wall_base_left");
+    assert.equal(tileAt(map, 4, 3), "wall_base");
+    assert.equal(queryCell(map, 3, 1).solid, true);
+    assert.equal(queryCell(map, 3, 3).solid, true);
+});
+
 test("interior objects: counters, furniture and open rugs", () => {
     const map = defineMap(houseTileset, ["hhhh", "ffff", "ffff"], [
         { id: "counter", x: 1, y: 3 },

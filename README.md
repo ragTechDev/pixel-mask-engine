@@ -96,7 +96,7 @@ buildMap(map, "autumn"); // objects keep their own colours
 
 Unknown palette names fall back to `default`. Palettes are fixed tables, and the API does not accept arbitrary colours. (This replaces the old `tilePalette` colour array export, whose indices no longer exist.)
 
-Edges and roofs use nine-patch sets: a centre tile plus edge and corner tiles for where it meets its neighbour. `townTileset` has blocks for them, keyed by a phone-keypad layout (`1`-`9` for a roof, `A`-`I` for a beige pavement patch, `l` `h` `r` and `[` `_` `]` for house walls). The key layout is documented on `townTileset`.
+Edges and roofs use nine-patch sets: a centre tile plus edge and corner tiles for where it meets its neighbour. `townTileset` has blocks for them, keyed by a phone-keypad layout (`1`-`9` for a roof, `< = >` for a roof one block high, `A`-`I` for a beige pavement patch, `l` `h` `r` for house walls and `[` `_` `]` for a wall one block high with its foundation). The key layout is documented on `townTileset`.
 
 `townTileset` (outdoor) and `houseTileset` (interior) are built in. `defineTileSet` and `defineMap` validate their input and throw on unknown tiles, block characters or objects, on objects outside the map, and on two objects of the same layer overlapping. `buildObject(id)` renders one object by itself. The art for towns, interiors and objects is in draft form and will change.
 

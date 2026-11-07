@@ -9,10 +9,11 @@ import { defineTileSet } from "../tileset";
  *     1 2 3   ridge, with corners
  *     4 5 6   middle
  *     7 8 9   eave, with corners
+ * - `<` `=` `>` a roof one block high (ridge over eave: left, middle, right), for small houses
  * - `A`-`I` beige pavement, in the same keypad layout (`E` is the middle,
  *   the rest are edges and corners against grass)
  * - `l` `h` `r` wall (left edge, middle, right edge)
- * - `[` `_` `]` wall base with foundation (left corner, middle, right corner)
+ * - `[` `_` `]` wall one block high with its foundation row (left corner, middle, right corner)
  *
  * Trees, fences, flowers, doors and windows are objects placed on top.
  */
@@ -34,6 +35,10 @@ export const townTileset = defineTileSet({
         "7": [["roof_left", "roof"], ["roof_bottom_left", "roof_bottom"]],
         "8": [["roof", "roof"], ["roof_bottom", "roof_bottom"]],
         "9": [["roof", "roof_right"], ["roof_bottom", "roof_bottom_right"]],
+
+        "<": [["roof_top_left", "roof_top"], ["roof_bottom_left", "roof_bottom"]],
+        "=": [["roof_top", "roof_top"], ["roof_bottom", "roof_bottom"]],
+        ">": [["roof_top", "roof_top_right"], ["roof_bottom", "roof_bottom_right"]],
 
         A: [["beige_pavement_top_left", "beige_pavement_top"], ["beige_pavement_left", "beige_pavement"]],
         B: [["beige_pavement_top", "beige_pavement_top"], ["beige_pavement", "beige_pavement"]],
