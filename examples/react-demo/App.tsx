@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, iconIds, iconSvg, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -347,6 +347,34 @@ function WorldView() {
   )
 }
 
+// ─── Icons view ──────────────────────────────────────────────────────────────
+const ICON_SCALES = [2, 4, 8] as const
+
+function IconsView() {
+  return (
+    <Panel style={{ maxWidth: 760 }}>
+      <div style={{ ...sectionTitle, marginBottom: 6 }}>Icons</div>
+      <p style={{ color: C.muted, fontSize: 12, margin: "0 0 16px", lineHeight: 1.6 }}>
+        One colour each, taken from the surrounding text colour (<code>fill="currentColor"</code>). Shown at 2, 4 and 8 screen pixels per icon pixel.
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
+        {iconIds.map((id) => (
+          <PickerCell key={id} label={id.replace("_", " ")}>
+            {ICON_SCALES.map((scale) => (
+              <span
+                key={scale}
+                style={{ color: C.text, lineHeight: 0 }}
+                dangerouslySetInnerHTML={{ __html: iconSvg(id, scale) }}
+              />
+            ))}
+            <span style={{ color: C.active, lineHeight: 0 }} dangerouslySetInnerHTML={{ __html: iconSvg(id, 4) }} />
+          </PickerCell>
+        ))}
+      </div>
+    </Panel>
+  )
+}
+
 function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
@@ -375,7 +403,7 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
 export default function App() {
   const [cfg, setCfg]   = useState<AvatarProps>(DEFAULT)
   const [tab, setTab]   = useState<Tab>("Skin")
-  const [view, setView] = useState<"avatar" | "world">("avatar")
+  const [view, setView] = useState<"avatar" | "world" | "icons">("avatar")
 
   const set = <K extends keyof AvatarProps>(k: K) =>
     (v: AvatarProps[K]) => setCfg(prev => ({ ...prev, [k]: v }))
@@ -416,6 +444,7 @@ export default function App() {
         <div role="tablist" style={{ display: "flex", gap: 6, marginLeft: 12 }}>
           <TabButton active={view === "avatar"} onClick={() => setView("avatar")}>Avatar</TabButton>
           <TabButton active={view === "world"} onClick={() => setView("world")}>World</TabButton>
+          <TabButton active={view === "icons"} onClick={() => setView("icons")}>Icons</TabButton>
         </div>
         <span style={{ marginLeft: "auto", fontSize: 10, color: C.muted, letterSpacing: "0.15em" }}>
           PIXEL-MASK-ENGINE
@@ -432,7 +461,7 @@ export default function App() {
         overflowX:  "auto",
       }}>
 
-        {view === "world" ? <WorldView /> : (<>
+        {view === "world" ? <WorldView /> : view === "icons" ? <IconsView /> : (<>
         {/* ── Left: Customizer ──────────────────────────────────────────── */}
         <Panel style={{
           width:     360,
