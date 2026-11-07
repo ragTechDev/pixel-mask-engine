@@ -10,6 +10,11 @@ To draft the next entry from the commit history, run `pnpm changelog`. See
 
 <!-- next-release -->
 
+## [0.5.0] - 2026-11-07
+
+### Added
+- **Sky tile.** A pale `sky` tile in every fixed palette (a blue sky by default, a warm hazy one in `autumn`, a grey-blue one in `winter`), and a `k` sky block in `townTileset` (two by two sky tiles). It is a plain tile with a few lighter specks, for the strip of sky above a horizon.
+
 ## [0.4.0] - 2026-11-07
 
 ### Added
