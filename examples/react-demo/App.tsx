@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Avatar, PixelImage, Tile } from "../../src/react"
-import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, iconIds, iconSvg, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
+import { avatarKey, buildAvatar, buildMap, buildObject, createCache, defineMap, houseTileset, buildIcon, iconIds, objectIds, tileIds, tileThemes, townTileset, type Raster, type AvatarConfig, type ObjectId, type PlacedObject, type TileId, type TileTheme } from "../../src"
 
 type AvatarProps = AvatarConfig
 
@@ -355,19 +355,14 @@ function IconsView() {
     <Panel style={{ maxWidth: 760 }}>
       <div style={{ ...sectionTitle, marginBottom: 6 }}>Icons</div>
       <p style={{ color: C.muted, fontSize: 12, margin: "0 0 16px", lineHeight: 1.6 }}>
-        One colour each, taken from the surrounding text colour (<code>fill="currentColor"</code>). Shown at 2, 4 and 8 screen pixels per icon pixel.
+        Small coloured objects with an outline, shade and highlight, like the world objects. Shown at 2, 4 and 8 screen pixels per icon pixel.
       </p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
         {iconIds.map((id) => (
           <PickerCell key={id} label={id.replace("_", " ")}>
             {ICON_SCALES.map((scale) => (
-              <span
-                key={scale}
-                style={{ color: C.text, lineHeight: 0 }}
-                dangerouslySetInnerHTML={{ __html: iconSvg(id, scale) }}
-              />
+              <PixelImage key={scale} raster={buildIcon(id)} pixelSize={scale} title={id} />
             ))}
-            <span style={{ color: C.active, lineHeight: 0 }} dangerouslySetInnerHTML={{ __html: iconSvg(id, 4) }} />
           </PickerCell>
         ))}
       </div>

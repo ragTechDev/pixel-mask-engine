@@ -1,38 +1,42 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { iconIds, iconMask, iconSvg } from "../dist/index.js";
+import { buildIcon, iconIds, iconRamps } from "../dist/index.js";
 
-test("the icon set has the like, repost and comment icons", () => {
-    assert.deepEqual([...iconIds].sort(), ["comment", "heart", "heart_outline", "repost"]);
+const rampColours = new Set(Object.values(iconRamps).flatMap((ramp) => Object.values(ramp)));
+
+test("the icon set has the like, comment and pass-it-on icons", () => {
+    assert.deepEqual([...iconIds].sort(), ["basket", "comment", "heart", "heart_empty"]);
 });
 
-test("every icon is a 9 by 8 grid of 0 and 1 with some pixels filled", () => {
+test("every icon is a small coloured raster with some pixels filled", () => {
     for (const id of iconIds) {
-        const rows = iconMask(id);
-        assert.equal(rows.length, 8, id);
-        for (const row of rows) assert.match(row, /^[01]{9}$/, id);
-        assert.ok(rows.join("").includes("1"), `${id} is empty`);
+        const icon = buildIcon(id);
+        assert.ok(icon.width >= 8 && icon.width <= 16, `${id} width ${icon.width}`);
+        assert.ok(icon.height >= 8 && icon.height <= 16, `${id} height ${icon.height}`);
+        assert.ok(icon.px.some((p) => p !== 0), `${id} is empty`);
+        assert.ok(icon.colors.length > 3, `${id} should be shaded, not flat`);
     }
 });
 
-test("the filled heart has more pixels than its outline, and both are symmetric", () => {
-    const count = (id) => iconMask(id).join("").split("1").length - 1;
-    assert.ok(count("heart") > count("heart_outline"));
-    for (const id of ["heart", "heart_outline"]) {
-        for (const row of iconMask(id)) assert.equal(row, [...row].reverse().join(""), id);
-    }
-});
-
-test("icon SVG takes its colour from the text and scales by pixel", () => {
+test("icons only use colours from the fixed ramps or the flat ink", () => {
     for (const id of iconIds) {
-        const svg = iconSvg(id, 3);
-        assert.match(svg, /^<svg /);
-        assert.match(svg, /fill="currentColor"/);
-        assert.match(svg, /width="27" height="24"/);
-        assert.match(svg, /viewBox="0 0 9 8"/);
+        for (const color of buildIcon(id).colors.slice(1)) {
+            assert.ok(rampColours.has(color) || color === "#5A3B22", `${id}: ${color}`);
+        }
     }
 });
 
-test("an unknown icon is rejected", () => {
-    assert.throws(() => iconMask("skull"), /Unknown icon/);
+test("the filled and empty hearts have the same shape in different colours", () => {
+    const filled = buildIcon("heart");
+    const empty = buildIcon("heart_empty");
+    assert.equal(filled.width, empty.width);
+    assert.equal(filled.height, empty.height);
+    const shape = (r) => [...r.px].map((p) => (p === 0 ? 0 : 1)).join("");
+    assert.equal(shape(filled), shape(empty));
+    assert.notDeepEqual(filled.colors, empty.colors);
+});
+
+test("icons are memoised and an unknown icon is rejected", () => {
+    assert.equal(buildIcon("basket"), buildIcon("basket"));
+    assert.throws(() => buildIcon("skull"), /Unknown icon/);
 });

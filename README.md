@@ -18,7 +18,7 @@ npm install @ragtechdev/pixel-mask-engine
 
 | Import | What it contains |
 | --- | --- |
-| `@ragtechdev/pixel-mask-engine` | `iconIds`, `iconMask`, `iconSvg`, `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `tilePalettes`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
+| `@ragtechdev/pixel-mask-engine` | `iconIds`, `buildIcon`, `buildAvatar`, `buildTile`, `defineTileSet`, `defineMap`, `buildMap`, `buildObject`, `queryCell`, `tilePalettes`, `avatarKey`, `createCache`, `toSvg`, style and palette tables, types |
 | `@ragtechdev/pixel-mask-engine/canvas` | `paintRaster`, `drawRaster` (browser canvas / `OffscreenCanvas`) |
 | `@ragtechdev/pixel-mask-engine/react` | `<Avatar>`, `<Tile>`, `<PixelImage>` |
 
@@ -102,13 +102,12 @@ Edges and roofs use nine-patch sets: a centre tile plus edge and corner tiles fo
 
 ### Icons
 
-Small one-colour interface icons (`iconIds`: `heart`, `heart_outline`, `repost`, `comment`), each 9 by 8 pixels. They take their colour from the surrounding text, so there is no colour option.
+Small coloured interface icons (`iconIds`: `heart`, `heart_empty`, `comment`, `basket`), drawn like world objects with an outline, shade and highlight in fixed colours. `buildIcon` returns a memoised raster you draw like any other.
 
 ```ts
-import { iconMask, iconSvg } from "@ragtechdev/pixel-mask-engine";
+import { buildIcon, toSvgDataUrl } from "@ragtechdev/pixel-mask-engine";
 
-element.innerHTML = iconSvg("heart", 3); // <svg ... fill="currentColor">, 27 by 24 px
-iconMask("repost"); // ["000001000", "111111100", ...], paint the "1" cells yourself
+img.src = toSvgDataUrl(buildIcon("heart"), 2); // 2 screen pixels per icon pixel
 ```
 
 ## Options
