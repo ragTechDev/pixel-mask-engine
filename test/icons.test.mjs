@@ -8,8 +8,8 @@ test("the icon set has the like, comment and message icons", () => {
     assert.deepEqual(
         [...iconIds].sort(),
         [
-            "basket", "bird_letter", "bird_letter_idle", "bird_perch", "bookmark", "bookmark_idle", "cog", "cog_idle", "comment", "cottage", "cottage_idle", "envelope", "envelope_idle",
-            "heart", "heart_empty", "jar", "mailbox", "note_ribbon", "pinned_note", "quill", "quill_idle", "winged_letter"
+            "basket", "bird_letter", "bird_letter_idle", "bird_perch", "bookmark", "bookmark_idle", "cog", "cog_idle", "comment", "cottage", "cottage_idle", "cottage_row", "cottage_row_idle", "envelope", "envelope_idle",
+            "heart", "heart_empty", "jar", "mailbox", "note_ribbon", "notice_board", "notice_board_idle", "pinned_note", "quill", "quill_idle", "willage_map", "willage_map_idle", "winged_letter"
         ]
     );
 });
@@ -90,7 +90,7 @@ test("the mailbox has a red flag", () => {
 
 test("each navigation icon has a coloured version and a faded copy of the same shape", () => {
     const faded = new Set([...Object.values(iconRamps.cream_idle), ...Object.values(iconRamps.dove_wing_idle), iconInk.legs_idle]);
-    for (const name of ["cottage", "quill", "cog"]) {
+    for (const name of ["cottage", "quill", "cog", "willage_map", "cottage_row", "notice_board"]) {
         const active = buildIcon(name);
         const idle = buildIcon(`${name}_idle`);
         assert.equal(active.width, idle.width, name);
@@ -100,5 +100,11 @@ test("each navigation icon has a coloured version and a faded copy of the same s
         for (const color of idle.colors.slice(1)) assert.ok(faded.has(color), `${name}_idle uses only faded colours: ${color}`);
         assert.ok(active.colors.length > idle.colors.length - 1, `${name} has more colour than its faded copy`);
     }
+});
+
+test("the cottage row has a little greenery that its faded copy loses", () => {
+    const greens = Object.values(iconRamps.grass);
+    assert.ok(buildIcon("cottage_row").colors.some((c) => greens.includes(c)), "cottage_row has bushes");
+    assert.ok(!buildIcon("cottage_row_idle").colors.some((c) => greens.includes(c)), "the faded copy has no green");
 });
 

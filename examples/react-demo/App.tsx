@@ -358,6 +358,7 @@ const ICON_GROUPS: ReadonlyArray<readonly [string, readonly IconId[]]> = [
   ["Send to one person", ["envelope_idle", "envelope", "mailbox", "note_ribbon"]],
   ["Save", ["bookmark_idle", "bookmark", "pinned_note", "jar"]],
   ["Navigation", ["cottage", "cottage_idle", "quill", "quill_idle", "cog", "cog_idle"]],
+  ["Feed (candidates)", ["cottage_row", "cottage_row_idle", "willage_map", "willage_map_idle", "notice_board", "notice_board_idle"]],
 ]
 
 function IconsView() {

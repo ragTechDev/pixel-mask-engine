@@ -22,6 +22,8 @@ export const iconRamps = {
     skin: { outline: "#6B4528", base: "#E0B08A", shadow: "#C2906A", highlight: "#F0C9A8" },
     cloth_green: { outline: "#26402B", base: "#5E8B5A", shadow: "#456B42", highlight: "#85B081" },
     ink_blue: { outline: "#1F2A44", base: "#34507F", shadow: "#263B60", highlight: "#5A78A8" },
+    grass: { outline: "#2F4D26", base: "#6E9450", shadow: "#4F7A3E", highlight: "#A8C682" },
+    map_paper: { outline: "#6B4528", base: "#EAD9B0", shadow: "#D2BF93", highlight: "#F6EBCB" },
     cream_idle: { outline: "#8A8478", base: "#EFEBDD", shadow: "#DCD6C4", highlight: "#FAF8F1" }
 } as const satisfies Record<string, Ramp>;
 
@@ -34,5 +36,7 @@ export const iconInk = {
     legs_idle: "#8A8478",
     flap: "#B5A58A",
     flap_idle: "#CFC8B6",
-    seal: "#C8505A"
+    seal: "#C8505A",
+    river: "#6FA3C7",
+    path: "#B8996D"
 } as const;

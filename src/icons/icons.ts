@@ -8,7 +8,9 @@ import {
     cottageChimney, cottageRoof, cottageWalls, cottageDoor, cottageWindow, quillFeather, quillShaft, quillInkPot,
     cogMask,
     envelopeMask, envelopeFlap, mailboxBody, mailboxPost, mailboxFlag, mailboxPole, mailboxSlot,
-    noteMask, ribbonBand, ribbonKnot, bookmarkMask, pinnedNote, noteLines, pinMask, jarLid, jarBody, jarJam
+    noteMask, ribbonBand, ribbonKnot, bookmarkMask, pinnedNote, noteLines, pinMask, jarLid, jarBody, jarJam,
+    mapPaper, mapHill, mapRiver, mapHouseRoof, mapHouseWall, mapPath, rowSideRoof, rowSideWalls, rowMidRoof, rowMidWalls, rowDoor, rowBush, rowBushShade, rowBushLight,
+    boardMask, boardPost, boardNoteA, boardNoteB, boardNoteLines
 } from "./masks";
 import { iconInk, iconRamps } from "./ramps";
 
@@ -21,6 +23,7 @@ export type IconId =
     | "bird_letter_idle"
     | "bird_perch"
     | "winged_letter"
+    | "willage_map" | "willage_map_idle" | "cottage_row" | "cottage_row_idle" | "notice_board" | "notice_board_idle"
     | "cottage" | "cottage_idle" | "quill" | "quill_idle" | "cog" | "cog_idle"
     | "envelope" | "envelope_idle" | "mailbox" | "note_ribbon" | "bookmark" | "bookmark_idle" | "pinned_note" | "jar";
 
@@ -33,6 +36,7 @@ export const iconIds: IconId[] = [
     "bird_letter_idle",
     "bird_perch",
     "winged_letter",
+    "willage_map", "willage_map_idle", "cottage_row", "cottage_row_idle", "notice_board", "notice_board_idle",
     "cottage", "cottage_idle", "quill", "quill_idle", "cog", "cog_idle",
     "envelope", "envelope_idle", "mailbox", "note_ribbon", "bookmark", "bookmark_idle", "pinned_note", "jar"
 ];
@@ -40,6 +44,8 @@ export const iconIds: IconId[] = [
 type Part =
     | { readonly shaded: PixelMask; readonly ramp: Ramp; readonly x: number; readonly y: number }
     | { readonly flat: PixelMask; readonly color: string; readonly x: number; readonly y: number };
+
+const dot: PixelMask = ["1"];
 
 type Tone = "light" | "dark";
 type NavPart =
@@ -69,9 +75,43 @@ const quill: readonly NavPart[] = [
     { flat: quillShaft, color: iconInk.legs, x: 0, y: 0 },
     { mask: quillInkPot, ramp: iconRamps.ink_blue, tone: "dark", x: 8, y: 9 }
 ];
+const willageMap: readonly NavPart[] = [
+    { mask: mapPaper, ramp: iconRamps.map_paper, tone: "light", x: 0, y: 0 },
+    { mask: mapHill, ramp: iconRamps.grass, tone: "dark", x: 1, y: 6 },
+    { flat: mapRiver, color: iconInk.river, x: 0, y: 2 },
+    { mask: mapHouseRoof, ramp: iconRamps.roof, tone: "dark", x: 8, y: 1 },
+    { mask: mapHouseWall, ramp: iconRamps.cream, tone: "light", x: 8, y: 3 },
+    { flat: mapPath, color: iconInk.path, x: 3, y: 7 }
+];
+const cottageRow: readonly NavPart[] = [
+    { mask: rowMidWalls, ramp: iconRamps.cream, tone: "light", x: 4, y: 6 },
+    { mask: rowMidRoof, ramp: iconRamps.mailbox, tone: "dark", x: 4, y: 3 },
+    { mask: rowSideWalls, ramp: iconRamps.cream, tone: "light", x: 0, y: 7 },
+    { mask: rowSideRoof, ramp: iconRamps.roof, tone: "dark", x: 0, y: 5 },
+    { mask: rowSideWalls, ramp: iconRamps.cream, tone: "light", x: 10, y: 7 },
+    { mask: rowSideRoof, ramp: iconRamps.coral, tone: "dark", x: 10, y: 5 },
+    { flat: rowDoor, color: iconInk.dark, x: 1, y: 9 },
+    { flat: rowDoor, color: iconInk.dark, x: 11, y: 9 },
+    { flat: rowDoor, color: iconInk.dark, x: 7, y: 9 },
+    { flat: rowBush, color: iconRamps.grass.base, x: 3, y: 9 },
+    { flat: rowBushShade, color: iconRamps.grass.shadow, x: 3, y: 9 },
+    { flat: rowBushLight, color: iconRamps.grass.highlight, x: 3, y: 9 },
+    { flat: rowBush, color: iconRamps.grass.base, x: 8, y: 9 },
+    { flat: rowBushShade, color: iconRamps.grass.shadow, x: 8, y: 9 },
+    { flat: rowBushLight, color: iconRamps.grass.highlight, x: 8, y: 9 }
+];
+const noticeBoard: readonly NavPart[] = [
+    { mask: boardPost, ramp: iconRamps.wicker, tone: "dark", x: 2, y: 8 },
+    { mask: boardPost, ramp: iconRamps.wicker, tone: "dark", x: 10, y: 8 },
+    { mask: boardMask, ramp: iconRamps.wicker, tone: "dark", x: 0, y: 0 },
+    { mask: boardNoteA, ramp: iconRamps.cream, tone: "light", x: 2, y: 2 },
+    { mask: boardNoteB, ramp: iconRamps.cream, tone: "light", x: 8, y: 2 },
+    { flat: boardNoteLines, color: iconInk.flap, x: 2, y: 3 },
+    { flat: dot, color: iconInk.seal, x: 3, y: 2 },
+    { flat: dot, color: iconInk.seal, x: 9, y: 2 }
+];
 const cog: readonly NavPart[] = [{ mask: cogMask, ramp: iconRamps.wicker, tone: "dark", x: 0, y: 0 }];
 
-const dot: PixelMask = ["1"];
 const beak: PixelMask = ["11"];
 
 /**
@@ -102,6 +142,12 @@ const iconParts: Record<IconId, readonly Part[]> = {
         { shaded: bubbleMask, ramp: iconRamps.cream_soft, x: 0, y: 0 },
         { flat: bubbleDots, color: iconInk.dark, x: 4, y: 2 }
     ],
+    willage_map: navIcon(willageMap, true),
+    willage_map_idle: navIcon(willageMap, false),
+    cottage_row: navIcon(cottageRow, true),
+    cottage_row_idle: navIcon(cottageRow, false),
+    notice_board: navIcon(noticeBoard, true),
+    notice_board_idle: navIcon(noticeBoard, false),
     cottage: navIcon(cottage, true),
     cottage_idle: navIcon(cottage, false),
     quill: navIcon(quill, true),

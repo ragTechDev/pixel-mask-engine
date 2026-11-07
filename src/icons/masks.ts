@@ -193,3 +193,36 @@ export const cogMask: PixelMask = [
     "000000111000000",
     "000000111000000"
 ];
+
+// Feed icon candidates: a map of the willage, a row of cottages, and a notice board.
+export const mapPaper: PixelMask = [
+    "11111111111111", "11111111111111", "11111111111111", "11111111111111", "11111111111111",
+    "11111111111111", "11111111111111", "11111111111111", "11111111111111", "11111111111111"
+];
+export const mapHill: PixelMask = ["0011100", "0111110", "1111111"];
+export const mapRiver: PixelMask = [
+    "00000000000100", "00000000001100", "00000000011000", "00000001110000", "00000011000000", "00001110000000"
+];
+export const mapHouseRoof: PixelMask = ["0110", "1111"];
+export const mapHouseWall: PixelMask = ["1111", "1111"];
+export const mapPath: PixelMask = ["1010101"];
+
+/** A row of three small cottages, no wider than the single cottage: a taller one between two. */
+export const rowSideRoof: PixelMask = ["0110", "1111"];
+export const rowSideWalls: PixelMask = ["1111", "1111", "1111", "1111"];
+export const rowMidRoof: PixelMask = ["001100", "011110", "111111"];
+export const rowMidWalls: PixelMask = ["111111", "111111", "111111", "111111", "111111"];
+export const rowDoor: PixelMask = ["1", "1"];
+/** A small bush that sits in front of the joins between the houses. */
+export const rowBush: PixelMask = ["010", "111"];
+export const rowBushShade: PixelMask = ["000", "111"];
+export const rowBushLight: PixelMask = ["010", "000"];
+
+export const boardMask: PixelMask = [
+    "11111111111111", "11111111111111", "11111111111111", "11111111111111", "11111111111111",
+    "11111111111111", "11111111111111", "11111111111111"
+];
+export const boardPost: PixelMask = ["11", "11", "11", "11"];
+export const boardNoteA: PixelMask = ["1111", "1111", "1111"];
+export const boardNoteB: PixelMask = ["111", "111", "111", "111"];
+export const boardNoteLines: PixelMask = ["111", "000", "111"];
