@@ -23,4 +23,4 @@ export type { Ramp } from "./core/sprite";
 export { configKey, createCache, type Cache } from "./core/cache";
 export { toSvg, toSvgPaths, toSvgDataUrl } from "./core/svg";
 export { iconIds, buildIcon, type IconId } from "./icons/icons";
-export { iconRamps } from "./icons/ramps";
+export { iconRamps, iconInk } from "./icons/ramps";

@@ -102,12 +102,12 @@ Edges and roofs use nine-patch sets: a centre tile plus edge and corner tiles fo
 
 ### Icons
 
-Small coloured interface icons (`iconIds`: `heart`, `heart_empty`, `comment`, `basket`), drawn like world objects with an outline, shade and highlight in fixed colours. `buildIcon` returns a memoised raster you draw like any other.
+Small coloured interface icons, drawn like world objects with an outline, shade and highlight in fixed colours. `iconIds` lists them: `heart` and `heart_empty` (liked and not), `comment`, and a messenger bird carrying a letter as `bird_letter` (sent, in full colour with a wax seal) and `bird_letter_idle` (not sent, faded). `basket`, `bird_perch` and `winged_letter` are alternatives for the same idea. `buildIcon` returns a memoised raster you draw like any other.
 
 ```ts
 import { buildIcon, toSvgDataUrl } from "@ragtechdev/pixel-mask-engine";
 
-img.src = toSvgDataUrl(buildIcon("heart"), 2); // 2 screen pixels per icon pixel
+img.src = toSvgDataUrl(buildIcon("bird_letter_idle"), 2); // 2 screen pixels per icon pixel
 ```
 
 ## Options
