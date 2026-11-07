@@ -10,6 +10,14 @@ To draft the next entry from the commit history, run `pnpm changelog`. See
 
 <!-- next-release -->
 
+## [0.3.0] - 2026-11-07
+
+### Added
+- **townTileset:** `<` `=` `>` blocks make a roof one block high (ridge over eave: left, middle, right), so a small house is one roof block over one wall block (`"<==>"` over `"[__]"`, 8 by 4 tiles). The `1`-`9` blocks still make taller roofs.
+
+### Fixed
+- The demo's town house is 8 by 4 tiles instead of 8 by 8, so it is in proportion with the trees and objects.
+
 ## [0.2.0] - 2026-11-07
 
 ### Breaking changes
