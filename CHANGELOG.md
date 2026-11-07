@@ -13,7 +13,7 @@ To draft the next entry from the commit history, run `pnpm changelog`. See
 ## [0.4.0] - 2026-11-07
 
 ### Added
-- **Icons.** Small coloured interface icons, drawn like world objects with an outline, shade and highlight in fixed colours: `buildIcon`, `iconIds`, `iconRamps` and `iconInk`. Like (`heart_empty`, `heart`), comment (`comment`), pass it on (`bird_letter_idle`, `bird_letter`, with `basket`, `bird_perch` and `winged_letter` as alternatives), send to one person (`envelope`, with `mailbox` and `note_ribbon`) and save (`bookmark_idle`, `bookmark`, with `pinned_note` and `jar`). An action with an off and an on state has a faded off icon, and the faded icons share one soft outline colour.
+- **Icons.** Small coloured interface icons, drawn like world objects with an outline, shade and highlight in fixed colours: `buildIcon`, `iconIds`, `iconRamps` and `iconInk`. Like (`heart_empty`, `heart`), comment (`comment`), pass it on (`bird_letter_idle`, `bird_letter`, with `basket`, `bird_perch` and `winged_letter` as alternatives), send to one person (`envelope_idle`, `envelope`, with `mailbox` and `note_ribbon`) and save (`bookmark_idle`, `bookmark`, with `pinned_note` and `jar`). An action with an off and an on state has a faded off icon, and the faded icons share one soft outline colour.
 - The demo has an Icons tab that groups the icons by use.
 
 ## [0.3.0] - 2026-11-07
