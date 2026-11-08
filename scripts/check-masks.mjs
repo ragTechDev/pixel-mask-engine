@@ -9,7 +9,7 @@ const src = join(root, "src");
 const TILE_SIZE = Number(/TILE_SIZE\s*=\s*(\d+)/.exec(readFileSync(join(src, "world/size.ts"), "utf8"))?.[1] ?? 16);
 // Masks are "0"/"1" rows. These are the only files that also use a palette key (buildAvatar.ts maps H to the highlight).
 const extraChars = { "avatar/masks/eyes.mask.ts": "H" };
-const MAX_ICON_SIZE = 20; // test/icons.test.mjs keeps every icon between 8 and 20 pixels
+const MAX_ICON_SIZE = 20; // every icon is centred on a square canvas this big (ICON_SIZE in src/icons/icons.ts)
 
 const args = process.argv.slice(2);
 const strict = args.includes("--strict");

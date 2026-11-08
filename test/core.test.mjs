@@ -78,7 +78,7 @@ test("buildTile resolves the fixed tile palette", () => {
     for (const id of tileIds) {
         const raster = buildTile(id);
         assert.deepEqual([raster.width, raster.height], [16, 16]);
-        assert.ok(raster.colors.slice(1).every((c) => Object.values(tilePalettes.default).includes(c)));
+        assert.ok(raster.colors.slice(1).every((c) => Object.values(tilePalettes.summer).includes(c)));
         assert.equal(buildTile(id), raster, "memoised");
     }
 });
@@ -90,4 +90,53 @@ test("toSvgPaths covers exactly the opaque pixels", () => {
         .flatMap((p) => [...p.d.matchAll(/h(\d+)v1/g)])
         .reduce((sum, m) => sum + Number(m[1]), 0);
     assert.equal(covered, opaque);
+});
+
+test("each piece of clothing can have its own colour, following clothesColor when it has none", () => {
+    const has = (raster, name) => Object.values(clothesPalettes[name]).some((c) => raster.colors.includes(c));
+    const plain = buildAvatar({ clothesColor: "red" });
+    assert.ok(has(plain, "red") && !has(plain, "blue"), "every piece follows clothesColor");
+
+    const mixed = buildAvatar({ clothesColor: "red", topColor: "blue", bottomColor: "green", shoeColor: "yellow" });
+    for (const name of ["blue", "green", "yellow"]) assert.ok(has(mixed, name), `${name} piece is drawn`);
+    assert.ok(!has(mixed, "red"), "nothing is left in the clothes colour once every piece has its own");
+
+    const shoesOnly = buildAvatar({ shoeColor: "red" });
+    assert.ok(has(shoesOnly, "red") && has(shoesOnly, "blue"), "only the shoes change");
+    const shape = (r) => Array.from(r.px, (p) => (p === 0 ? 0 : 1)).join("");
+    assert.equal(shape(shoesOnly), shape(buildAvatar()), "the shape is the same");
+
+    const dress = buildAvatar({ topStyle: "dress", topColor: "pink", bottomColor: "green" });
+    assert.ok(has(dress, "pink") && !has(dress, "green"), "a dress takes the top colour, and the bottom colour has nothing to colour");
+});
+
+test("piece colours that match clothesColor, or are unknown, change nothing", () => {
+    assert.equal(avatarKey({ clothesColor: "red", topColor: "red" }), avatarKey({ clothesColor: "red" }));
+    assert.equal(avatarKey({ topColor: "plaid" }), avatarKey());
+    assert.equal(avatarKey({ topColor: "toString" }), avatarKey(), "inherited keys are not colours");
+    assert.notEqual(avatarKey({ topColor: "red" }), avatarKey());
+    assert.deepEqual(resolveAvatarConfig({ topColor: "red" }).topColor, "red");
+    assert.equal("topColor" in resolveAvatarConfig({ topColor: "blue" }), false, "blue is the clothes colour here");
+    assert.deepEqual(buildAvatar({ topColor: "blue" }), buildAvatar(), "the default avatar's pixels are unchanged");
+});
+
+test("a dress or overalls is a top that covers the bottom", () => {
+    for (const topStyle of ["dress", "overalls"]) {
+        assert.deepEqual(buildAvatar({ topStyle, bottomStyle: "skirt" }), buildAvatar({ topStyle, bottomStyle: "none" }), `${topStyle} hides the bottom`);
+        assert.notDeepEqual(buildAvatar({ topStyle }), buildAvatar({ topStyle: "shirt" }), `${topStyle} is not a shirt`);
+    }
+    assert.notDeepEqual(buildAvatar({ topStyle: "shirt", bottomStyle: "skirt" }), buildAvatar({ topStyle: "shirt", bottomStyle: "none" }), "a shirt does not");
+});
+
+test("the old fullOutfitStyle and outfitColor options are gone", () => {
+    const resolved = resolveAvatarConfig({ fullOutfitStyle: "dress", outfitColor: "pink" });
+    assert.equal("fullOutfitStyle" in resolved, false);
+    assert.equal("outfitColor" in resolved, false);
+    assert.deepEqual(buildAvatar({ fullOutfitStyle: "dress" }), buildAvatar());
+});
+
+test("black is not a clothes colour", () => {
+    assert.equal("black" in clothesPalettes, false);
+    assert.equal(resolveAvatarConfig({ clothesColor: "black" }).clothesColor, defaultAvatarConfig.clothesColor, "it falls back to the default");
+    assert.equal("topColor" in resolveAvatarConfig({ topColor: "black" }), false);
 });

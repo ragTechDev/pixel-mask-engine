@@ -15,6 +15,7 @@ import { treeTrunkMask } from "../masks/objects/tree/trunk.mask";
 import { windowFrameMask } from "../masks/objects/window/frame.mask";
 import { windowGlassMask } from "../masks/objects/window/glass.mask";
 import type { ObjectId } from "../types";
+import type { TileTheme } from "../tiles/palettes";
 import type { ObjectRampId } from "./ramps";
 
 /**
@@ -25,6 +26,8 @@ import type { ObjectRampId } from "./ramps";
 export interface ObjectPart {
     readonly mask: PixelMask;
     readonly ramp: ObjectRampId;
+    /** Ramps for the seasons that change this part. Summer uses `ramp`. */
+    readonly seasonal?: Partial<Record<TileTheme, ObjectRampId>>;
     readonly x: number;
     readonly y: number;
 }
@@ -34,7 +37,7 @@ export const objectParts: Record<ObjectId, readonly ObjectPart[]> = {
     // 1×2 tiles (16×32). Trunk first, canopy over it.
     tree: [
         { mask: treeTrunkMask, ramp: "bark", x: 5, y: 14 },
-        { mask: treeCanopyMask, ramp: "leaf", x: 1, y: 1 }
+        { mask: treeCanopyMask, ramp: "leaf", seasonal: { spring: "leaf_spring", autumn: "leaf_autumn", winter: "leaf_snow" }, x: 1, y: 1 }
     ],
     // 1×1 tile. Two posts with two rails across them.
     fence: [
@@ -70,8 +73,8 @@ export const objectParts: Record<ObjectId, readonly ObjectPart[]> = {
     ],
     // 1×1 tile, sits on the ground. One flower mask used three times.
     flower: [
-        { mask: flowerMask, ramp: "flower_red", x: 3, y: 3 },
-        { mask: flowerMask, ramp: "flower_yellow", x: 10, y: 8 },
-        { mask: flowerMask, ramp: "flower_red", x: 5, y: 11 }
+        { mask: flowerMask, ramp: "flower_red", seasonal: { spring: "flower_pink", autumn: "flower_orange", winter: "flower_frost" }, x: 3, y: 3 },
+        { mask: flowerMask, ramp: "flower_yellow", seasonal: { spring: "flower_white", autumn: "flower_rust", winter: "flower_ice" }, x: 10, y: 8 },
+        { mask: flowerMask, ramp: "flower_red", seasonal: { spring: "flower_pink", autumn: "flower_orange", winter: "flower_frost" }, x: 5, y: 11 }
     ]
 };

@@ -134,7 +134,7 @@ async function icon() {
   const id = await ask("Icon id", { check: isSnake });
   const parts = (await ask("Mask parts, comma-separated (one name = one single mask)", { def: camel(id), check: isNames })).split(",").map((s) => s.trim());
   const size = (await ask("Placeholder size per mask", { def: "10x10", check: isSize })).split("x").map(Number);
-  const idle = await confirm("Also add a faded _idle copy?", "n");
+  const idle = await confirm("Also add a faded idle variant (used as `idle`)?", "n");
 
   const masks = scaffoldMasks({
     baseDir: `icons/${category}`,
@@ -173,7 +173,7 @@ async function icon() {
     steps.push({
       file: "src/icons/categories.ts",
       what: "Register the new category.",
-      code: `import { ${records} } from "./${category}/icons";\n\n"${category}": ${records},   // inside iconCategories`
+      code: `import { ${records} } from "./${category}/icons";\n\n"${category}": ${records},   // inside iconTables`
     });
   }
   steps.push(
@@ -188,7 +188,6 @@ async function icon() {
 const garmentSlots = {
   top: { dir: "top", type: "TopStyle", table: "topStyles", offset: [2, 6], placement: "overBody" },
   bottom: { dir: "bottom", type: "BottomStyle", table: "bottomStyles", offset: [2, 12], placement: "overBody" },
-  fullOutfit: { dir: "full", type: "FullOutfitStyle", table: "fullOutfitStyles", offset: [2, 6], placement: "overBody" },
   shoes: { dir: "shoes", type: "ShoeStyle", table: "shoeStyles", offset: [2, 16], placement: "overlay" }
 };
 
@@ -325,7 +324,7 @@ async function tile() {
     { file: "src/world/types.ts", what: `Add "${id}" to the TownTileId union.` },
     {
       file: "src/world/tiles/palettes.ts",
-      what: "Add the colour names to defaultColors. Tiles only ever name colours; autumn and winter inherit the default unless you override them.",
+      what: "Add the colour names to defaultColors. Tiles only ever name colours; the other seasons inherit summer unless you override them.",
       code: colors.map((c) => `${c}: "#RRGGBB",`).join("\n")
     },
     {
@@ -350,7 +349,7 @@ async function tile() {
 
 const kinds = [
   { label: "Icon", value: icon, hint: "interface icon in a lucide-style category" },
-  { label: "Avatar garment", value: garment, hint: "top, bottom, full outfit or shoes" },
+  { label: "Avatar garment", value: garment, hint: "top (including a dress or overalls), bottom or shoes" },
   { label: "Avatar hair", value: hair, hint: "front or back hair style" },
   { label: "World object", value: object, hint: "tree, door, rug and so on" },
   { label: "World tile", value: tile, hint: "a terrain material" }

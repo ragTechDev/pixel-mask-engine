@@ -27,9 +27,15 @@ const keysIn = (file, name) => {
 const orientations = [...readFileSync(join(root, "src/avatar/masks/head.mask.ts"), "utf8").matchAll(/^ {4}(\w+): \[/gm)].length;
 if (!orientations) throw new Error("Could not count head orientations in src/avatar/masks/head.mask.ts");
 
-// A full outfit replaces the top and bottom, so clothing is the outfits plus every top and bottom pairing.
-const outfits = count(lib.fullOutfitStyles) - 1;
-const clothing = outfits + (count(lib.topStyles) * count(lib.bottomStyles));
+// Each piece of clothing has its own colour. A top is absent (one look) or one of its styles in one of
+// the colours; a one-piece top (a dress, overalls) also covers the bottom, so it has no bottom to pair with.
+// Any other top pairs with a bottom, which is absent or one of its styles in one of the colours. Shoes work the same way.
+const colours = count(lib.clothesPalettes);
+const tops = Object.entries(lib.topStyles).filter(([id]) => id !== "none");
+const onePiece = tops.filter(([, def]) => def.coversBottom).length;
+const separate = tops.length - onePiece;
+const bottoms = count(lib.bottomStyles) - 1;
+const clothing = onePiece * colours + (separate * colours + 1) * (bottoms * colours + 1);
 const dims = {
   "head orientation": orientations,
   "skin tone": count(lib.skinPalettes),
@@ -37,9 +43,8 @@ const dims = {
   "back hair": count(lib.backHairStyles),
   "hair colour": count(lib.hairPalettes),
   "eye colour": count(lib.eyePalettes),
-  "clothes colour": count(lib.clothesPalettes),
   clothing,
-  shoes: count(lib.shoeStyles),
+  shoes: (count(lib.shoeStyles) - 1) * colours + 1,
   "arm pose": keysIn("src/avatar/buildAvatar.ts", "ARM_POSES"),
   "leg pose": keysIn("src/avatar/buildAvatar.ts", "LEG_POSES")
 };

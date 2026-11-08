@@ -10,12 +10,10 @@ import { legsMask } from "./masks/legs.mask";
 import { torsoMask } from "./masks/torso.mask";
 import {
     bottomStyles,
-    fullOutfitStyles,
     shoeStyles,
     topStyles,
     type ArmPose,
     type BottomStyle,
-    type FullOutfitStyle,
     type GarmentDefinition,
     type GarmentLayer,
     type GarmentPlacement,
@@ -43,16 +41,27 @@ export interface AvatarConfig {
     backHairStyle?: BackHairStyle;
     hairColor?: HairColor;
     eyeColor?: EyeColor;
+    /** The colour of the clothes. Each piece uses it unless it has a colour of its own below. */
     clothesColor?: ClothesColor;
+    /** Colours of single pieces. Left out, a piece follows `clothesColor`. */
+    topColor?: ClothesColor;
+    bottomColor?: ClothesColor;
+    shoeColor?: ClothesColor;
     topStyle?: TopStyle;
     bottomStyle?: BottomStyle;
-    fullOutfitStyle?: FullOutfitStyle;
     shoeStyle?: ShoeStyle;
     armPose?: ArmPose;
     legPose?: LegPose;
 }
 
-export const defaultAvatarConfig: Readonly<Required<AvatarConfig>> = {
+/** The pieces that can take a colour of their own. */
+export const pieceColorFields = ["topColor", "bottomColor", "shoeColor"] as const;
+export type PieceColorField = (typeof pieceColorFields)[number];
+
+/** An avatar config with every choice filled in. A piece colour is only there when it differs from `clothesColor`. */
+export type ResolvedAvatarConfig = Required<Omit<AvatarConfig, PieceColorField>> & Pick<AvatarConfig, PieceColorField>;
+
+export const defaultAvatarConfig: Readonly<Required<Omit<AvatarConfig, PieceColorField>>> = {
     headOrientation: "front",
     skinTone: "light",
     frontHairStyle: "centerPart",
@@ -62,7 +71,6 @@ export const defaultAvatarConfig: Readonly<Required<AvatarConfig>> = {
     clothesColor: "blue",
     topStyle: "shirt",
     bottomStyle: "shorts",
-    fullOutfitStyle: "none",
     shoeStyle: "boots",
     armPose: "down",
     legPose: "neutral"
@@ -71,7 +79,7 @@ export const defaultAvatarConfig: Readonly<Required<AvatarConfig>> = {
 const ARM_POSES = { down: 1, forward: 1, back: 1 };
 const LEG_POSES = { neutral: 1, step: 1 };
 
-const allowed: { [K in keyof AvatarConfig]-?: object } = {
+const allowed: { [K in Exclude<keyof AvatarConfig, PieceColorField>]-?: object } = {
     headOrientation: headMasks,
     skinTone: skinPalettes,
     frontHairStyle: frontHairStyles,
@@ -81,7 +89,6 @@ const allowed: { [K in keyof AvatarConfig]-?: object } = {
     clothesColor: clothesPalettes,
     topStyle: topStyles,
     bottomStyle: bottomStyles,
-    fullOutfitStyle: fullOutfitStyles,
     shoeStyle: shoeStyles,
     armPose: ARM_POSES,
     legPose: LEG_POSES
@@ -92,15 +99,22 @@ const allowed: { [K in keyof AvatarConfig]-?: object } = {
  * configs loaded from storage or the network can never select anything
  * outside the fixed tables.
  */
-export function resolveAvatarConfig(config: AvatarConfig = {}): Required<AvatarConfig> {
+export function resolveAvatarConfig(config: AvatarConfig = {}): ResolvedAvatarConfig {
     const out = { ...defaultAvatarConfig } as Record<string, string>;
-    for (const key of Object.keys(allowed) as Array<keyof AvatarConfig>) {
+    for (const key of Object.keys(allowed) as Array<keyof typeof allowed>) {
         const value = config[key];
         if (typeof value === "string" && Object.prototype.hasOwnProperty.call(allowed[key], value)) {
             out[key] = value;
         }
     }
-    return out as Required<AvatarConfig>;
+    // A piece colour only counts when it differs from the clothes colour, so equivalent configs match.
+    for (const key of pieceColorFields) {
+        const value = config[key];
+        if (typeof value === "string" && value !== out.clothesColor && Object.prototype.hasOwnProperty.call(clothesPalettes, value)) {
+            out[key] = value;
+        }
+    }
+    return out as ResolvedAvatarConfig;
 }
 
 /** Cache key for an avatar; equivalent configs (after defaults) share a key. */
@@ -131,7 +145,7 @@ export function buildAvatar(config: AvatarConfig = {}): Raster {
     const skin = rampSlots(skinPalettes[c.skinTone]);
     const hair = rampSlots(hairPalettes[c.hairColor]);
     const eyes = rampSlots(eyePalettes[c.eyeColor]);
-    const clothes = rampSlots(clothesPalettes[c.clothesColor]);
+    const clothesSlots = (color: ClothesColor | undefined) => rampSlots(clothesPalettes[color ?? c.clothesColor]);
 
     const layer = (mask: PixelMask, slots: readonly string[], x: number, y: number): Layer => ({
         sprite: shadedSprite(mask),
@@ -141,11 +155,16 @@ export function buildAvatar(config: AvatarConfig = {}): Raster {
     });
 
     const hairLayers: readonly HairLayer[] = resolveHairLayers(c.frontHairStyle, c.backHairStyle, o);
-    const outfit = c.fullOutfitStyle !== "none";
+    // A one-piece top (a dress, overalls) covers the legs, so nothing is drawn for the bottom.
+    const coversBottom = (topStyles[c.topStyle] as GarmentDefinition).coversBottom === true;
+    const piece = (layers: readonly GarmentLayer[], color: ClothesColor | undefined) => {
+        const slots = clothesSlots(color);
+        return layers.map((l) => ({ ...l, slots }));
+    };
     const garments = [
-        ...garmentLayersFor(outfit ? fullOutfitStyles[c.fullOutfitStyle] : topStyles[c.topStyle], o),
-        ...(outfit ? [] : garmentLayersFor(bottomStyles[c.bottomStyle], o)),
-        ...garmentLayersFor(shoeStyles[c.shoeStyle], o)
+        ...piece(garmentLayersFor(topStyles[c.topStyle], o), c.topColor),
+        ...(coversBottom ? [] : piece(garmentLayersFor(bottomStyles[c.bottomStyle], o), c.bottomColor)),
+        ...piece(garmentLayersFor(shoeStyles[c.shoeStyle], o), c.shoeColor)
     ];
 
     const garmentsAt = (placement: GarmentPlacement) =>
@@ -156,7 +175,7 @@ export function buildAvatar(config: AvatarConfig = {}): Raster {
                     (!g.armPoses || g.armPoses.includes(c.armPose)) &&
                     (!g.legPoses || g.legPoses.includes(c.legPose))
             )
-            .map((g) => layer(g.mask, clothes, g.offsetX, g.offsetY));
+            .map((g) => layer(g.mask, g.slots, g.offsetX, g.offsetY));
     const hairAt = (placement: HairLayer["placement"]) =>
         hairLayers.filter((h) => h.placement === placement).map((h) => layer(h.mask, hair, h.offsetX, h.offsetY));
 
@@ -186,7 +205,7 @@ export function buildAvatar(config: AvatarConfig = {}): Raster {
         arms,
         head,
         ...hairLayers.map((h) => layer(h.mask, hair, h.offsetX, h.offsetY)),
-        ...garments.map((g) => layer(g.mask, clothes, g.offsetX, g.offsetY))
+        ...garments.map((g) => layer(g.mask, g.slots, g.offsetX, g.offsetY))
     ]);
 
     return composeSprites(layers, bounds);

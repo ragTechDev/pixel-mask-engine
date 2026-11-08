@@ -10,5 +10,5 @@
     "resolveJsonModule": true,
     "outDir": "dist"
   },
-  "include": ["src", "examples"]
+  "include": ["src", "studio"]
 }

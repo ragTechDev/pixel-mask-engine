@@ -16,7 +16,7 @@ A TypeScript library that composes and renders pixel-art avatars (and, next, til
 - Worlds (`src/world/`): terrain tiles, tilesets, maps and objects.
   - `defineTileSet` (2×2-tile blocks plus `solid`/`water`/`grass` tile-id lists), `defineMap` (one character per block, plus placed objects), `buildMap` (memoised raster), `queryCell` and `tileAt`. Built-in tilesets are `townTileset` and `houseTileset`.
   - Art is one `*.mask.ts` file per mask under `src/world/masks/`, like the avatar masks: `masks/tiles/<tile>/<layer>.mask.ts` for terrain layers, `masks/tiles/edges/**` for edge strips, and `masks/objects/<object>/<part>.mask.ts` for objects (a directory when there are several masks, a single file otherwise). Every mask is `"0"`/`"1"` rows. Assembly lives in `src/world/tiles/tileDefs.ts` (tiles: which layer is painted in which colour name) and `src/world/objects/objectParts.ts` (which mask, ramp and offset each object part uses).
-  - Tile colours are only ever named (`TileColor`), never written in art. `src/world/tiles/palettes.ts` holds the fixed palettes (`tilePalettes`, `default`, `autumn`, `winter`), so `buildTile(id, theme)` and `buildMap(map, theme)` recolour the whole terrain. Unknown themes fall back to the default. Objects keep their own `objectRamps`.
+  - Tile colours are only ever named (`TileColor`), never written in art. `src/world/tiles/palettes.ts` holds the fixed palettes (`tilePalettes`: `spring`, `summer` (the default), `autumn`, `winter`), so `buildTile(id, theme)` and `buildMap(map, theme)` recolour the whole terrain. Unknown themes (including the old name `default`) fall back to summer. Objects keep their own `objectRamps`.
   - A tile is a *material* (a base colour plus 0/1 detail layers) or an *edge tile* (an inner material with edge strips painted on the open sides, where a strip can paint another tile's pixels, such as grass outside a pavement). One strip set serves every side and corner. `test/fixtures/tile-golden.json` pins every tile's pixels in the default palette.
   - Edges are tiles too: nine-patch sets (centre plus edges and corners) for `roof_*`, `beige_pavement_*` (against grass) and `wall_*` (left, right, base). `townTileset` blocks assemble them with phone-keypad keys (`1`-`9` roof, `< = >` one-block roof, `A`-`I` pavement, `l h r` wall and `[ _ ]` one-block wall with foundation). Edge tiles keep their base tile's pattern away from the edge, which the tests check.
   - Things that stand on terrain (tree, fence, door, window, counter, bookshelf, rug, flower) are **objects**, not tiles: `"0"/"1"` shape masks, auto-shaded by `shadeMask` with the fixed `objectRamps`, with footprint and behaviour in `objectInfo`. This is the base for furniture, decor and a pet.
@@ -34,18 +34,24 @@ Next: more objects and a pet on `Sprite`; more tile types and objects; a Web Wor
 
 ## Hard rules
 
-- **Constrained customization only.** Avatars and rooms are built from fixed masks and fixed palettes. Never add an API that accepts user-supplied art, arbitrary colours or arbitrary images.
+- **Constrained customization only.** Avatars and rooms are built from fixed masks and fixed palettes. Never add an API that accepts user-supplied art or arbitrary images. Colours: avatars take only the fixed palette names. Icons, objects and tiles also accept a validated hex colour (`parseHex` in `src/core/customColor.ts`: `#rgb` or `#rrggbb`, nothing else) and shade the other tones from it; never pass a user string into a colour without `parseHex`.
 - **Safe gestures only** if you add animation or gestures: non-contact (wave, sparkle, tip a hat). Nothing contact-based or sexualizable (no hugs, kisses, etc.).
 - **No new dependency without checking its size and licence first.** Report the gzipped size delta. The core target is zero runtime dependencies.
 - **No secrets**, API keys, `.env` files or personal data anywhere in the repo or its history.
 - **Do not break the published API silently.** If an export changes, say so and update the README.
 - **Licences:** code is MIT (`LICENSE`). Art is CC BY 4.0 (`LICENSE-ART.md`), which covers `src/avatar/masks/**`, `src/world/masks/**` and `src/world/tilesets/**`. When you add new art files (furniture, decor, pet masks), add their paths to `LICENSE-ART.md`. Do not change either licence without asking.
 
+## The studio
+
+`studio/` is a Vite + React app that imports straight from `src/` (never from `dist`), so it always shows the current library. It is not published to npm. The menu has two top-level sections, each with its own second-level menu: **Library** (Icons, Tiles, Objects, Avatars, Worlds) and **Docs** (one page per topic, listed in `docSections` in `studio/src/pages/Docs.tsx`, each ending with a link to the next). Library pages: Icons, Tiles, Objects (searchable grids; selecting an item opens a popover with copyable code, SVG/PNG download and every size and colour depth), Avatars (the customizer), Worlds and Docs. It uses hash routes and a relative Vite `base`, so the same build works on GitHub Pages, a custom domain or any folder. The size, bit depth, season and common-colour choices live in the address. `palette` (fixed `palettePresets`, in `src/core/variant.ts`) is a variant option next to `size` and `bits`, kept in the address as `?palette=` with a Palette row in `VariantBar`. **Studio-only colours** (single-colour edits in `CustomColours.tsx`, per-part avatar colours in `Avatars.tsx`) live in `studio/src/recolor.ts` and only recolour what it shows and exports. Avatar custom colours must never become a library API; hex colours for icons, objects and tiles are one (see the hard rule), so the studio also has a hex field and picker beside the common colours (`ColorDots`, `?color=#rrggbb`) and per-group Tile colours on Tiles and Worlds (`TileColours`, `?tile-grass=#rrggbb`), and its snippets include them. When you add an icon, tile or object it appears automatically; when the API changes, update `studio/src/pages/Docs.tsx` along with the README.
+
 ## Commands
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm dev           # vite examples/react-demo
+pnpm dev           # the studio (studio/): browse icons, tiles, objects, avatars, worlds and docs locally
+pnpm build:studio  # static studio build into studio/dist (.github/workflows/studio.yml deploys it to GitHub Pages)
+pnpm preview:studio # serve the built studio
 pnpm build         # tsup (tsup.config.ts): index, canvas, react entries
 pnpm typecheck     # tsc on everything + no-DOM check of the core entry (tsconfig.core.json)
 pnpm test          # builds, then node:test against dist (test/*.test.mjs)
@@ -100,4 +106,4 @@ Start by proposing a short plan (steps, API sketch, what breaks) and wait for ap
 
 ## Definition of done
 
-Typecheck passes, the demo runs, the build succeeds, gzipped sizes are reported against the baseline, tests exist for changed modules, and the README matches the real API.
+Typecheck passes, the studio builds and runs, the build succeeds, gzipped sizes are reported against the baseline, tests exist for changed modules, and the README matches the real API.

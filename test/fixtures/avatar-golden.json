@@ -256,16 +256,14 @@
    "sha256": "48b4ac5dc528b236ba8b330968d2d258e6c273a4d57292aa5d34da5132257fc9"
   },
   {
-   "config": {
-    "fullOutfitStyle": "none"
-   },
+   "config": {},
    "width": 16,
    "height": 24,
    "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
   },
   {
    "config": {
-    "fullOutfitStyle": "overalls"
+    "topStyle": "overalls"
    },
    "width": 16,
    "height": 24,
@@ -273,7 +271,7 @@
   },
   {
    "config": {
-    "fullOutfitStyle": "dress"
+    "topStyle": "dress"
    },
    "width": 16,
    "height": 24,
@@ -362,7 +360,6 @@
     "clothesColor": "red",
     "topStyle": "none",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -380,9 +377,8 @@
     "hairColor": "brown",
     "eyeColor": "green",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -400,9 +396,8 @@
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -420,9 +415,8 @@
     "hairColor": "black",
     "eyeColor": "green",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -440,9 +434,8 @@
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -462,7 +455,6 @@
     "clothesColor": "green",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -480,9 +472,8 @@
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "none",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -500,9 +491,8 @@
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -522,7 +512,6 @@
     "clothesColor": "red",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -542,7 +531,6 @@
     "clothesColor": "red",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -560,9 +548,8 @@
     "hairColor": "brown",
     "eyeColor": "green",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -580,9 +567,8 @@
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -600,9 +586,8 @@
     "hairColor": "black",
     "eyeColor": "green",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -622,7 +607,6 @@
     "clothesColor": "red",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -642,7 +626,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -660,9 +643,8 @@
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "none",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -682,7 +664,6 @@
     "clothesColor": "green",
     "topStyle": "none",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "step"
@@ -702,7 +683,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -720,9 +700,8 @@
     "hairColor": "brown",
     "eyeColor": "blue",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "none",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -740,9 +719,8 @@
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -762,7 +740,6 @@
     "clothesColor": "red",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -782,7 +759,6 @@
     "clothesColor": "green",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -800,9 +776,8 @@
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "red",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -822,7 +797,6 @@
     "clothesColor": "red",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -840,9 +814,8 @@
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -860,9 +833,8 @@
     "hairColor": "black",
     "eyeColor": "green",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -880,9 +852,8 @@
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -902,7 +873,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "none",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -922,7 +892,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "none",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -940,9 +909,8 @@
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -960,9 +928,8 @@
     "hairColor": "brown",
     "eyeColor": "blue",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -980,9 +947,8 @@
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "none",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -1000,9 +966,8 @@
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "none",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -1020,9 +985,8 @@
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "dress",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "dress",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -1042,7 +1006,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "none",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -1062,7 +1025,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"
@@ -1082,7 +1044,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "back",
     "legPose": "neutral"
@@ -1102,7 +1063,6 @@
     "clothesColor": "blue",
     "topStyle": "none",
     "bottomStyle": "none",
-    "fullOutfitStyle": "none",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -1120,9 +1080,8 @@
     "hairColor": "blonde",
     "eyeColor": "dark",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "skirt",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "down",
     "legPose": "neutral"
@@ -1140,9 +1099,8 @@
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "green",
-    "topStyle": "none",
+    "topStyle": "overalls",
     "bottomStyle": "shorts",
-    "fullOutfitStyle": "overalls",
     "shoeStyle": "none",
     "armPose": "forward",
     "legPose": "neutral"

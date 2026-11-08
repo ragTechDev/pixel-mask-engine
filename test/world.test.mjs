@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
     buildMap, buildObject, buildTile, defineMap, defineTileSet, houseTileset, mapTileSize,
-    objectIds, objectInfo, objectRamps, queryCell, tileAt, tileIds, tilePalettes, tileThemes, townTileset
+    colorRamps, colorableObjectIds, objectColors, objectIds, objectInfo, objectRamps, queryCell, seasonalObjectIds, tileAt, defaultTileTheme, tileIds, tilePalettes, tileThemes, townTileset
 } from "../dist/index.js";
 
 test("every tile is 16×16, opaque terrain, and only uses palette colours", () => {
@@ -13,7 +13,7 @@ test("every tile is 16×16, opaque terrain, and only uses palette colours", () =
         const tile = buildTile(id);
         assert.equal(tile.width, 16, id);
         assert.equal(tile.height, 16, id);
-        for (const color of tile.colors.slice(1)) assert.ok(Object.values(tilePalettes.default).includes(color), `${id}: ${color}`);
+        for (const color of tile.colors.slice(1)) assert.ok(Object.values(tilePalettes.summer).includes(color), `${id}: ${color}`);
     }
     for (const id of tileIds) assert.ok(buildTile(id).px.every((p) => p !== 0), `${id} is not opaque`);
 });
@@ -183,23 +183,31 @@ test("validation rejects bad input", () => {
 // ─── Palettes and golden pixels ──────────────────────────────────────────────
 const fingerprint = (r) => createHash("sha256").update(JSON.stringify([r.width, r.height, r.colors, [...r.px]])).digest("hex").slice(0, 16);
 
-test("tiles match the recorded pixels in the default palette", () => {
+test("tiles match the recorded pixels in the summer (default) palette", () => {
     const golden = JSON.parse(readFileSync(new URL("./fixtures/tile-golden.json", import.meta.url), "utf8"));
     assert.deepEqual(Object.keys(golden).sort(), [...tileIds].sort());
     for (const id of tileIds) assert.equal(fingerprint(buildTile(id)), golden[id], id);
 });
 
 test("every palette names the same colours", () => {
-    assert.deepEqual(tileThemes, ["default", "autumn", "winter"]);
-    const names = Object.keys(tilePalettes.default).sort();
+    assert.deepEqual(tileThemes, ["spring", "summer", "autumn", "winter"]);
+    assert.equal(defaultTileTheme, "summer");
+    const names = Object.keys(tilePalettes.summer).sort();
     for (const theme of tileThemes) {
         assert.deepEqual(Object.keys(tilePalettes[theme]).sort(), names, theme);
         for (const color of Object.values(tilePalettes[theme])) assert.match(color, /^#[0-9A-F]{6}$/i, theme);
     }
 });
 
+test("every season has its own grass and sky", () => {
+    for (const key of ["grass", "water", "sky"]) {
+        const values = tileThemes.map((theme) => tilePalettes[theme][key]);
+        assert.equal(new Set(values).size, tileThemes.length, `${key} differs between seasons`);
+    }
+});
+
 test("a palette recolours tiles without changing their shape", () => {
-    for (const theme of ["autumn", "winter"]) {
+    for (const theme of ["spring", "autumn", "winter"]) {
         let changed = 0;
         for (const id of tileIds) {
             const base = buildTile(id);
@@ -222,7 +230,9 @@ test("a palette recolours tiles without changing their shape", () => {
     assert.deepEqual(buildTile("road", "winter").colors, buildTile("road").colors, "road is not recoloured");
 });
 
-test("unknown palettes fall back to the default", () => {
+test("unknown palettes, and the old name \"default\", fall back to summer", () => {
+    assert.equal(buildTile("grass", "summer"), buildTile("grass"));
+    assert.equal(buildTile("grass", "default"), buildTile("grass"));
     assert.equal(buildTile("grass", "nope"), buildTile("grass"));
     assert.equal(buildTile("grass", "toString"), buildTile("grass"), "inherited keys are not palettes");
 });
@@ -235,9 +245,11 @@ test("buildMap takes a palette, keeps objects' colours, and memoises per palette
     assert.equal(buildMap(map, "winter"), winter);
     assert.equal(buildMap(map, "nope"), plain);
     assert.equal(winter.width, plain.width);
-    assert.ok(winter.colors.includes(objectRamps.leaf.base), "tree keeps its colours");
+    assert.ok(winter.colors.includes(objectRamps.leaf_snow.base), "the tree is snowy in winter");
+    assert.ok(!winter.colors.includes(objectRamps.leaf.base));
+    assert.ok(plain.colors.includes(objectRamps.leaf.base), "and green in summer");
     assert.ok(winter.colors.includes(tilePalettes.winter.grass));
-    assert.ok(!winter.colors.includes(tilePalettes.default.grass));
+    assert.ok(!winter.colors.includes(tilePalettes.summer.grass));
 });
 
 test("the sky tile is a pale opaque tile that changes colour with the palette", () => {
@@ -246,11 +258,60 @@ test("the sky tile is a pale opaque tile that changes colour with the palette", 
     assert.equal(sky.height, 16);
     assert.ok(sky.px.every((p) => p !== 0), "sky is opaque");
     assert.equal(sky.colors.length, 3, "a base colour and a lighter speckle");
-    for (const theme of ["autumn", "winter"]) {
+    for (const theme of ["spring", "autumn", "winter"]) {
         assert.notDeepEqual(buildTile("sky", theme).colors, sky.colors, `${theme} recolours the sky`);
     }
 });
 
 test("the town tileset has a sky block", () => {
     assert.deepEqual(townTileset.blocks.k, [["sky", "sky"], ["sky", "sky"]]);
+});
+
+test("trees and flowers change with the season, in the same shape, and the world follows", () => {
+    assert.deepEqual([...seasonalObjectIds].sort(), ["flower", "tree"]);
+    const shape = (r) => Array.from(r.px, (p) => (p === 0 ? 0 : 1)).join("");
+    for (const id of seasonalObjectIds) {
+        const summer = buildObject(id);
+        assert.equal(buildObject(id, "summer"), summer, "summer is the default");
+        assert.equal(buildObject(id, "nope"), summer, "unknown seasons fall back to summer");
+        for (const season of ["spring", "autumn", "winter"]) {
+            const other = buildObject(id, season);
+            assert.notDeepEqual(other.colors, summer.colors, `${id} differs in ${season}`);
+            assert.equal(shape(other), shape(summer), `${id} keeps its shape in ${season}`);
+            assert.equal(buildObject(id, season), other, "memoised");
+            const rampColors = new Set(Object.values(objectRamps).flatMap((r) => Object.values(r)));
+            assert.ok(other.colors.slice(1).every((c) => rampColors.has(c)), `${id} ${season} uses fixed ramps`);
+        }
+    }
+    for (const id of objectIds.filter((o) => !seasonalObjectIds.includes(o))) {
+        assert.equal(buildObject(id, "winter"), buildObject(id), `${id} looks the same all year`);
+    }
+    const map = defineMap(townTileset, ["ggg", "g1g"], [{ id: "tree", x: 0, y: 0 }, { id: "flower", x: 3, y: 3 }]);
+    assert.ok(buildMap(map, "autumn").colors.includes(objectRamps.leaf_autumn.base));
+    assert.ok(buildMap(map, "spring").colors.includes(objectRamps.flower_pink.base));
+    assert.ok(buildMap(map, "winter").colors.includes(objectRamps.flower_frost.base));
+    assert.ok(buildMap(map).colors.includes(objectRamps.flower_red.base));
+});
+
+test("objects with a main colour can be shown in their common colours, in the same shape", () => {
+    assert.deepEqual([...colorableObjectIds].sort(), ["bookshelf", "door", "fence", "flower", "rug", "tree", "window"]);
+    const shape = (r) => Array.from(r.px, (p) => (p === 0 ? 0 : 1)).join("");
+    for (const id of colorableObjectIds) {
+        const plain = buildObject(id);
+        for (const color of objectColors[id]) {
+            const recoloured = buildObject(id, undefined, color);
+            assert.equal(shape(recoloured), shape(plain), `${id} keeps its shape in ${color}`);
+            assert.ok(Object.values(colorRamps[color]).some((c) => recoloured.colors.includes(c)), `${id} shows ${color}`);
+            assert.equal(buildObject(id, undefined, color), recoloured, "memoised");
+        }
+    }
+    assert.ok(buildObject("tree", "winter", "orange").colors.includes(colorRamps.orange.base), "a colour wins over the season");
+    assert.ok(!buildObject("tree", "winter", "orange").colors.includes(objectRamps.leaf_snow.base));
+    assert.ok(Object.values(objectRamps.gold).some((c) => buildObject("door", undefined, "blue").colors.includes(c)), "the knob keeps its colour");
+});
+
+test("colour is ignored for objects that cannot take it and for colours not offered for the object", () => {
+    assert.equal(buildObject("counter", undefined, "red"), buildObject("counter"));
+    assert.equal(buildObject("tree", undefined, "teal"), buildObject("tree"), "teal is not a tree colour");
+    assert.equal(buildObject("flower", undefined, "plaid"), buildObject("flower"));
 });

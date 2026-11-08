@@ -2,7 +2,7 @@ import { composeSprites, type Layer, type Raster } from "../core/compose";
 import { objectIds, objectInfo, objectLayers } from "./objects/objects";
 import { TILE_SIZE } from "./size";
 import { themeSlots, tileSprite } from "./tiles";
-import { resolveTheme, type TileTheme } from "./tiles/palettes";
+import { resolveTheme, tileColorsKey, type TileColors } from "./tiles/palettes";
 import type { TileSet } from "./tileset";
 import type { ObjectId, TileId } from "./types";
 
@@ -131,23 +131,26 @@ export function queryCell(map: TileMap, tx: number, ty: number): CellInfo | unde
     };
 }
 
-const rendered = new WeakMap<TileMap, Map<TileTheme, Raster>>();
+const rendered = new WeakMap<TileMap, Map<string, Raster>>();
 
 /**
  * Renders the whole map to one raster (16 px per tile) in a fixed tile palette
  * (`tileThemes`). Memoised per map object and palette. Unknown palettes fall
- * back to the default. Objects keep their own colours.
+ * back to summer. Seasonal objects (trees, flowers) change with it. `colors` recolours
+ * groups of the palette with hex colours (`tileColorGroups`).
  */
-export function buildMap(map: TileMap, theme?: string): Raster {
+export function buildMap(map: TileMap, theme?: string, colors?: TileColors): Raster {
     const resolved = resolveTheme(theme);
+    const custom = tileColorsKey(colors);
+    const cacheKey = `${resolved}|${custom}`;
     let byTheme = rendered.get(map);
     if (!byTheme) {
         byTheme = new Map();
         rendered.set(map, byTheme);
     }
-    let raster = byTheme.get(resolved);
+    let raster = byTheme.get(cacheKey);
     if (!raster) {
-        const slots = themeSlots(resolved);
+        const slots = themeSlots(resolved, colors);
         const size = map.tileset.blockSize;
         const layers: Layer[] = [];
         for (let by = 0; by < map.height; by += 1) {
@@ -172,11 +175,11 @@ export function buildMap(map: TileMap, theme?: string): Raster {
             return layer || a.y + objectInfo[a.id].height - (b.y + objectInfo[b.id].height) || a.x - b.x;
         };
         for (const placed of [...map.objects].sort(order)) {
-            layers.push(...objectLayers(placed.id, placed.x * TILE_SIZE, placed.y * TILE_SIZE));
+            layers.push(...objectLayers(placed.id, placed.x * TILE_SIZE, placed.y * TILE_SIZE, resolved));
         }
         const { width, height } = mapTileSize(map);
         raster = composeSprites(layers, { x: 0, y: 0, width: width * TILE_SIZE, height: height * TILE_SIZE });
-        byTheme.set(resolved, raster);
+        byTheme.set(cacheKey, raster);
     }
     return raster;
 }

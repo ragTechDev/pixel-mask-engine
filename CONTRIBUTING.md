@@ -19,7 +19,7 @@ Not an artist, or short on time? Ask for what you'd like to see.
 
 ## The art rules
 
-- **Constrained by design.** Art is `"0"` and `"1"` masks, and colours come from the fixed palettes and ramps. The library never accepts arbitrary colours or images.
+- **Constrained by design.** Art is `"0"` and `"1"` masks, and colours come from the fixed palettes and ramps. The library never accepts arbitrary images, and avatars never accept arbitrary colours; icons, objects and tiles accept only a validated hex colour.
 - **Keep it light.** No new dependencies without checking their size and licence first. Please mention the size change in your PR.
 - **Gentle gestures only.** If you add animation or gestures, keep them non-contact: a wave, a sparkle, a tipped hat.
 - **Licence.** By contributing, you agree your art is released under CC BY 4.0 and your code under MIT, as described in [LICENSE-ART.md](LICENSE-ART.md) and [LICENSE](LICENSE).
@@ -33,7 +33,7 @@ pnpm install
 pnpm new
 ```
 
-1. **Choose what to add:** an icon, an avatar garment (top, bottom, full outfit or shoes), an avatar hair style, a world object or a world tile.
+1. **Choose what to add:** an icon, an avatar garment (top, which includes a dress or overalls, bottom or shoes), an avatar hair style, a world object or a world tile.
 2. **Answer the prompts:** an id, the parts it's made of, and a placeholder size. Press Enter to accept the default in brackets.
 3. **Draw the masks:** the wizard creates placeholder mask files in the right folder. Replace the placeholder rows with your art: `"1"` is filled and `"0"` is empty. Outline, highlight and shadow are added for you.
 4. **Make the listed edits:** it prints each file you still need to change (type unions, tables, tests) with the imports and entries already written out, ready to paste.
@@ -63,6 +63,10 @@ printf '4\nlamp\n1\n2\n1\n\n\n\n' | pnpm new
 
 Coding agents are welcome to scaffold, draw the masks and wire everything up. The wizard only makes placeholder shapes, so replace them with real art, then run `pnpm check:masks` and look at the render (`pnpm docs:images`) before you open a PR.
 
+## Seeing your art in the studio
+
+`pnpm dev` starts the studio, which shows every icon, tile, object and avatar from `src/`. New art appears automatically, so it is the quickest way to check how a mask looks at full size, at 8x8 and 16x16, and in 1 and 2-bit colour.
+
 ## Before you push
 
 ```sh
@@ -70,6 +74,7 @@ pnpm typecheck       # types, plus a no-DOM check of the core entry
 pnpm check:masks     # validates every mask (add avatar, world or icons to limit it)
 pnpm stats           # refreshes the numbers in the README and re-renders the images
 pnpm test            # builds and runs the tests; fails if the README numbers are stale
+pnpm build:studio    # the studio still builds
 ```
 
 Commit the updated `README.md` and `docs/images/` along with your change. A new tile also needs its pixel fingerprint in `test/fixtures/tile-golden.json`: run `pnpm test` once and the failure prints the value to paste in.

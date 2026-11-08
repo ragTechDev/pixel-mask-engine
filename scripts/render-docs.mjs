@@ -147,9 +147,9 @@ const person = (i, extra = {}) => ({
 
 const walkers = [
   { x: 40, config: person(0, { topStyle: "shirt", bottomStyle: "shorts", shoeStyle: "boots", headOrientation: "right", legPose: "step" }) },
-  { x: 128, config: person(1, { fullOutfitStyle: "dress", shoeStyle: "sandals", headOrientation: "front" }) },
+  { x: 128, config: person(1, { topStyle: "dress", shoeStyle: "sandals", headOrientation: "front" }) },
   { x: 200, config: person(2, { topStyle: "longSleeve", bottomStyle: "skirt", shoeStyle: "shoes", headOrientation: "left", legPose: "step" }) },
-  { x: 300, config: person(3, { fullOutfitStyle: "overalls", shoeStyle: "boots", headOrientation: "front" }) },
+  { x: 300, config: person(3, { topStyle: "overalls", shoeStyle: "boots", headOrientation: "front" }) },
   { x: 380, config: person(4, { topStyle: "spaghetti", bottomStyle: "shorts", shoeStyle: "sandals", headOrientation: "right", legPose: "step" }) },
   { x: 470, config: person(5, { topStyle: "shirt", bottomStyle: "skirt", shoeStyle: "shoes", headOrientation: "front" }) },
   { x: 560, config: person(6, { topStyle: "longSleeve", bottomStyle: "shorts", shoeStyle: "boots", headOrientation: "left", legPose: "step" }) }
@@ -190,7 +190,7 @@ const mini = defineMap(
   ["kk<=>kk", "gg[_]gg", "ppppppp", "ggwwggt"],
   [{ id: "window", x: 6, y: 2 }, { id: "door", x: 4, y: 3 }, { id: "tree", x: 0, y: 2 }, { id: "flower", x: 12, y: 6 }]
 );
-save("themes", sheet(["default", "autumn", "winter"].map((theme) => buildMap(mini, theme)), { columns: 3, gap: 8 }), 3, { png: true });
+save("themes", sheet(["spring", "summer", "autumn", "winter"].map((theme) => buildMap(mini, theme)), { columns: 4, gap: 8 }), 3, { png: true });
 
 // ─── Icons ──────────────────────────────────────────────────────────────────
 

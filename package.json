@@ -49,7 +49,9 @@
     }
   },
   "scripts": {
-    "dev": "vite examples/react-demo",
+    "dev": "vite",
+    "build:studio": "vite build",
+    "preview:studio": "vite preview",
     "build": "tsup",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.core.json",
     "test": "tsup && node --test test/*.test.mjs",

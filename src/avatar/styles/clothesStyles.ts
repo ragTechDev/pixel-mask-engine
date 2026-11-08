@@ -18,7 +18,7 @@ type HeadOrientation = keyof typeof headMasks;
 export type ArmPose = "down" | "forward" | "back";
 export type LegPose = "neutral" | "step";
 export type GarmentPlacement = "behindBody" | "overBody" | "overlay";
-export type GarmentSlot = "top" | "bottom" | "fullOutfit" | "shoes";
+export type GarmentSlot = "top" | "bottom" | "shoes";
 
 export type GarmentLayer = {
     mask: PixelMask;
@@ -31,13 +31,14 @@ export type GarmentLayer = {
 
 export type GarmentDefinition = {
     slot: GarmentSlot;
+    /** A one-piece top (a dress, overalls) that also covers the legs, so no bottom is drawn under it. */
+    coversBottom?: true;
     byOrientation: Partial<Record<HeadOrientation, readonly GarmentLayer[]>>;
     fallback: readonly GarmentLayer[];
 };
 
-export type TopStyle = "none" | "spaghetti" | "shirt" | "longSleeve";
+export type TopStyle = "none" | "spaghetti" | "shirt" | "longSleeve" | "overalls" | "dress";
 export type BottomStyle = "none" | "shorts" | "skirt";
-export type FullOutfitStyle = "none" | "overalls" | "dress";
 export type ShoeStyle = "none" | "boots" | "sandals" | "shoes";
 
 export const topStyles = {
@@ -62,6 +63,18 @@ export const topStyles = {
             { mask: longSleeveTorsoMask, offsetX: 2, offsetY: 6, placement: "overBody" },
             { mask: longSleevesMask, offsetX: 0, offsetY: 6, placement: "overlay", armPoses: ["down"] }
         ]
+    },
+    overalls: {
+        slot: "top",
+        coversBottom: true,
+        byOrientation: {},
+        fallback: [{ mask: overallsTorsoMask, offsetX: 2, offsetY: 6, placement: "overBody" }]
+    },
+    dress: {
+        slot: "top",
+        coversBottom: true,
+        byOrientation: {},
+        fallback: [{ mask: dressTorsoMask, offsetX: 2, offsetY: 6, placement: "overBody" }]
     }
 } as const satisfies Record<TopStyle, GarmentDefinition>;
 
@@ -78,22 +91,6 @@ export const bottomStyles = {
         fallback: [{ mask: skirtMask, offsetX: 2, offsetY: 12, placement: "overBody" }]
     }
 } as const satisfies Record<BottomStyle, GarmentDefinition>;
-
-export const fullOutfitStyles = {
-    none: { slot: "fullOutfit", byOrientation: {}, fallback: [] },
-    overalls: {
-        slot: "fullOutfit",
-        byOrientation: {},
-        fallback: [
-            { mask: overallsTorsoMask, offsetX: 2, offsetY: 6, placement: "overBody" },
-        ]
-    },
-    dress: {
-        slot: "fullOutfit",
-        byOrientation: {},
-        fallback: [{ mask: dressTorsoMask, offsetX: 2, offsetY: 6, placement: "overBody" }]
-    }
-} as const satisfies Record<FullOutfitStyle, GarmentDefinition>;
 
 export const shoeStyles = {
     none: { slot: "shoes", byOrientation: {}, fallback: [] },

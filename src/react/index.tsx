@@ -1,13 +1,14 @@
 import { useMemo } from "react";
-import { avatarKey, buildAvatar, buildIcon, buildMap, buildObject, buildTile, createCache, toSvgPaths } from "../index";
-import type { AvatarConfig, IconId, ObjectId, Raster, TileId, TileMap, TileTheme } from "../index";
+import { avatarKey, buildAvatar, buildIcon, buildMap, buildObject, buildTile, createCache, toMapVariant, toSvgPaths, toVariant } from "../index";
+import type { AvatarConfig, ColorName, HexColor, IconId, IconOptions, ObjectId, Raster, TileId, TileMap, TileColors, TileTheme, VariantOptions } from "../index";
 
 const avatarCache = createCache<Raster>(512);
 
-type ImageProps = { pixelSize?: number; className?: string; title?: string };
+type ImageProps = VariantOptions & { pixelSize?: number; className?: string; title?: string };
 
 /** Renders a raster as SVG (one path per colour). */
-export function PixelImage({ raster, pixelSize = 4, className, title }: ImageProps & { raster: Raster }) {
+export function PixelImage({ raster: source, pixelSize = 4, className, title, size, bits, palette }: ImageProps & { raster: Raster }) {
+    const raster = toVariant(source, { size, bits, palette });
     const paths = useMemo(() => toSvgPaths(raster), [raster]);
     return (
         <svg
@@ -30,24 +31,27 @@ export function PixelImage({ raster, pixelSize = 4, className, title }: ImagePro
 
 export type AvatarProps = AvatarConfig & ImageProps;
 
-export function Avatar({ pixelSize, className, title, ...config }: AvatarProps) {
+export function Avatar({ pixelSize, className, title, size, bits, palette, ...config }: AvatarProps) {
     const raster = avatarCache.get(avatarKey(config), () => buildAvatar(config));
-    return <PixelImage raster={raster} pixelSize={pixelSize} className={className} title={title} />;
+    return <PixelImage raster={raster} pixelSize={pixelSize} className={className} title={title} size={size} bits={bits} palette={palette} />;
 }
 
-export function Tile({ id, theme, ...rest }: ImageProps & { id: TileId; theme?: TileTheme }) {
-    return <PixelImage raster={buildTile(id, theme)} {...rest} />;
+export function Tile({ id, theme, colors, ...rest }: ImageProps & { id: TileId; theme?: TileTheme; colors?: TileColors }) {
+    return <PixelImage raster={buildTile(id, theme, colors)} {...rest} />;
 }
 
-export function Icon({ id, ...rest }: ImageProps & { id: IconId }) {
-    return <PixelImage raster={buildIcon(id)} {...rest} />;
+export function Icon({ id, idle, color, ...rest }: ImageProps & IconOptions & { id: IconId }) {
+    return <PixelImage raster={buildIcon(id, { idle, color })} {...rest} />;
 }
 
-export function WorldObject({ id, ...rest }: ImageProps & { id: ObjectId }) {
-    return <PixelImage raster={buildObject(id)} {...rest} />;
+export function WorldObject({ id, theme, color, ...rest }: ImageProps & { id: ObjectId; theme?: TileTheme; color?: ColorName | HexColor }) {
+    return <PixelImage raster={buildObject(id, theme, color)} {...rest} />;
 }
 
-/** A whole map. `buildMap` memoises per map object, so keep the `map` reference stable. */
-export function World({ map, theme, ...rest }: ImageProps & { map: TileMap; theme?: TileTheme }) {
-    return <PixelImage raster={buildMap(map, theme)} {...rest} />;
+/**
+ * A whole map. `buildMap` memoises per map object, so keep the `map` reference stable.
+ * `size` is the pixels per tile (8 or 16), not the size of the whole map.
+ */
+export function World({ map, theme, colors, size, bits, palette, ...rest }: ImageProps & { map: TileMap; theme?: TileTheme; colors?: TileColors }) {
+    return <PixelImage raster={toMapVariant(buildMap(map, theme, colors), { size, bits, palette })} {...rest} />;
 }

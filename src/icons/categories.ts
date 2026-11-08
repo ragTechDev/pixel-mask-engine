@@ -1,4 +1,5 @@
 import { accountIcons } from "./account/icons";
+import { actionsIcons } from "./actions/icons";
 import { buildingsIcons } from "./buildings/icons";
 import { communicationIcons } from "./communication/icons";
 import { designIcons } from "./design/icons";
@@ -7,9 +8,13 @@ import { foodBeverageIcons } from "./food-beverage/icons";
 import { navigationIcons } from "./navigation/icons";
 import { socialIcons } from "./social/icons";
 
-/** Icons grouped by category, named after the lucide.dev categories. */
-export const iconCategories = {
+/**
+ * Icon parts grouped by category, named after the lucide.dev categories. A faded
+ * variant is registered next to its icon as `<id>_idle`; `buildIcon(id, { idle: true })` finds it.
+ */
+export const iconTables = {
     account: accountIcons,
+    actions: actionsIcons,
     buildings: buildingsIcons,
     communication: communicationIcons,
     design: designIcons,
@@ -19,4 +24,4 @@ export const iconCategories = {
     social: socialIcons
 } as const;
 
-export type IconCategory = keyof typeof iconCategories;
+export type IconCategory = keyof typeof iconTables;
