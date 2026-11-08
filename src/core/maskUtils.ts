@@ -5,6 +5,18 @@ export type MaskPoint = {
     y: number;
 };
 
+const mirrored = new WeakMap<PixelMask, PixelMask>();
+
+/** Flips a mask left to right. The result is memoised, so the same mask always gives the same object. */
+export function mirrorMask(mask: PixelMask): PixelMask {
+    let flipped = mirrored.get(mask);
+    if (!flipped) {
+        flipped = mask.map((row) => [...row].reverse().join(""));
+        mirrored.set(mask, flipped);
+    }
+    return flipped;
+}
+
 export function getMaskWidth(mask: PixelMask): number {
     return mask[0]?.length ?? 0;
 }

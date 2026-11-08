@@ -1,4 +1,4 @@
-import type { Sprite } from "./sprite";
+import { SLOT, type Sprite } from "./sprite";
 
 /**
  * A composed, colour-resolved image. `px` indexes into `colors`;
@@ -17,6 +17,10 @@ export type Layer = {
     readonly slots: readonly string[];
     readonly x: number;
     readonly y: number;
+    /** The outline is left out wherever the pixel underneath is one of these colours, so the two blend. */
+    readonly noOutlineOver?: readonly string[];
+    /** The same for highlights, so a layer can carry on from the one under it without a lighter edge. */
+    readonly noHighlightOver?: readonly string[];
 };
 
 export type Bounds = { x: number; y: number; width: number; height: number };
@@ -43,7 +47,7 @@ export function composeSprites(layers: readonly Layer[], bounds: Bounds = layerB
     const indexOf = new Map<string, number>();
     const px = new Uint8Array(width * height);
 
-    for (const { sprite, slots, x, y } of layers) {
+    for (const { sprite, slots, x, y, noOutlineOver, noHighlightOver } of layers) {
         const left = x + sprite.originX - bounds.x;
         const top = y + sprite.originY - bounds.y;
         for (let sy = 0; sy < sprite.height; sy += 1) {
@@ -53,6 +57,10 @@ export function composeSprites(layers: readonly Layer[], bounds: Bounds = layerB
                 const tx = left + sx;
                 const color = slots[sprite.px[sy * sprite.width + sx]];
                 if (!color || tx < 0 || tx >= width) continue;
+                const slot = sprite.px[sy * sprite.width + sx];
+                const under = colors[px[ty * width + tx]];
+                if (noOutlineOver && slot === SLOT.outline && noOutlineOver.includes(under)) continue;
+                if (noHighlightOver && slot === SLOT.highlight && noHighlightOver.includes(under)) continue;
                 let ci = indexOf.get(color);
                 if (ci === undefined) {
                     ci = colors.length;
