@@ -10,6 +10,30 @@ To draft the next entry from the commit history, run `pnpm changelog`. See
 
 <!-- next-release -->
 
+## [0.8.0] - 2026-11-09
+
+### Breaking changes
+- **Back hair ids changed.** `loose` is now `looseBlunt`; `highPonytail` and `lowPonytail` are now `highPonytailRight` and `lowPonytailRight`; `doubleHighPonytail` and `doubleLowPonytail` are now `highPigtails` and `lowPigtails`; `shortCropped` is gone (use `looseBlunt` with `hairLength="ear"`). The default back style is `lowPonytailRight`. An id that no longer exists falls back to the default, as before.
+- **Tiles, icons and clothes.** The default tile palette is replaced by the four seasons (unknown names, including `default`, fall back to summer). The `_idle` icon ids are removed in favour of `{ idle: true }`, and every icon is drawn on one 20×20 canvas. `fullOutfitStyle` and `outfitColor` are removed: use `topStyle="dress"` or `"overalls"` and `topColor`. `black` is no longer a clothes colour, and `bits` accepts only 1 or 2.
+
+### Added
+- **Every avatar view is drawn.** Facing left, right and back used to draw the front. Each body part, garment and hair style now has its own front and side mask, with left as the side flipped. Sleeves sit under the hair and head, and in profile the arm goes over the body clothes.
+- **Hair length.** `hairLength` runs from `bald` through `ear`, `chin`, `shoulder` and `armpit` to `midBack`, and the back styles follow it: loose hair hangs to that length and a tail is as long as the hair. Ear length and bald only offer blunt loose hair.
+- **Hair styles.** Loose hair is `looseBlunt`, `looseV` or `looseU` (the cuts start at shoulder length). Ponytails are high or low and sit on the right, the left or the middle; pigtails come in pairs. At chin length a high middle ponytail is a coconut-palm tuft.
+- **Texture and drape.** `hairTexture` is `straight` (the default), `wavy`, `curly` or `coiled`. `hairDrape` puts the hair over the shoulders, behind them, or with a strand over each and the rest behind.
+- **Hair accessories.** `hairAccessory` is a `hairtie`, `scrunchie` or `bow` on a ponytail or pigtails, in its own colour (`hairAccessoryColor`, which follows `clothesColor` until set).
+- **Size, bit depth and palette options.** `size` (8 or 16), `bits` (1 or 2) and `palette` (six fixed four-colour presets) on every component, `toVariant` and `toMapVariant`.
+- **Seasons and colours.** Seasonal tile palettes (spring, summer, autumn, winter) with seasonal trees and flowers; common colours or any validated hex colour for icons and objects, and a hex colour per group for tiles and maps (`tileColorGroups`); per-piece avatar colours (`topColor`, `bottomColor`, `shoeColor`) and wider palettes.
+- **Icons.** `dice`, `reset`, `save` and `copy`.
+- **Studio.** A browsable studio replaces the React demo and deploys to GitHub Pages: icons, tiles, objects, avatars and worlds, with code, downloads, every variant and palette, search and docs. The avatar creator has a hair length slider and controls for texture, styles, shoulders and accessories, and the avatar keeps its size however tall the hair is.
+
+### Changed
+- Front-facing avatars are unchanged except that sleeves now sit under the head, which shifts a few pixels at the chin corners.
+
+### Fixed
+- **Studio:** the popover no longer collapses on iPhone Safari, and it fits the visible screen when the browser toolbar is showing.
+
+
 ## [0.7.0] - 2026-11-08
 
 ### Added
