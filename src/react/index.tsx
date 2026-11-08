@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { avatarKey, buildAvatar, buildTile, createCache, toSvgPaths } from "../index";
-import type { AvatarConfig, Raster, TileId, TileTheme } from "../index";
+import { avatarKey, buildAvatar, buildIcon, buildMap, buildObject, buildTile, createCache, toSvgPaths } from "../index";
+import type { AvatarConfig, IconId, ObjectId, Raster, TileId, TileMap, TileTheme } from "../index";
 
 const avatarCache = createCache<Raster>(512);
 
@@ -37,4 +37,17 @@ export function Avatar({ pixelSize, className, title, ...config }: AvatarProps) 
 
 export function Tile({ id, theme, ...rest }: ImageProps & { id: TileId; theme?: TileTheme }) {
     return <PixelImage raster={buildTile(id, theme)} {...rest} />;
+}
+
+export function Icon({ id, ...rest }: ImageProps & { id: IconId }) {
+    return <PixelImage raster={buildIcon(id)} {...rest} />;
+}
+
+export function WorldObject({ id, ...rest }: ImageProps & { id: ObjectId }) {
+    return <PixelImage raster={buildObject(id)} {...rest} />;
+}
+
+/** A whole map. `buildMap` memoises per map object, so keep the `map` reference stable. */
+export function World({ map, theme, ...rest }: ImageProps & { map: TileMap; theme?: TileTheme }) {
+    return <PixelImage raster={buildMap(map, theme)} {...rest} />;
 }

@@ -1,4 +1,3 @@
-// DRAFT object part, to be redrawn by hand. "1" is filled, "0" is empty; the outline, highlight and shadow are added automatically.
 export const bookshelfFrameMask = [
     "11111111111111",
     "11111111111111",
