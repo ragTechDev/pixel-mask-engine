@@ -2,7 +2,7 @@
   "name": "@ragtechdev/pixel-mask-engine",
   "version": "0.6.0",
   "description": "Compose and render pixel-art avatars and tiles from fixed masks and palettes.",
-  "author": "Natasha Ann",
+  "author": "RAGTECH PTE. LTD.",
   "license": "(MIT AND CC-BY-4.0)",
   "repository": {
     "type": "git",
@@ -54,6 +54,10 @@
     "typecheck": "tsc --noEmit && tsc -p tsconfig.core.json",
     "test": "tsup && node --test test/*.test.mjs",
     "size": "node scripts/size.mjs",
+    "new": "node scripts/new.mjs",
+    "check:masks": "node scripts/check-masks.mjs",
+    "stats": "tsup && node scripts/render-docs.mjs && node scripts/stats.mjs",
+    "docs:images": "tsup && node scripts/render-docs.mjs",
     "changelog": "node scripts/changelog.mjs",
     "changelog:write": "node scripts/changelog.mjs --write",
     "prepublishOnly": "pnpm run typecheck && pnpm test"
