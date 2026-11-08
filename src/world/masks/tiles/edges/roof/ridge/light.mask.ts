@@ -1,4 +1,4 @@
-// DRAFT edge strip, to be redrawn by hand. Rows run from the open edge inward; "1" is painted.
+// Rows run from the open edge inward; "1" is painted.
 // It is applied to any side of a tile (flipped or turned as needed). Roles are set in src/world/tiles/tileDefs.ts.
 export const ridgeLightMask = [
     "0000000000000000",

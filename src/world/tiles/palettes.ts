@@ -44,7 +44,7 @@ type Palette = Readonly<Record<TileColor, string>>;
 
 /**
  * Fixed palettes for the whole tile world. Only these can be chosen; tiles never
- * accept arbitrary colours. These are drafts.
+ * accept arbitrary colours.
  */
 export const tilePalettes = {
     default: defaultColors,
