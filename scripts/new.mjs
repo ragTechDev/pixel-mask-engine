@@ -235,7 +235,7 @@ async function hair() {
   const size = (await ask("Placeholder size", { def: "11x8", check: isSize })).split("x").map(Number);
   const suffix = pascal(side);
   const masks = scaffoldMasks({
-    baseDir: "avatar/masks/hair",
+    baseDir: `avatar/masks/hair/${side === "front" ? "overHead" : "behindHead"}`,
     thing: style,
     parts: [style],
     size,
@@ -245,7 +245,7 @@ async function hair() {
   const m = masks[0];
   const placement = side === "front" ? "front" : "behindHead";
   const typeName = side === "front" ? "FrontHairStyle" : "BackHairStyle";
-  const table = side === "front" ? "frontHairStyles" : "backHairStyles";
+  const table = side === "front" ? "frontHairStyles" : "backHairStylesByLength (one entry per hair length) and backHairStyles";
   const constName = `${side.toUpperCase()}_${words(style).join("_").replace(/([a-z])([A-Z])/g, "$1_$2").toUpperCase()}`;
   next(`Next: edit these files to add the "${style}" ${side} hair style.`, [
     { file: "the new mask file", what: "Draw the hair. It is positioned relative to the head's top-left corner, so offsetY is usually negative." },

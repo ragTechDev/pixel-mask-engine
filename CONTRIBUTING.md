@@ -47,7 +47,7 @@ It never edits existing files and never overwrites one, so it's safe to run agai
 | --- | --- |
 | Icon | `src/icons/<category>/`, with categories named after [Lucide's](https://lucide.dev/icons/) |
 | Avatar garment | `src/avatar/masks/clothes/<slot>/` |
-| Avatar hair | `src/avatar/masks/hair/` |
+| Avatar hair | `src/avatar/masks/hair/overHead/` (front hair) or `src/avatar/masks/hair/behindHead/` (back hair) |
 | World object | `src/world/masks/objects/` |
 | World tile | `src/world/masks/tiles/` |
 
