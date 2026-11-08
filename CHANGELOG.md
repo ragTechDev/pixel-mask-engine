@@ -10,6 +10,18 @@ To draft the next entry from the commit history, run `pnpm changelog`. See
 
 <!-- next-release -->
 
+## [0.7.0] - 2026-11-08
+
+### Added
+- **React components for icons, objects and worlds.** `<Icon id="heart" />`, `<WorldObject id="tree" />` and `<World map={map} theme="autumn" />` join `<Avatar>` and `<Tile>`, so you no longer need `<PixelImage>` with a build call for these. Each takes `pixelSize`, `className` and `title`. `<PixelImage>` is still there for any `Raster` you build yourself.
+- **Scaffolding wizard.** `pnpm new` scaffolds the mask files for a new icon, avatar garment, hair style, world object or tile, then lists the edits left to make.
+- **Checks and docs tooling.** `pnpm check:masks` validates every mask, `pnpm stats` keeps the counts and bundled sizes in the README current (the tests fail when the counts are stale), and `pnpm docs:images` renders the README pictures from the built package.
+- **CONTRIBUTING.md**, and a rewritten README with a rendered banner and examples.
+
+### Changed
+- Icon art now lives in lucide-style category folders (`social`, `communication`, `buildings` and so on), with one mask file per mask. `buildIcon` and every icon look the same, but `iconIds` is now listed in category order.
+- Copyright for the code and the pixel art is now held by RAGTECH PTE. LTD. The licences (MIT for code, CC BY 4.0 for art) are unchanged.
+
 ## [0.6.0] - 2026-11-07
 
 ### Added
