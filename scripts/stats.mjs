@@ -24,8 +24,8 @@ const keysIn = (file, name) => {
   if (!body) throw new Error(`Could not find ${name} in ${file}`);
   return [...body[1].matchAll(/(\w+)\s*:/g)].length;
 };
-const orientations = [...readFileSync(join(root, "src/avatar/masks/head.mask.ts"), "utf8").matchAll(/^ {4}(\w+): \[/gm)].length;
-if (!orientations) throw new Error("Could not count head orientations in src/avatar/masks/head.mask.ts");
+const orientations = keysIn("src/avatar/orientation.ts", "headOrientations");
+if (!orientations) throw new Error("Could not count head orientations in src/avatar/orientation.ts");
 
 // Each piece of clothing has its own colour. A top is absent (one look) or one of its styles in one of
 // the colours; a one-piece top (a dress, overalls) also covers the bottom, so it has no bottom to pair with.
@@ -40,6 +40,10 @@ const dims = {
   "head orientation": orientations,
   "skin tone": count(lib.skinPalettes),
   "front hair": count(lib.frontHairStyles),
+  "hair length": count(lib.hairLengths),
+  "hair texture": count(lib.hairTextures),
+  "hair drape": count(lib.hairDrapes),
+  "hair accessory": count(lib.hairAccessories),
   "back hair": count(lib.backHairStyles),
   "hair colour": count(lib.hairPalettes),
   "eye colour": count(lib.eyePalettes),

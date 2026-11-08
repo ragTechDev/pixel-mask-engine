@@ -5,7 +5,7 @@
    "config": {},
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -13,7 +13,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -21,23 +21,23 @@
    },
    "width": 17,
    "height": 24,
-   "sha256": "ebc5e353a2eb9742e631be2ffb9cb15c52ab5ce1d80aeb7203c5e5b4ab3210fc"
+   "sha256": "ca4e125d5b3666cdfdee1c61e557f92f4ad87b2bf35e3a40c511bef20adcc67f"
   },
   {
    "config": {
     "headOrientation": "right"
    },
-   "width": 15,
+   "width": 17,
    "height": 24,
-   "sha256": "661ebc924820962df307d792b7b5cee8308a30cd5ea44ad63ad1dfb0d9ab18e0"
+   "sha256": "6d687b650d4af6d4625d511c1e79975aaf24dee1fe275b277abdfab2d8effdf3"
   },
   {
    "config": {
     "headOrientation": "back"
    },
-   "width": 15,
+   "width": 16,
    "height": 24,
-   "sha256": "661ebc924820962df307d792b7b5cee8308a30cd5ea44ad63ad1dfb0d9ab18e0"
+   "sha256": "46656ff7d6007c968d76ad8584ffcb6dc120e7b675d923446d375d2b6db9f983"
   },
   {
    "config": {
@@ -45,7 +45,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -53,7 +53,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "ced5655ae950dbcc7af46b0e9ede853eb07ac91c19a6158a4388fb4749cfcd86"
+   "sha256": "02c7051facadc85da7f598a8dd38226cc2b92f4e039642e03b4ea29d4bb6773b"
   },
   {
    "config": {
@@ -61,7 +61,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "4cd4d0fce8cf970c958abe5aa2a75dbc5a2b920a27c500721b003f682389372e"
+   "sha256": "b4c2f3894c9b90964c160a8cf6517e3ab6fe3d0a4929fa6d14450cf605df62e9"
   },
   {
    "config": {
@@ -69,7 +69,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -77,7 +77,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "1c8e92724ca362d3858d2f2c9630196ee4d993931ff9349efdcb8b70d1607ab5"
+   "sha256": "d4a7b204a48aed848bfa766c233d237334ae94ccf894a38e8f363033e6a30faf"
   },
   {
    "config": {
@@ -85,47 +85,48 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "512a8d4b550d260d05d213135925be2e2d2e1e46e7f96c55f293ad80343553e3"
+   "sha256": "563bc66df1a776bca5c9b67b3a47cb16dce9b4c7eaa11ef2831f91eabbe559ae"
   },
   {
    "config": {
-    "backHairStyle": "lowPonytail"
+    "backHairStyle": "lowPonytailRight"
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
-    "backHairStyle": "highPonytail"
+    "backHairStyle": "highPonytailRight"
    },
    "width": 17,
    "height": 24,
-   "sha256": "6d4b4caa8f5ab376219de794696162ab5179c8368cffae68b647e0a7f1fdd65d"
+   "sha256": "4eb81e76b13fbb8581b7690e1590e0262c8003555285bf029edf6d71a9ac395e"
   },
   {
    "config": {
-    "backHairStyle": "doubleLowPonytail"
+    "backHairStyle": "lowPigtails"
    },
    "width": 19,
    "height": 24,
-   "sha256": "0ab1c4233f1787153a98fbf27b70c9d321dc527bf1fabf42c4d5c6c27cf99e03"
+   "sha256": "ccd92a207d5ef3328a57322bdf823e0c425f9ad08f345e7ced7bad35cc682399"
   },
   {
    "config": {
-    "backHairStyle": "doubleHighPonytail"
+    "backHairStyle": "highPigtails"
    },
    "width": 19,
    "height": 24,
-   "sha256": "b0d66f07ab0dfc5170e73a2e3bf69fe56022b6b0fd00265d587fdfa11b019df2"
+   "sha256": "fcfd67da1170c72b3f8e586d39d9d2800b094cb43439bdf1fe9c150db63464b1"
   },
   {
    "config": {
-    "backHairStyle": "shortCropped"
+    "backHairStyle": "looseBlunt",
+    "hairLength": "ear"
    },
    "width": 15,
    "height": 24,
-   "sha256": "e9fe6d5d9b596cb46e7db71c0fa94646a3d08c0a65cab3fa1e74c2e3f7f422a6"
+   "sha256": "ceb6e35e1120dda0c5119f6fc507e179386800c03bf93e34916fcf6f5e6c3a41"
   },
   {
    "config": {
@@ -133,7 +134,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -141,7 +142,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "f9a010f7a37bea7b7933cc6431c701938591ca2435033ffa51164bbc1c7babc7"
+   "sha256": "6d6d3e13ebab514dd9bea961adf94671ea3822778803767ca9ad136f7269d933"
   },
   {
    "config": {
@@ -149,7 +150,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "285226b6cb0e2a25cbcd26fc2f983810e6dd94d8ea85ef05bde3bf37bf2cc612"
+   "sha256": "32af05ee647210178dae5a4deb92c9b9a58cfd4953e8a811fbb05e30c1cbe30e"
   },
   {
    "config": {
@@ -157,7 +158,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -165,7 +166,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "dbe9ca12d2b5e2161dd923bc5621b62a8e59461f0fd9b76740de581916a82314"
+   "sha256": "7e030c70c87d0d21bbb9613ded497523ebe465a9ac6ef5299df06c69790427c0"
   },
   {
    "config": {
@@ -173,7 +174,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "764569051acaa498746b4300a1ccba1006213bbc9ae4d66f12e1cf922b5d5df4"
+   "sha256": "7460f9dbde16c59d888611a0a522d9e527c98ca9c4d5eb6b0891a7f13ea1cfe0"
   },
   {
    "config": {
@@ -181,7 +182,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -189,7 +190,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "14e9147793c577cb1f16a683e1f2bd548e0e03825d8b347159ca0edc195357f5"
+   "sha256": "2b0d2124084398d9bd0ea4fcaf98f29890ed6a7dd5d0ea7c179f53dd273da09e"
   },
   {
    "config": {
@@ -197,7 +198,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "c8e7942c37661e9f8f201fb0e49bafa0d0d7d2ea9869c0f1b817f72615cf2110"
+   "sha256": "bfe23155869bb4eb1ace77c477e032eb2af61b587348c3afa9bb2f1e557257d6"
   },
   {
    "config": {
@@ -221,7 +222,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -229,7 +230,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "1e029e5a55c8149bafa90bfad64cdd8d5121fcb4c4400e739206e09b934a5865"
+   "sha256": "4efe8bf1082ebfca93854859f3f8238a49751c696f2cf3fe84785746154a0b5a"
   },
   {
    "config": {
@@ -237,7 +238,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "721edb51b4d9174f31547f2d5d59193cc32039fbeb0a650c328a3e1f4c6566c6"
+   "sha256": "d527fa0361fa809f06efe3ad003b277f1c3865546affd1a3feb7a854a4ce0359"
   },
   {
    "config": {
@@ -245,7 +246,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -253,13 +254,13 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "48b4ac5dc528b236ba8b330968d2d258e6c273a4d57292aa5d34da5132257fc9"
+   "sha256": "4cb99422b5e7cf64d1c99faa2a5e3fa6403fb394cd3762a59f638cb36e323ede"
   },
   {
    "config": {},
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -283,7 +284,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "8835acc3faacf02d74186228a7dd2a2953d231cdf792a8e04b8ac454b7d5c78e"
+   "sha256": "4804aa2117b1370e45fbe32a74b87962d56ae53dab40c81188d067a7b4e85439"
   },
   {
    "config": {
@@ -291,7 +292,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -299,7 +300,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b2bab2087dd4e068c755f1d4fad521cc83ced26c7017713fbc2eb6e1f01aad8c"
+   "sha256": "c001867c2a499aa0e41df74ea8a5d1b332358cc625e170792c93baf6785c0ed2"
   },
   {
    "config": {
@@ -307,7 +308,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "6c13ef29bcfa10cef77b424ad25dca0bf3f1eed653037f8d59a4ab06a30f463e"
+   "sha256": "c5c312ab2c1fe65e836c134de0a46e8c70bfe4beee977ebafba8efcb20f669da"
   },
   {
    "config": {
@@ -315,7 +316,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -339,7 +340,7 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
@@ -347,14 +348,14 @@
    },
    "width": 16,
    "height": 24,
-   "sha256": "b23a501f6975f756b9032840651e7f1c7614607408c137f32eea1f4425d58e8f"
+   "sha256": "cf0f14e20ec4ed33c78ed2701ae7bc93bf844cc9a273d720b0d342205d3795ca"
   },
   {
    "config": {
     "headOrientation": "back",
     "skinTone": "medium",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "red",
@@ -364,16 +365,17 @@
     "armPose": "down",
     "legPose": "neutral"
    },
-   "width": 15,
-   "height": 27,
-   "sha256": "2ead598defcfd4d8d6c20a4ced9c68938ec45b9521d11e6b9273e8efb2e25f2e"
+   "width": 17,
+   "height": 24,
+   "sha256": "a06233c8c9ada9e39bf084d0fd803a1fdbcad40b905d2d72b8ac4e41c65f1e5f"
   },
   {
    "config": {
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "shortCropped",
+    "backHairStyle": "looseBlunt",
+    "hairLength": "ear",
     "hairColor": "brown",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -385,14 +387,14 @@
    },
    "width": 15,
    "height": 24,
-   "sha256": "7538a8637ac8345e24598d77edfd2884e6e4bb08f7ce6e40792013d81e068e79"
+   "sha256": "9b00eb43d7f8a07f4729152d9ad2a267ff6f9b9a4284f6811f2926a8bab959bc"
   },
   {
    "config": {
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "blue",
@@ -411,7 +413,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "bangs",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "black",
     "eyeColor": "green",
     "clothesColor": "red",
@@ -430,7 +432,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "red",
@@ -449,7 +451,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "bangs",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "brown",
     "eyeColor": "green",
     "clothesColor": "green",
@@ -468,7 +470,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "green",
@@ -487,7 +489,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -506,7 +508,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "bangs",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "red",
@@ -525,7 +527,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "red",
@@ -544,7 +546,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "bangs",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "brown",
     "eyeColor": "green",
     "clothesColor": "red",
@@ -563,7 +565,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "red",
@@ -582,7 +584,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "black",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -601,7 +603,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "blonde",
     "eyeColor": "blue",
     "clothesColor": "red",
@@ -620,7 +622,8 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "shortCropped",
+    "backHairStyle": "looseBlunt",
+    "hairLength": "ear",
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "blue",
@@ -632,14 +635,15 @@
    },
    "width": 15,
    "height": 24,
-   "sha256": "815ff3751903af89e84bc74d712aede394a51c931ffb9ceed40d4099a63b69f9"
+   "sha256": "58799fff4628aea3ef99bb45dcf71433fb8d20844cbd03e1c9815cb7116b4fef"
   },
   {
    "config": {
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "bangs",
-    "backHairStyle": "shortCropped",
+    "backHairStyle": "looseBlunt",
+    "hairLength": "ear",
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "red",
@@ -651,14 +655,14 @@
    },
    "width": 15,
    "height": 24,
-   "sha256": "3b4943c1d9bd405ca580e117d85637812d3d589412742fae463ad3e721eba83c"
+   "sha256": "e6dd93f19a5c6ca05d929c1d3067e56b6355a987ff395eece1d4a32a0712f548"
   },
   {
    "config": {
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "green",
@@ -677,7 +681,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "blue",
@@ -696,7 +700,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "brown",
     "eyeColor": "blue",
     "clothesColor": "red",
@@ -715,7 +719,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "green",
@@ -734,7 +738,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "brown",
     "eyeColor": "green",
     "clothesColor": "red",
@@ -753,7 +757,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "bangs",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "green",
@@ -772,7 +776,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "bangs",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "red",
@@ -791,7 +795,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "red",
@@ -810,7 +814,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -829,7 +833,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "bangs",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "black",
     "eyeColor": "green",
     "clothesColor": "green",
@@ -848,7 +852,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "blue",
@@ -867,7 +871,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "bangs",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "brown",
     "eyeColor": "blue",
     "clothesColor": "blue",
@@ -886,7 +890,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -905,7 +909,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "blue",
@@ -924,7 +928,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "bangs",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "brown",
     "eyeColor": "blue",
     "clothesColor": "green",
@@ -943,7 +947,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -962,7 +966,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "green",
@@ -981,7 +985,7 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "green",
@@ -1000,7 +1004,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "bangs",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "black",
     "eyeColor": "blue",
     "clothesColor": "blue",
@@ -1019,7 +1023,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleHighPonytail",
+    "backHairStyle": "highPigtails",
     "hairColor": "black",
     "eyeColor": "dark",
     "clothesColor": "blue",
@@ -1038,7 +1042,7 @@
     "headOrientation": "front",
     "skinTone": "medium",
     "frontHairStyle": "bangs",
-    "backHairStyle": "lowPonytail",
+    "backHairStyle": "lowPonytailRight",
     "hairColor": "black",
     "eyeColor": "blue",
     "clothesColor": "blue",
@@ -1057,7 +1061,7 @@
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "highPonytail",
+    "backHairStyle": "highPonytailRight",
     "hairColor": "blonde",
     "eyeColor": "green",
     "clothesColor": "blue",
@@ -1076,7 +1080,8 @@
     "headOrientation": "front",
     "skinTone": "light",
     "frontHairStyle": "centerPart",
-    "backHairStyle": "shortCropped",
+    "backHairStyle": "looseBlunt",
+    "hairLength": "ear",
     "hairColor": "blonde",
     "eyeColor": "dark",
     "clothesColor": "green",
@@ -1088,14 +1093,14 @@
    },
    "width": 15,
    "height": 24,
-   "sha256": "7e0e82ae7ddb7db2e28480edabfcc0904a1234a6f3ac444ccacca047fed26efb"
+   "sha256": "5e574590a4538f8d2f9f77d32c3ae5b1db4536e1e0cc3d9223b4d5681550c7bb"
   },
   {
    "config": {
     "headOrientation": "front",
     "skinTone": "brown",
     "frontHairStyle": "sideSwept",
-    "backHairStyle": "doubleLowPonytail",
+    "backHairStyle": "lowPigtails",
     "hairColor": "brown",
     "eyeColor": "dark",
     "clothesColor": "green",

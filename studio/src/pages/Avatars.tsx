@@ -236,16 +236,16 @@ function elementArt(look: ResolvedAvatarConfig, element: Element): Raster | null
             }
             case "top": {
                 // Short hair keeps a ponytail out of the way of the shoulders.
-                const r = buildAvatar({ ...front, topStyle: front.topStyle === "none" ? "shirt" : front.topStyle, bottomStyle: "none", shoeStyle: "none", backHairStyle: "shortCropped" });
+                const r = buildAvatar({ ...front, topStyle: front.topStyle === "none" ? "shirt" : front.topStyle, bottomStyle: "none", shoeStyle: "none", backHairStyle: "looseBlunt", hairLength: "ear" });
                 return isolate(r, everything(r), ROWS.torso);
             }
             case "bottom": {
                 // A dress would hide it, so it is shown under a plain shirt.
-                const r = buildAvatar({ ...front, topStyle: "shirt", bottomStyle: front.bottomStyle === "none" ? "shorts" : front.bottomStyle, shoeStyle: "none", backHairStyle: "shortCropped" });
+                const r = buildAvatar({ ...front, topStyle: "shirt", bottomStyle: front.bottomStyle === "none" ? "shorts" : front.bottomStyle, shoeStyle: "none", backHairStyle: "looseBlunt", hairLength: "ear" });
                 return isolate(r, everything(r), ROWS.hips);
             }
             case "shoes": {
-                const r = buildAvatar({ ...front, topStyle: "shirt", bottomStyle: "shorts", shoeStyle: front.shoeStyle === "none" ? "boots" : front.shoeStyle, backHairStyle: "shortCropped" });
+                const r = buildAvatar({ ...front, topStyle: "shirt", bottomStyle: "shorts", shoeStyle: front.shoeStyle === "none" ? "boots" : front.shoeStyle, backHairStyle: "looseBlunt", hairLength: "ear" });
                 return isolate(r, everything(r), ROWS.feet);
             }
         }

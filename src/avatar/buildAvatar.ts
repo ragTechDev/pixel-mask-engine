@@ -1,13 +1,21 @@
 import { composeSprites, layerBounds, type Layer, type Raster } from "../core/compose";
 import { configKey } from "../core/cache";
-import type { PixelMask } from "../core/maskUtils";
+import { mirrorMask, type PixelMask } from "../core/maskUtils";
 import { clothesPalettes, eyePalettes, hairPalettes, skinPalettes } from "../core/palette";
 import { defineSprite, rampSlots, shadeMask, SLOT, type Sprite } from "../core/sprite";
-import { armsMask } from "./masks/arms.mask";
-import { eyesMask } from "./masks/eyes.mask";
-import { headMasks } from "./masks/head.mask";
-import { legsMask } from "./masks/legs.mask";
-import { torsoMask } from "./masks/torso.mask";
+import { armsFrontMask } from "./masks/armsFront.mask";
+import { armsSideMask } from "./masks/armsSide.mask";
+import { eyesFrontMask } from "./masks/eyesFront.mask";
+import { eyesSideMask } from "./masks/eyesSide.mask";
+import { headFrontMask } from "./masks/headFront.mask";
+import { headSideMask } from "./masks/headSide.mask";
+import { legsFrontMask } from "./masks/legsFront.mask";
+import { legsSideMask } from "./masks/legsSide.mask";
+import { torsoFrontMask } from "./masks/torsoFront.mask";
+import { torsoSideMask } from "./masks/torsoSide.mask";
+import { accessoryParts, hairAccessories, type HairAccessory } from "./styles/hairAccessories";
+import { hairTextures, textureMask, texturePad, type HairTexture } from "./styles/hairTextures";
+import { headOrientations, maskForView, type HeadOrientation } from "./orientation";
 import {
     bottomStyles,
     shoeStyles,
@@ -23,21 +31,36 @@ import {
 } from "./styles/clothesStyles";
 import {
     backHairStyles,
+    backHairStylesFor,
+    hairLengths,
+    hairDrapes,
+    hairDrapeApplies,
+    hairAccessoryApplies,
+    isLooseHair,
+    isMiddlePonytail,
     frontHairStyles,
     resolveHairLayers,
     type BackHairStyle,
+    type HairLength,
+    type HairDrape,
     type FrontHairStyle,
     type HairLayer
 } from "./styles/hairStyles";
 import type { ClothesColor, EyeColor, HairColor, SkinTone } from "../core/palette";
 
-export type HeadOrientation = keyof typeof headMasks;
+export type { HeadOrientation };
 
 /** An avatar is fully described by fixed style ids and palette keys. */
 export interface AvatarConfig {
     headOrientation?: HeadOrientation;
     skinTone?: SkinTone;
     frontHairStyle?: FrontHairStyle;
+    hairLength?: HairLength;
+    /** Whether back hair falls over the shoulders or hangs behind them. Only hair that reaches the shoulders has the choice. */
+    hairDrape?: HairDrape;
+    hairTexture?: HairTexture;
+    /** Ties up a ponytail or pigtails. Only tied hair has one. */
+    hairAccessory?: HairAccessory;
     backHairStyle?: BackHairStyle;
     hairColor?: HairColor;
     eyeColor?: EyeColor;
@@ -46,6 +69,8 @@ export interface AvatarConfig {
     /** Colours of single pieces. Left out, a piece follows `clothesColor`. */
     topColor?: ClothesColor;
     bottomColor?: ClothesColor;
+    /** The colour of the hair accessory. Left out, it follows `clothesColor`. */
+    hairAccessoryColor?: ClothesColor;
     shoeColor?: ClothesColor;
     topStyle?: TopStyle;
     bottomStyle?: BottomStyle;
@@ -55,7 +80,7 @@ export interface AvatarConfig {
 }
 
 /** The pieces that can take a colour of their own. */
-export const pieceColorFields = ["topColor", "bottomColor", "shoeColor"] as const;
+export const pieceColorFields = ["topColor", "bottomColor", "shoeColor", "hairAccessoryColor"] as const;
 export type PieceColorField = (typeof pieceColorFields)[number];
 
 /** An avatar config with every choice filled in. A piece colour is only there when it differs from `clothesColor`. */
@@ -65,7 +90,11 @@ export const defaultAvatarConfig: Readonly<Required<Omit<AvatarConfig, PieceColo
     headOrientation: "front",
     skinTone: "light",
     frontHairStyle: "centerPart",
-    backHairStyle: "lowPonytail",
+    hairLength: "shoulder",
+    hairDrape: "overShoulder",
+    hairTexture: "straight",
+    hairAccessory: "none",
+    backHairStyle: "lowPonytailRight",
     hairColor: "brown",
     eyeColor: "dark",
     clothesColor: "blue",
@@ -80,9 +109,13 @@ const ARM_POSES = { down: 1, forward: 1, back: 1 };
 const LEG_POSES = { neutral: 1, step: 1 };
 
 const allowed: { [K in Exclude<keyof AvatarConfig, PieceColorField>]-?: object } = {
-    headOrientation: headMasks,
+    headOrientation: headOrientations,
     skinTone: skinPalettes,
     frontHairStyle: frontHairStyles,
+    hairLength: hairLengths,
+    hairDrape: hairDrapes,
+    hairTexture: hairTextures,
+    hairAccessory: hairAccessories,
     backHairStyle: backHairStyles,
     hairColor: hairPalettes,
     eyeColor: eyePalettes,
@@ -114,6 +147,17 @@ export function resolveAvatarConfig(config: AvatarConfig = {}): ResolvedAvatarCo
             out[key] = value;
         }
     }
+    // Hair too short to tie up can only be loose.
+    if (!backHairStylesFor(out.hairLength as HairLength).includes(out.backHairStyle as BackHairStyle)) out.backHairStyle = "looseBlunt";
+    // Hair above the shoulders has no choice to make, so equivalent configs match.
+    if (!hairDrapeApplies(out.hairLength as HairLength)) out.hairDrape = defaultAvatarConfig.hairDrape;
+    // A tail down the middle hangs behind the head, so it has no shoulder to fall over.
+    if (isMiddlePonytail(out.backHairStyle as BackHairStyle)) out.hairDrape = defaultAvatarConfig.hairDrape;
+    // Only loose hair has some left to hang behind; a tail just falls over the shoulder.
+    if (out.hairDrape === "overAndBehindShoulder" && !isLooseHair(out.backHairStyle as BackHairStyle)) out.hairDrape = defaultAvatarConfig.hairDrape;
+    // Only tied hair has an accessory, and the colour of no accessory does not count.
+    if (!hairAccessoryApplies(out.hairLength as HairLength, out.backHairStyle as BackHairStyle)) out.hairAccessory = "none";
+    if (out.hairAccessory === "none") delete out.hairAccessoryColor;
     return out as ResolvedAvatarConfig;
 }
 
@@ -132,7 +176,29 @@ function shadedSprite(mask: PixelMask): Sprite {
     return sprite;
 }
 
-const eyesSprite = defineSprite(eyesMask, { "1": SLOT.base, H: SLOT.highlight });
+// A hair accessory is thin, so shading would turn every pixel into a highlight or a shadow and none would be the
+// colour that was picked. It is drawn in its base colour instead, with an outline unless it is too thin for one.
+const flat = { outlined: new WeakMap<PixelMask, Sprite>(), bare: new WeakMap<PixelMask, Sprite>() };
+function flatSprite(mask: PixelMask, outlined: boolean): Sprite {
+    const cache = outlined ? flat.outlined : flat.bare;
+    let sprite = cache.get(mask);
+    if (!sprite) {
+        const shadedOne = shadedSprite(mask);
+        sprite = {
+            ...shadedOne,
+            px: shadedOne.px.map((slot) => (slot === SLOT.highlight || slot === SLOT.shadow ? SLOT.base : slot === SLOT.outline && !outlined ? 0 : slot))
+        };
+        cache.set(mask, sprite);
+    }
+    return sprite;
+}
+
+const armsMasks = { front: armsFrontMask, side: armsSideMask };
+const headMasks = { front: headFrontMask, side: headSideMask };
+const legsMasks = { front: legsFrontMask, side: legsSideMask };
+const torsoMasks = { front: torsoFrontMask, side: torsoSideMask };
+const eyesLegend = { "1": SLOT.base, H: SLOT.highlight };
+const eyesSprites = { front: defineSprite(eyesFrontMask, eyesLegend), side: defineSprite(eyesSideMask, eyesLegend) };
 
 function garmentLayersFor(def: GarmentDefinition, orientation: HeadOrientation): readonly GarmentLayer[] {
     return def.byOrientation[orientation] ?? def.fallback;
@@ -154,7 +220,7 @@ export function buildAvatar(config: AvatarConfig = {}): Raster {
         y
     });
 
-    const hairLayers: readonly HairLayer[] = resolveHairLayers(c.frontHairStyle, c.backHairStyle, o);
+    const hairLayers: readonly HairLayer[] = resolveHairLayers(c.frontHairStyle, c.backHairStyle, c.hairLength, c.hairDrape, o);
     // A one-piece top (a dress, overalls) covers the legs, so nothing is drawn for the bottom.
     const coversBottom = (topStyles[c.topStyle] as GarmentDefinition).coversBottom === true;
     const piece = (layers: readonly GarmentLayer[], color: ClothesColor | undefined) => {
@@ -176,35 +242,79 @@ export function buildAvatar(config: AvatarConfig = {}): Raster {
                     (!g.legPoses || g.legPoses.includes(c.legPose))
             )
             .map((g) => layer(g.mask, g.slots, g.offsetX, g.offsetY));
-    const hairAt = (placement: HairLayer["placement"]) =>
-        hairLayers.filter((h) => h.placement === placement).map((h) => layer(h.mask, hair, h.offsetX, h.offsetY));
+    const hairBody = [hair[SLOT.base], hair[SLOT.shadow], hair[SLOT.highlight]];
+    // A texture widens the mask on both sides, so the layer moves left by the same amount to stay in place.
+    const hairLayer = (h: HairLayer): Layer => ({
+        ...layer(textureMask(h.mask, c.hairTexture), hair, h.offsetX - texturePad(c.hairTexture), h.offsetY),
+        ...(h.blends ? { noOutlineOver: hairBody, noHighlightOver: hairBody } : {})
+    });
+    // An accessory sits where a tail is tied, in the same group as the tail and just after it.
+    const accessorySlots = rampSlots(clothesPalettes[c.hairAccessoryColor ?? c.clothesColor]);
+    const flatLayer = (mask: PixelMask, outlined: boolean, x: number, y: number): Layer => ({ sprite: flatSprite(mask, outlined), slots: accessorySlots, x, y });
+    const accessoryLayers = (h: HairLayer): Layer[] => {
+        if (c.hairAccessory === "none" || !h.tie) return [];
+        const { mask, above, tilted, outlined } = accessoryParts[c.hairAccessory];
+        const { x, y, tilt } = h.tie;
+        // A band slants across a sloping tail, through the tie point; anything else lies flat, centred on it.
+        if (tilt) {
+            const width = tilted.mask[0].length;
+            return tilt === "slash"
+                ? [flatLayer(tilted.mask, outlined, x - tilted.centre, y - tilted.up)]
+                : [flatLayer(mirrorMask(tilted.mask), outlined, x - (width - 1 - tilted.centre), y - tilted.up)];
+        }
+        return [flatLayer(mask, outlined, x - Math.floor(mask[0].length / 2), y - above)];
+    };
+    // An accessory goes just after its tail, or just before it where the tail falls over the tie.
+    const withAccessory = (h: HairLayer): Layer[] => (h.tie?.under ? [...accessoryLayers(h), hairLayer(h)] : [hairLayer(h), ...accessoryLayers(h)]);
+    const hairAt = (placement: HairLayer["placement"]) => hairLayers.filter((h) => h.placement === placement).flatMap(withAccessory);
 
-    const legs = layer(legsMask, skin, 2, 13);
-    const torso = layer(torsoMask, skin, 2, 6);
-    const arms = layer(armsMask, skin, 0, 6);
-    const head = layer(headMasks[o], skin, 1, -5);
+    const legs = layer(maskForView(legsMasks, o), skin, 2, 13);
+    const torso = layer(maskForView(torsoMasks, o), skin, 2, 6);
+    const arms = layer(maskForView(armsMasks, o), skin, 0, 6);
+    // Loose hair frames the face, so the head has no outline where it sits against that hair.
+    const head: Layer = {
+        ...layer(maskForView(headMasks, o), skin, 1, -5),
+        ...(isLooseHair(c.backHairStyle) && c.hairLength !== "bald" ? { noOutlineOver: hairBody } : {})
+    };
+    const inProfile = o === "left" || o === "right";
+    // The back of the head has no face. In profile one eye sits near the face side of the head.
+    const eyeLayers: Layer[] =
+        o === "front"
+            ? [{ sprite: eyesSprites.front, slots: eyes, x: 3, y: 1 }]
+            : o === "back"
+              ? []
+              : [{ sprite: eyesSprites.side, slots: eyes, x: o === "right" ? 8 : 4, y: 1 }];
 
     const layers: Layer[] = [
+        ...hairAt("behindBody"),
         ...garmentsAt("behindBody"),
         legs,
         torso,
-        arms,
+        // In profile the arm hangs in front of the torso, so it goes over the clothes on the body.
+        ...(inProfile ? [] : [arms]),
         ...garmentsAt("overBody"),
+        ...(inProfile ? [arms] : []),
+        ...garmentsAt("overArms"),
         ...hairAt("behindHead"),
         head,
-        { sprite: eyesSprite, slots: eyes, x: 3, y: 1 },
+        ...eyeLayers,
         ...hairAt("front"),
-        ...garmentsAt("overlay")
+        ...garmentsAt("overlay"),
+        ...hairAt("top")
     ];
 
-    // Bounds include every candidate layer (even pose-hidden ones) so the
-    // avatar keeps the same size and alignment across poses.
+    // Bounds include every candidate layer (even pose-hidden ones) and the front-view body, so the
+    // avatar keeps the same size and alignment across poses and when it turns.
     const bounds = layerBounds([
+        layer(maskForView(legsMasks, "front"), skin, 2, 13),
+        layer(maskForView(torsoMasks, "front"), skin, 2, 6),
+        layer(maskForView(armsMasks, "front"), skin, 0, 6),
+        layer(maskForView(headMasks, "front"), skin, 1, -5),
         legs,
         torso,
         arms,
         head,
-        ...hairLayers.map((h) => layer(h.mask, hair, h.offsetX, h.offsetY)),
+        ...hairLayers.flatMap(withAccessory),
         ...garments.map((g) => layer(g.mask, g.slots, g.offsetX, g.offsetY))
     ]);
 

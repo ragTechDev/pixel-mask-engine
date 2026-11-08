@@ -3,6 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
     avatarKey,
+    backHairStylesFor,
     buildAvatar,
     buildTile,
     clothesPalettes,
@@ -10,7 +11,10 @@ import {
     createCache,
     defaultAvatarConfig,
     eyePalettes,
+    hairAccessories,
+    hairDrapes,
     hairPalettes,
+    hairTextures,
     resolveAvatarConfig,
     skinPalettes,
     tileIds,
@@ -139,4 +143,211 @@ test("black is not a clothes colour", () => {
     assert.equal("black" in clothesPalettes, false);
     assert.equal(resolveAvatarConfig({ clothesColor: "black" }).clothesColor, defaultAvatarConfig.clothesColor, "it falls back to the default");
     assert.equal("topColor" in resolveAvatarConfig({ topColor: "black" }), false);
+});
+
+test("each head orientation draws its own view", () => {
+    const grid = (o, extra = {}) => {
+        const r = buildAvatar({ headOrientation: o, backHairStyle: "looseBlunt", hairLength: "ear", ...extra });
+        return { r, g: Array.from(r.px, (ci) => (ci ? r.colors[ci] : ".")).join(",") };
+    };
+    const views = ["front", "left", "right", "back"].map((o) => grid(o).g);
+    assert.equal(new Set(views).size, 4);
+});
+
+test("facing left is facing right flipped", () => {
+    const silhouette = (o) => {
+        const { width, height, px } = buildAvatar({ headOrientation: o, backHairStyle: "looseBlunt", hairLength: "ear" });
+        return Array.from({ length: height }, (_, y) => Array.from({ length: width }, (_, x) => (px[y * width + x] ? 1 : 0)));
+    };
+    assert.deepEqual(silhouette("left"), silhouette("right").map((row) => row.reverse()));
+});
+
+test("hairLength falls back to shoulder length and each length draws different loose hair", () => {
+    assert.equal(resolveAvatarConfig({ hairLength: "nope" }).hairLength, "shoulder");
+    assert.equal(defaultAvatarConfig.hairLength, "shoulder");
+    const lengths = ["ear", "chin", "shoulder", "armpit", "midBack"];
+    for (const headOrientation of ["front", "left", "right", "back"]) {
+        // From behind, hair over the shoulders is in front of the body and mostly hidden, so use hair down the back.
+        const hairDrape = headOrientation === "back" ? "behindShoulder" : "overShoulder";
+        const pictures = lengths.map((hairLength) => {
+            const r = buildAvatar({ headOrientation, backHairStyle: "looseBlunt", hairLength, hairDrape });
+            return Array.from(r.px, (ci) => (ci ? r.colors[ci] : ".")).join(",");
+        });
+        assert.equal(new Set(pictures).size, 5, headOrientation);
+    }
+});
+
+test("a longer hair length makes a longer ponytail", () => {
+    const pixels = (hairLength) => buildAvatar({ backHairStyle: "lowPonytailRight", hairLength }).px.filter(Boolean).length;
+    // Ear length is a palm tuft rather than a short tail, so the tails start at chin length.
+    const sizes = ["chin", "shoulder", "armpit", "midBack"].map(pixels);
+    assert.deepEqual(sizes, [...sizes].sort((a, b) => a - b));
+});
+
+test("ear length hair can only be loose", () => {
+    for (const backHairStyle of ["highPonytailRight", "lowPonytailLeft", "highPonytailMiddle", "highPigtails", "lowPigtails"]) {
+        assert.equal(resolveAvatarConfig({ hairLength: "ear", backHairStyle }).backHairStyle, "looseBlunt");
+        assert.equal(resolveAvatarConfig({ hairLength: "chin", backHairStyle }).backHairStyle, backHairStyle);
+    }
+    assert.deepEqual(backHairStylesFor("ear"), ["looseBlunt"]);
+    assert.equal(backHairStylesFor("chin").length, 9);
+    assert.equal(avatarKey({ hairLength: "ear", backHairStyle: "lowPigtails" }), avatarKey({ hairLength: "ear", backHairStyle: "looseBlunt" }));
+});
+
+test("the head has no outline where loose hair frames it", () => {
+    const outline = skinPalettes[defaultAvatarConfig.skinTone].outline;
+    const outlinePixels = (backHairStyle) => {
+        const r = buildAvatar({ backHairStyle, hairLength: "shoulder" });
+        const i = r.colors.indexOf(outline);
+        return r.px.filter((ci) => ci === i).length;
+    };
+    assert.ok(outlinePixels("looseBlunt") < outlinePixels("lowPonytailRight"));
+});
+
+test("bald draws no hair at all", () => {
+    const hairColours = new Set(Object.values(hairPalettes[defaultAvatarConfig.hairColor]));
+    const colours = (config) => buildAvatar({ hairColor: defaultAvatarConfig.hairColor, ...config }).colors;
+    assert.ok(colours({ hairLength: "shoulder" }).some((c) => hairColours.has(c)));
+    for (const headOrientation of ["front", "left", "right", "back"]) {
+        assert.ok(!colours({ headOrientation, hairLength: "bald" }).some((c) => hairColours.has(c)), headOrientation);
+    }
+    assert.deepEqual(backHairStylesFor("bald"), ["looseBlunt"]);
+    assert.equal(avatarKey({ hairLength: "bald", backHairStyle: "lowPigtails" }), avatarKey({ hairLength: "bald", backHairStyle: "looseBlunt" }));
+});
+
+test("hair texture defaults to straight and each texture draws different hair", () => {
+    assert.equal(defaultAvatarConfig.hairTexture, "straight");
+    assert.equal(resolveAvatarConfig({ hairTexture: "frizzy" }).hairTexture, "straight");
+    assert.deepEqual(Object.keys(hairTextures), ["straight", "wavy", "curly", "coiled"]);
+    assert.equal(avatarKey({}), avatarKey({ hairTexture: "straight" }));
+    const count = (hairTexture) => buildAvatar({ backHairStyle: "looseBlunt", hairLength: "shoulder", hairTexture }).px.filter(Boolean).length;
+    const sizes = Object.keys(hairTextures).map(count);
+    assert.equal(new Set(sizes).size, sizes.length);
+    assert.ok(count("coiled") > count("straight"));
+});
+
+test("a bald head is the same in every texture", () => {
+    const grid = (hairTexture) => Array.from(buildAvatar({ hairLength: "bald", hairTexture }).px).join(",");
+    assert.equal(new Set(Object.keys(hairTextures).map(grid)).size, 1);
+});
+
+test("hair can fall over the shoulders, hang behind them, or have some of each", () => {
+    assert.equal(defaultAvatarConfig.hairDrape, "overShoulder");
+    assert.deepEqual(Object.keys(hairDrapes), ["overShoulder", "behindShoulder", "overAndBehindShoulder"]);
+    assert.equal(resolveAvatarConfig({ hairDrape: "nope" }).hairDrape, "overShoulder");
+    const grid = (config) => {
+        const r = buildAvatar(config);
+        return Array.from(r.px, (ci) => (ci ? r.colors[ci] : ".")).join(",");
+    };
+    for (const backHairStyle of ["looseBlunt", "lowPigtails"]) {
+        // In profile a tail hangs behind the head and never reaches the body, so only loose hair differs.
+        for (const headOrientation of backHairStyle === "looseBlunt" ? ["front", "right", "back"] : ["front", "back"]) {
+            const base = { backHairStyle, hairLength: "armpit", headOrientation };
+            assert.notEqual(grid({ ...base, hairDrape: "overShoulder" }), grid({ ...base, hairDrape: "behindShoulder" }), `${backHairStyle} ${headOrientation}`);
+        }
+    }
+    // Some of each is a strand over the shoulder with the rest behind. From behind the strand is hidden by the body.
+    for (const headOrientation of ["front", "right"]) {
+        const base = { backHairStyle: "looseBlunt", hairLength: "armpit", headOrientation };
+        const some = grid({ ...base, hairDrape: "overAndBehindShoulder" });
+        assert.notEqual(some, grid({ ...base, hairDrape: "overShoulder" }), `${headOrientation} some vs over`);
+        assert.notEqual(some, grid({ ...base, hairDrape: "behindShoulder" }), `${headOrientation} some vs behind`);
+    }
+});
+
+test("a tail has no hair left to hang behind, so some of each is over the shoulder", () => {
+    for (const backHairStyle of ["highPonytailRight", "lowPigtails"]) {
+        const some = { backHairStyle, hairLength: "armpit", hairDrape: "overAndBehindShoulder" };
+        assert.equal(avatarKey(some), avatarKey({ ...some, hairDrape: "overShoulder" }), backHairStyle);
+    }
+    assert.notEqual(avatarKey({ hairLength: "armpit", backHairStyle: "looseBlunt", hairDrape: "overAndBehindShoulder" }), avatarKey({ hairLength: "armpit", backHairStyle: "looseBlunt" }));
+});
+
+test("hair above the shoulders has no drape to choose", () => {
+    for (const hairLength of ["bald", "ear", "chin"]) {
+        assert.equal(avatarKey({ hairLength, hairDrape: "behindShoulder" }), avatarKey({ hairLength, hairDrape: "overShoulder" }), hairLength);
+    }
+    assert.notEqual(avatarKey({ hairLength: "shoulder", hairDrape: "behindShoulder" }), avatarKey({ hairLength: "shoulder" }));
+});
+
+test("loose hair can be cut blunt, in a V or in a U", () => {
+    const grid = (config) => {
+        const r = buildAvatar(config);
+        return Array.from(r.px, (ci) => (ci ? r.colors[ci] : ".")).join(",");
+    };
+    for (const hairLength of ["shoulder", "armpit", "midBack"]) {
+        for (const headOrientation of ["right", "back"]) {
+            const base = { hairLength, hairDrape: "behindShoulder", headOrientation };
+            const cuts = ["looseBlunt", "looseV", "looseU"].map((backHairStyle) => grid({ ...base, backHairStyle }));
+            assert.equal(new Set(cuts).size, 3, `${hairLength} ${headOrientation}`);
+        }
+    }
+    // The cuts need hair that hangs below the head.
+    for (const hairLength of ["bald", "ear", "chin"]) {
+        for (const backHairStyle of ["looseV", "looseU"]) {
+            assert.equal(resolveAvatarConfig({ hairLength, backHairStyle }).backHairStyle, "looseBlunt", `${hairLength} ${backHairStyle}`);
+        }
+    }
+    assert.deepEqual(backHairStylesFor("shoulder").filter((id) => id.startsWith("loose")), ["looseBlunt", "looseV", "looseU"]);
+    assert.ok(!backHairStylesFor("chin").includes("looseV"));
+});
+
+test("a ponytail can be on the right, on the left or in the middle", () => {
+    const grid = (config) => {
+        const r = buildAvatar(config);
+        return Array.from(r.px, (ci) => (ci ? r.colors[ci] : ".")).join(",");
+    };
+    assert.equal(defaultAvatarConfig.backHairStyle, "lowPonytailRight");
+    for (const height of ["high", "low"]) {
+        for (const headOrientation of ["front", "back"]) {
+            const pictures = ["Right", "Left", "Middle"].map((side) =>
+                grid({ headOrientation, hairLength: "armpit", backHairStyle: `${height}Ponytail${side}` })
+            );
+            assert.equal(new Set(pictures).size, 3, `${height} ${headOrientation}`);
+        }
+    }
+    // The left ponytail is the right one flipped, so from the front it sits on the other side.
+    const silhouette = (backHairStyle, headOrientation) => {
+        const { width, height, px } = buildAvatar({ headOrientation, hairLength: "armpit", backHairStyle });
+        return Array.from({ length: height }, (_, y) => Array.from({ length: width }, (_, x) => (px[y * width + x] ? 1 : 0)));
+    };
+    assert.deepEqual(silhouette("highPonytailLeft", "front"), silhouette("highPonytailRight", "front").map((row) => row.reverse()));
+    // A middle tail hangs behind the head, so it has no shoulder to fall over.
+    assert.equal(avatarKey({ backHairStyle: "lowPonytailMiddle", hairLength: "armpit", hairDrape: "behindShoulder" }), avatarKey({ backHairStyle: "lowPonytailMiddle", hairLength: "armpit" }));
+});
+
+test("a ponytail or pigtails can have a hairtie, a scrunchie or a bow in a colour", () => {
+    assert.equal(defaultAvatarConfig.hairAccessory, "none");
+    assert.deepEqual(Object.keys(hairAccessories), ["none", "hairtie", "scrunchie", "bow"]);
+    assert.equal(resolveAvatarConfig({ backHairStyle: "lowPigtails", hairAccessory: "feather" }).hairAccessory, "none");
+    const red = Object.values(clothesPalettes.red);
+    const reds = (config) => {
+        const r = buildAvatar({ clothesColor: "blue", topStyle: "none", bottomStyle: "none", shoeStyle: "none", ...config });
+        return r.px.filter((ci) => ci && red.includes(r.colors[ci])).length;
+    };
+    for (const backHairStyle of ["highPonytailRight", "lowPonytailLeft", "highPonytailMiddle", "lowPigtails"]) {
+        for (const headOrientation of ["front", "back", "right"]) {
+            const base = { backHairStyle, hairLength: "armpit", headOrientation, hairAccessoryColor: "red" };
+            assert.equal(reds({ ...base, hairAccessory: "none" }), 0, `${backHairStyle} ${headOrientation} none`);
+            // From behind a high ponytail falls over its tie, so a hairtie can be hidden there; the wider ones still peek out.
+            const hidden = headOrientation === "back" && backHairStyle.startsWith("high") && backHairStyle.includes("Ponytail");
+            for (const hairAccessory of hidden ? ["scrunchie", "bow"] : ["hairtie", "scrunchie", "bow"]) {
+                assert.ok(reds({ ...base, hairAccessory }) > 0, `${backHairStyle} ${headOrientation} ${hairAccessory}`);
+            }
+            if (hidden) assert.ok(reds({ ...base, hairAccessory: "hairtie" }) < reds({ ...base, hairAccessory: "scrunchie" }), `${backHairStyle} hairtie is mostly hidden`);
+        }
+    }
+    assert.ok(reds({ hairLength: "armpit", backHairStyle: "lowPigtails", hairAccessory: "bow", hairAccessoryColor: "red" }) > reds({ hairLength: "armpit", backHairStyle: "lowPigtails", hairAccessory: "hairtie", hairAccessoryColor: "red" }));
+});
+
+test("only tied hair has an accessory, and with none its colour does not count", () => {
+    for (const config of [{ backHairStyle: "looseBlunt", hairLength: "armpit" }, { backHairStyle: "lowPigtails", hairLength: "ear" }, { backHairStyle: "lowPigtails", hairLength: "bald" }]) {
+        assert.equal(resolveAvatarConfig({ ...config, hairAccessory: "bow" }).hairAccessory, "none", JSON.stringify(config));
+        assert.equal(avatarKey({ ...config, hairAccessory: "bow", hairAccessoryColor: "red" }), avatarKey(config));
+    }
+    const tied = { backHairStyle: "lowPigtails", hairLength: "armpit" };
+    assert.equal(avatarKey({ ...tied, hairAccessory: "none", hairAccessoryColor: "red" }), avatarKey(tied));
+    assert.notEqual(avatarKey({ ...tied, hairAccessory: "bow", hairAccessoryColor: "red" }), avatarKey({ ...tied, hairAccessory: "bow" }));
+    // The accessory follows the clothes colour until it has a colour of its own.
+    assert.equal(avatarKey({ ...tied, hairAccessory: "bow", hairAccessoryColor: "blue" }), avatarKey({ ...tied, hairAccessory: "bow", clothesColor: "blue" }));
 });

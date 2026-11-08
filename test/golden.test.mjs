@@ -1,5 +1,6 @@
 // Pixel-for-pixel check against the pre-refactor React/SVG renderer.
-// Fixture: per-pixel SHA-256 fingerprints recorded from commit db0a2c2.
+// Fixture: per-pixel SHA-256 fingerprints recorded from commit db0a2c2. Front-facing entries are still the original
+// pixels; the left, right and back entries were re-recorded when those views got their own masks.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";

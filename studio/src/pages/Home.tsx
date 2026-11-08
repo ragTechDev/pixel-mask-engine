@@ -34,7 +34,7 @@ export function HomePage({ route }: { route: Route }) {
                 </div>
                 <div className="hero-art" aria-hidden>
                     <Avatar pixelSize={px} />
-                    <Avatar pixelSize={px} skinTone="brown" hairColor="black" topStyle="longSleeve" clothesColor="red" backHairStyle="doubleHighPonytail" />
+                    <Avatar pixelSize={px} skinTone="brown" hairColor="black" topStyle="longSleeve" clothesColor="red" backHairStyle="highPigtails" />
                     <Avatar pixelSize={px} skinTone="medium" hairColor="blonde" topStyle="dress" clothesColor="green" frontHairStyle="bangs" />
                     <WorldObject id="tree" pixelSize={px} />
                 </div>
