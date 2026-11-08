@@ -3,6 +3,15 @@ import { PixelImage } from "../../../src/react";
 import {
     avatarKey,
     backHairStyles,
+    backHairStylesFor,
+    hairAccessories,
+    hairAccessoryApplies,
+    hairLengths,
+    hairDrapeApplies,
+    isLooseHair,
+    isMiddlePonytail,
+    hairDrapes,
+    hairTextures,
     bottomStyles,
     buildAvatar,
     clothesPalettes,
@@ -41,6 +50,8 @@ interface Section {
     colors?: Record<string, { base: string }>;
     /** A line of help under the title. */
     hint?: string;
+    /** Picked with a stepped slider, for options that are in order. */
+    slider?: true;
 }
 
 /** What a tab's icon zooms in on. */
@@ -64,8 +75,13 @@ const TABS: Tab[] = [
     ] },
     { id: "hair", label: "Hair", crop: "head", sections: [
         { field: "hairColor", title: "Hair colour", options: keys(hairPalettes), crop: "head", colors: hairPalettes },
-        { field: "frontHairStyle", title: "Fringe", options: keys(frontHairStyles), crop: "head" },
-        { field: "backHairStyle", title: "Back", options: keys(backHairStyles), crop: "head" }
+        { field: "hairLength", title: "Length", hint: "Set the length first: loose hair hangs to it, and tails are as long. Bald has no hair at all.", options: keys(hairLengths), crop: "head", slider: true },
+        { field: "hairTexture", title: "Texture", hint: "How the hair falls, from straight to tight coils.", options: keys(hairTextures), crop: "head" },
+        { field: "frontHairStyle", title: "Overhead", options: keys(frontHairStyles), crop: "head" },
+        { field: "backHairStyle", title: "Behind head", options: keys(backHairStyles), crop: "head" },
+        { field: "hairDrape", title: "Shoulders", hint: "Does the hair fall over the shoulders, hang behind them, or have some of each?", options: keys(hairDrapes), crop: "head" },
+        { field: "hairAccessory", title: "Accessory", hint: "Ties up a ponytail or pigtails.", options: keys(hairAccessories), crop: "head" },
+        { field: "hairAccessoryColor", title: "Accessory colour", options: keys(clothesPalettes), crop: "head", colors: clothesPalettes }
     ] },
     { id: "top", label: "Top", crop: "body", sections: [
         { field: "topStyle", title: "Top", hint: "Dresses and overalls are tops that cover the bottom.", options: keys(topStyles), crop: "body" },
@@ -81,7 +97,7 @@ const TABS: Tab[] = [
     ] }
 ];
 
-const PALETTES = { skinTone: skinPalettes, eyeColor: eyePalettes, hairColor: hairPalettes, topColor: clothesPalettes, bottomColor: clothesPalettes, shoeColor: clothesPalettes } as const;
+const PALETTES = { skinTone: skinPalettes, eyeColor: eyePalettes, hairColor: hairPalettes, topColor: clothesPalettes, bottomColor: clothesPalettes, shoeColor: clothesPalettes, hairAccessoryColor: clothesPalettes } as const;
 type ColourField = keyof typeof PALETTES;
 const isColourField = (field: Field): field is ColourField => field in PALETTES;
 /** A one-piece top (a dress, overalls) covers the legs, so there is no bottom under it. */
@@ -176,7 +192,8 @@ function prepare(look: ResolvedAvatarConfig, custom: Custom): { render: Resolved
 function shuffled(current: AvatarConfig): AvatarConfig {
     const next: Record<string, string> = { ...(resolveAvatarConfig(current) as Record<string, string>) };
     for (const tab of TABS) {
-        for (const section of tab.sections) next[section.field] = pick(section.options);
+        // Random keeps some hair; bald is a deliberate choice.
+        for (const section of tab.sections) next[section.field] = pick(section.field === "hairLength" ? section.options.filter((id) => id !== "bald") : section.options);
     }
     // Each piece often matches the clothes colour, and sometimes has a colour of its own.
     for (const field of pieceColorFields) next[field] = Math.random() < 0.5 ? next.clothesColor : pick(keys(clothesPalettes));
@@ -200,6 +217,8 @@ const iconCache = createCache<Raster | null>(128);
 /** The rows of the avatar a part sits in, for close-ups that show it as worn. */
 const ROWS = {
     head: [0, CROP_ROWS.head] as [number, number],
+    // Tall enough to show hair down to mid-back.
+    hair: [0, 20] as [number, number],
     // Shoulders to hips.
     torso: TORSO_ROWS,
     // Hips to feet.
@@ -232,7 +251,7 @@ function elementArt(look: ResolvedAvatarConfig, element: Element): Raster | null
             }
             case "hair": {
                 const r = buildAvatar(front);
-                return isolate(r, everything(r), ROWS.head);
+                return isolate(r, everything(r), ROWS.hair);
             }
             case "top": {
                 // Short hair keeps a ponytail out of the way of the shoulders.
@@ -266,12 +285,32 @@ function ElementIcon({ look, element }: { look: ResolvedAvatarConfig; element: E
 
 /** Which element of the character an option changes, so its card can show just that. */
 const ELEMENT_OF: Partial<Record<Field, Element>> = {
+    hairLength: "hair",
+    hairTexture: "hair",
+    hairDrape: "hair",
+    hairAccessory: "hair",
     frontHairStyle: "hair",
     backHairStyle: "hair",
     topStyle: "top",
     bottomStyle: "bottom",
     shoeStyle: "shoes"
 };
+
+/** Steps through options that are in order, one stop per option. */
+function StepSlider({ options, current, label, onChange }: { options: readonly string[]; current: string; label: string; onChange: (id: string) => void }) {
+    const index = Math.max(0, options.indexOf(current));
+    return (
+        <div className="steps">
+            <input type="range" min={0} max={options.length - 1} step={1} value={index} aria-label={label} aria-valuetext={words(options[index])}
+                onChange={(e) => onChange(options[Number(e.target.value)])} />
+            <div className="steps-labels">
+                {options.map((id, i) => (
+                    <button key={id} className="steps-stop" aria-pressed={i === index} onClick={() => onChange(id)}>{words(id)}</button>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 /** The style cards of one section: each shows only that element, close up, all at the same scale. */
 function OptionGrid({ section, look, current, bottomCovered, choose }: {
@@ -282,7 +321,15 @@ function OptionGrid({ section, look, current, bottomCovered, choose }: {
     choose: (field: Field, value: string) => void;
 }) {
     const element = ELEMENT_OF[section.field];
-    const arts = section.options.map((id) =>
+    // Hair too short to tie up only offers loose hair.
+    const options =
+        section.field === "backHairStyle"
+            ? backHairStylesFor(look.hairLength)
+            : // Only loose hair has some left to hang behind, so a tail only has over or behind.
+              section.field === "hairDrape" && !isLooseHair(look.backHairStyle)
+              ? section.options.filter((id) => id !== "overAndBehindShoulder")
+              : section.options;
+    const arts = options.map((id) =>
         element && id !== "none" ? elementArt(resolveAvatarConfig({ ...look, [section.field]: id }), element) : null
     );
     // One pixel size for the whole row, so a short style does not look bigger than a long one.
@@ -290,7 +337,7 @@ function OptionGrid({ section, look, current, bottomCovered, choose }: {
     const px = Math.max(1, Math.floor(Math.min(92 / biggest.w, 56 / biggest.h)));
     return (
         <div className="opt-grid">
-            {section.options.map((id, i) => {
+            {options.map((id, i) => {
                 const selected = id === current && !(section.field === "bottomStyle" && bottomCovered);
                 const art = arts[i];
                 return (
@@ -339,7 +386,10 @@ export function AvatarsPage({ route }: { route: Route }) {
     const parted = recolor(Object.keys(custom).length ? buildAvatar(prepared.render) : full, prepared.map);
     const shown = toVariant(recolor(parted, userMap), variant);
     const hasCustom = Object.keys(custom).length > 0 || Object.keys(userMap).length > 0;
-    const px = Math.max(1, Math.floor((phone ? 130 : 230) / Math.max(shown.width, shown.height)));
+    // Sized from the same avatar without hair, so the scale stays the same however much hair sticks out; a tall
+    // style just rises higher in the scene instead of shrinking everything.
+    const bare = toVariant(buildAvatar({ ...look, hairLength: "bald" }), variant);
+    const px = Math.max(1, Math.floor((phone ? 130 : 230) / Math.max(bare.width, bare.height)));
     const facing = FACING.indexOf(look.headOrientation as (typeof FACING)[number]);
 
     // Picking a bottom under a dress or overalls swaps that for an ordinary top, so the bottom shows.
@@ -403,7 +453,7 @@ export function AvatarsPage({ route }: { route: Route }) {
                             </button>
                         ))}
                     </div>
-                    {tab.sections.map((section) => {
+                    {tab.sections.filter((section) => !(look.hairLength === "bald" && (section.field === "frontHairStyle" || section.field === "backHairStyle" || section.field === "hairTexture")) && !(section.field === "hairDrape" && (!hairDrapeApplies(look.hairLength) || isMiddlePonytail(look.backHairStyle))) && !((section.field === "hairAccessory" || section.field === "hairAccessoryColor") && (!hairAccessoryApplies(look.hairLength, look.backHairStyle) || (section.field === "hairAccessoryColor" && look.hairAccessory === "none")))).map((section) => {
                         // A piece without a colour of its own shows the clothes colour.
                         const current = (look[section.field] ?? (isPieceColour(section.field) ? look.clothesColor : undefined)) as string;
                         const bottomCovered = (section.field === "bottomStyle" || section.field === "bottomColor") && coversBottom(look.topStyle);
@@ -416,7 +466,9 @@ export function AvatarsPage({ route }: { route: Route }) {
                                         {section.field === "bottomStyle" ? `Your ${words(look.topStyle)} covers the bottom. Picking one switches to a ${ORDINARY_TOP}.` : "Hidden while your top covers the bottom."}
                                     </p>
                                 )}
-                                {section.colors ? (
+                                {section.slider ? (
+                                    <StepSlider options={section.options} current={current} label={section.title} onChange={(id) => choose(section.field, id)} />
+                                ) : section.colors ? (
                                     <div className="swatches">
                                         {section.options.map((id) => {
                                             const name = NAMES[section.field]?.[id] ?? words(id);

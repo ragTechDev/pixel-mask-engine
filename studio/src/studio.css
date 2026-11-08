@@ -243,3 +243,9 @@ body:has(dialog[open]) { overflow: hidden; }
 .kv-item { display: flex; flex-direction: column; min-width: 0; }
 .kv-item dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 @media (min-width: 721px) { .kv-item { flex-direction: row; gap: 12px; } .kv-item dt { min-width: 64px; } }
+
+.steps { display: flex; flex-direction: column; gap: 6px; }
+.steps input[type="range"] { width: 100%; accent-color: var(--ink); margin: 0; }
+.steps-labels { display: flex; justify-content: space-between; gap: 2px; }
+.steps-stop { background: none; border: 0; padding: 2px 0; font: inherit; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; flex: 1 1 0; text-align: center; }
+.steps-stop[aria-pressed="true"] { color: var(--ink); font-weight: 700; }
