@@ -8,7 +8,7 @@ A TypeScript library that composes and renders pixel-art avatars (and, next, til
 
 ## Current state (core and Sprite refactor done)
 
-- Entries: `@ragtechdev/pixel-mask-engine` (pure core: `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg*`, style and palette tables), `@ragtechdev/pixel-mask-engine/canvas` (`paintRaster`, `drawRaster`) and `@ragtechdev/pixel-mask-engine/react` (`Avatar`, `Tile`, `PixelImage`). React is an optional peer.
+- Entries: `@ragtechdev/pixel-mask-engine` (pure core: `buildAvatar`, `buildTile`, `avatarKey`, `createCache`, `toSvg*`, style and palette tables), `@ragtechdev/pixel-mask-engine/canvas` (`paintRaster`, `drawRaster`) and `@ragtechdev/pixel-mask-engine/react` (`Avatar`, `Tile`, `Icon`, `WorldObject`, `World`, `PixelImage`). React is an optional peer.
 - `Sprite` (`src/core/sprite.ts`) is the single image primitive: palette-slot indices plus an origin. Avatar shape masks are still `"0"`/`"1"` strings, auto-shaded by `shadeMask` using `src/core/lighting.ts`. Tile masks are `"0"`/`"1"` layers painted in named colours, resolved through the fixed `tilePalettes`. `composeSprites` (internal) produces a colour-resolved `Raster`.
 - `resolveAvatarConfig` replaces any value that isn't in the fixed tables with its default.
 - Size baseline before the refactor: the whole bundle was about 3.3 KB gzipped. After it, an avatar-only import is about 3.28 KB, the full core entry is about 4.25 KB (it now includes tiles), and the react and canvas entries add about 0.46 KB and 0.45 KB.
@@ -20,9 +20,9 @@ A TypeScript library that composes and renders pixel-art avatars (and, next, til
   - A tile is a *material* (a base colour plus 0/1 detail layers) or an *edge tile* (an inner material with edge strips painted on the open sides, where a strip can paint another tile's pixels, such as grass outside a pavement). One strip set serves every side and corner. `test/fixtures/tile-golden.json` pins every tile's pixels in the default palette.
   - Edges are tiles too: nine-patch sets (centre plus edges and corners) for `roof_*`, `beige_pavement_*` (against grass) and `wall_*` (left, right, base). `townTileset` blocks assemble them with phone-keypad keys (`1`-`9` roof, `< = >` one-block roof, `A`-`I` pavement, `l h r` wall and `[ _ ]` one-block wall with foundation). Edge tiles keep their base tile's pattern away from the edge, which the tests check.
   - Things that stand on terrain (tree, fence, door, window, counter, bookshelf, rug, flower) are **objects**, not tiles: `"0"/"1"` shape masks, auto-shaded by `shadeMask` with the fixed `objectRamps`, with footprint and behaviour in `objectInfo`. This is the base for furniture, decor and a pet.
-  - All town and object masks are **drafts** that the maintainer will redraw. The layering (tile, block, tileset behaviour lists, map) follows pret/pokered, with none of its art or data.
+  - The layering (tile, block, tileset behaviour lists, map) follows pret/pokered, with none of its art or data. Masks are made by the maintainers and by coding agents, and the art may be refined over time.
 
-Next: more objects and a pet on `Sprite`; final art for the draft tiles and objects; more tile types; a Web Worker only if measurements show it's needed.
+Next: more objects and a pet on `Sprite`; more tile types and objects; a Web Worker only if measurements show it's needed.
 
 ## Target design
 
@@ -35,7 +35,6 @@ Next: more objects and a pet on `Sprite`; final art for the draft tiles and obje
 ## Hard rules
 
 - **Constrained customization only.** Avatars and rooms are built from fixed masks and fixed palettes. Never add an API that accepts user-supplied art, arbitrary colours or arbitrary images.
-- **Human-made art only.** All masks are authored by the maintainers. Never generate or add AI-generated art assets, and never add assets whose origin you cannot state.
 - **Safe gestures only** if you add animation or gestures: non-contact (wave, sparkle, tip a hat). Nothing contact-based or sexualizable (no hugs, kisses, etc.).
 - **No new dependency without checking its size and licence first.** Report the gzipped size delta. The core target is zero runtime dependencies.
 - **No secrets**, API keys, `.env` files or personal data anywhere in the repo or its history.
@@ -51,6 +50,10 @@ pnpm build         # tsup (tsup.config.ts): index, canvas, react entries
 pnpm typecheck     # tsc on everything + no-DOM check of the core entry (tsconfig.core.json)
 pnpm test          # builds, then node:test against dist (test/*.test.mjs)
 pnpm size          # gzipped size per entry (scripts/size.mjs)
+pnpm new           # scaffolding wizard for new art (scripts/new.mjs)
+pnpm docs:images   # re-renders docs/images (banner, icons, avatars, tiles, objects, themes) from the built package (scripts/render-docs.mjs)
+pnpm stats         # rebuilds, re-renders the images, then updates the counts and bundled sizes in the README (scripts/stats.mjs); --check only verifies the counts
+pnpm check:masks   # validate every mask: 0/1 only, rectangular, tile and icon size limits, naming, orphans (scripts/check-masks.mjs)
 ```
 
 Tests use the built-in `node:test` runner (no test dependency). `test/golden.test.mjs` checks `buildAvatar` pixel-for-pixel against fingerprints recorded from the original React renderer (commit db0a2c2). Add tests for each module you refactor.
@@ -78,6 +81,18 @@ Versions follow semver (before 1.0, a breaking change bumps the minor). Release 
 ## Measuring size
 
 Build with tsup (ESM, minified, React external) and gzip the output. Report gzipped bytes for: the core entry alone, the React entry alone, and the whole thing. Compare to the 3.3 KB baseline above.
+
+## Adding an icon, garment, hair style, object or tile
+
+Use the scaffolding wizard instead of creating the files by hand. It puts the mask files in the right folder with the right names, and prints the exact edits still needed.
+
+1. Run `pnpm new --dry-run` first to see what it would create. Run `pnpm new` to write the files. It is interactive; to drive it without a terminal, pipe the answers in one per line (an empty line takes the default): `printf '4\nlamp\n1\n2\n1\n\n\n\n' | pnpm new`. Menus are numbered, so run it once interactively or read `scripts/new.mjs` to see the prompt order for your kind.
+2. It only creates placeholder masks (filled rectangles, or blank layers for tiles). You may draw the real masks yourself. Check the result by running `pnpm check:masks` and rendering it (`pnpm docs:images`, then look at `docs/images/`), and tell the maintainer which masks are new so they can review the look.
+3. Make every edit it lists: type unions, table entries, tests, and the README table for icons. It never edits existing files and never overwrites one.
+4. Add the new mask paths to `LICENSE-ART.md` if they are not already under a covered folder, then run `pnpm typecheck && pnpm test`. A new tile also needs its fingerprint in `test/fixtures/tile-golden.json`. Run `pnpm check:masks` after adding or editing any mask. After wiring a new icon, tile, object or avatar style in, run `pnpm stats` and commit the README and `docs/images/`: `pnpm test` fails when the README counts are stale.
+5. Edge and nine-patch tiles are not scaffolded. Edit `src/world/tiles/tileDefs.ts` by hand.
+
+The human-facing version of these steps lives in `CONTRIBUTING.md`. Keep the two consistent when the wizard changes.
 
 ## Working agreement
 
